@@ -200,14 +200,26 @@ export async function AboutView({ lang }: { lang: Lang }) {
 }
 
 /* ---------- Contact + FAQ ---------- */
+/** "https://www.instagram.com/reetadeserts/" → "@reetadeserts"; profile.php links fall back to "Reeta". */
+function handle(url: string) {
+  try {
+    const u = new URL(url);
+    const first = u.pathname.split("/").filter(Boolean)[0];
+    if (!first || first.includes(".")) return "Reeta";
+    return `@${first.replace(/^@/, "")}`;
+  } catch {
+    return "Reeta";
+  }
+}
+
 export async function ContactView({ lang }: { lang: Lang }) {
   const t = dict[lang];
   const [settings, faqs] = await Promise.all([getSettings(), getFaqs()]);
   const channels = [
     settings.whatsapp_number && { label: t.contact.whatsapp, value: settings.whatsapp_number, url: waLink(settings.whatsapp_number), color: "#8a9a62" },
-    settings.instagram_url && { label: t.contact.instagram, value: settings.instagram_url.replace(/^https?:\/\/(www\.)?/, ""), url: settings.instagram_url, color: "#d9607a" },
-    settings.tiktok_url && { label: t.contact.tiktok, value: settings.tiktok_url.replace(/^https?:\/\/(www\.)?/, ""), url: settings.tiktok_url, color: "#3a2420" },
-    settings.facebook_url && { label: t.contact.facebook, value: settings.facebook_url.replace(/^https?:\/\/(www\.)?/, ""), url: settings.facebook_url, color: "#5b4659" },
+    settings.instagram_url && { label: t.contact.instagram, value: handle(settings.instagram_url), url: settings.instagram_url, color: "#d9607a" },
+    settings.tiktok_url && { label: t.contact.tiktok, value: handle(settings.tiktok_url), url: settings.tiktok_url, color: "#3a2420" },
+    settings.facebook_url && { label: t.contact.facebook, value: handle(settings.facebook_url), url: settings.facebook_url, color: "#5b4659" },
   ].filter(Boolean) as { label: string; value: string; url: string; color: string }[];
 
   return (
