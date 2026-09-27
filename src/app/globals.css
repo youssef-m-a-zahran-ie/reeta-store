@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* Reeta brand tokens (Brand Guidelines v1.0) */
+:root {
+  --page: #fef9f1;
+  --blush: #f2d0e3;
+  --cream: #f5ead8;
+  --plum: #5b4659;
+  --plum-hover: #4a3848;
+  --cocoa: #3a2420;
+  --toffee: #a0673f;
+  --sage: #8a9a62;
+  --honey: #c9955f;
+  --rose: #d9607a;
+  --line: rgb(91 70 89 / 0.14);
+  --muted: rgb(58 36 32 / 0.66);
+  --dot: rgb(91 70 89 / 0.13);
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-blush: var(--blush);
+  --color-cream: var(--cream);
+  --color-plum: var(--plum);
+  --color-plum-hover: var(--plum-hover);
+  --color-cocoa: var(--cocoa);
+  --color-toffee: var(--toffee);
+  --color-sage: var(--sage);
+  --color-honey: var(--honey);
+  --color-rose: var(--rose);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --font-display: "Fredoka Variable", "Baloo Bhaijaan 2", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Figtree Variable", "Readex Pro Variable", system-ui, "Segoe UI", sans-serif;
+  --radius-card: 22px;
+}
+
+html {
+  background: var(--page);
+}
+
+body {
+  background: var(--page);
+  color: var(--cocoa);
+  font-family: var(--font-sans);
+}
+
+[dir="rtl"] body,
+body [dir="rtl"] {
+  font-family: "Readex Pro Variable", "Figtree Variable", system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--plum);
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--rose);
+  outline-offset: 2px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, var(--dot) 1.25px, transparent 1.7px);
+  background-size: 34px 34px;
+}
+
+/* Logo layers, recolored with currentColor */
+.mark {
+  display: block;
+  background: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+.mark-full { mask-image: url("/brand/mark-full.png"); }
+.mark-inner { mask-image: url("/brand/mark-inner.png"); }
+.mark-arcA { mask-image: url("/brand/mark-arcA.png"); }
+.mark-arcB { mask-image: url("/brand/mark-arcB.png"); }
+
+/* Shared admin controls */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    font-family: var(--font-display);
+  }
+  .btn-primary { @apply bg-plum text-blush hover:bg-plum-hover; }
+  .btn-secondary { @apply border-2 border-plum text-plum hover:bg-blush; }
+  .btn-ghost { @apply text-plum hover:bg-blush; }
+  .btn-danger { @apply border-2 border-rose text-rose hover:bg-rose hover:text-white; }
+  .btn-sm { @apply px-3.5 py-1.5 text-sm; }
+
+  .field { @apply grid gap-1.5; }
+  .label { @apply text-sm font-semibold text-plum; }
+  .hint { @apply text-xs text-muted; }
+  .input {
+    @apply w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[15px] text-cocoa outline-none transition placeholder:text-cocoa/35 focus:border-plum focus:ring-2 focus:ring-blush;
+  }
+  textarea.input { @apply min-h-24 leading-relaxed; }
+  select.input { @apply pe-9; }
+
+  .card { @apply rounded-[22px] border border-line bg-white; }
+  .eyebrow {
+    @apply text-[13px] font-medium uppercase tracking-[0.08em] text-toffee;
+    font-family: var(--font-display);
+  }
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.dot-grid-dark {
+  background-image: radial-gradient(circle, rgb(242 208 227 / 0.09) 1.25px, transparent 1.7px);
+  background-size: 34px 34px;
+}
