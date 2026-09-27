@@ -1,11 +1,5 @@
-import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin/guard";
 import { AdminNav } from "@/components/admin/admin-nav";
-
-export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s · Reeta Admin" },
-  robots: { index: false, follow: false },
-};
 
 export default async function PanelLayout({ children }: LayoutProps<"/admin">) {
   const { user } = await requireAdmin();

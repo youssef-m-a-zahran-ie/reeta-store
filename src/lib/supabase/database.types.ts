@@ -1507,8 +1507,28 @@ export type Database = {
       }
     }
     Functions: {
+      _store_images: { Args: { p_product: string }; Returns: Json }
+      _store_product_card: {
+        Args: { p: Database["public"]["Tables"]["products"]["Row"] }
+        Returns: Json
+      }
+      _store_variants: {
+        Args: { p: Database["public"]["Tables"]["products"]["Row"] }
+        Returns: Json
+      }
+      _variant_price: {
+        Args: {
+          p: Database["public"]["Tables"]["products"]["Row"]
+          v: Database["public"]["Tables"]["variants"]["Row"]
+        }
+        Returns: number
+      }
       is_admin: { Args: never; Returns: boolean }
       is_admin_email: { Args: { p_email: string }; Returns: boolean }
+      store_bundles: { Args: never; Returns: Json }
+      store_catalog: { Args: never; Returns: Json }
+      store_product: { Args: { p_slug: string }; Returns: Json }
+      store_settings: { Args: never; Returns: Json }
     }
     Enums: {
       ad_platform: "meta" | "tiktok" | "google" | "snapchat" | "other"

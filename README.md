@@ -12,8 +12,8 @@ The Reeta e-commerce site and its admin, on one domain.
 | 0 · Setup (project, Supabase, Cloudflare config, brand tokens) | ✅ |
 | 1 · Prototype (Orbit hero, pouch cards, cart ring) | ✅ separate artifact |
 | 2 · Database, admin sign-in, Catalog, Inventory | ✅ |
-| 3 · Storefront pages | next |
-| 4 · Cart, checkout, orders, emails | |
+| 3 · Storefront pages (EN + AR), cart | ✅ |
+| 4 · Checkout, delivery fee, orders, emails | next |
 | 5 · Rest of the admin (orders, customers, bundles, discounts, content, settings) | |
 | 6 · Dashboard, reports, ad spend, pixels | |
 | 7 · QA and launch | |

@@ -15,6 +15,14 @@
   --line: rgb(91 70 89 / 0.14);
   --muted: rgb(58 36 32 / 0.66);
   --dot: rgb(91 70 89 / 0.13);
+  --display-stack: "Fredoka Variable", "Baloo Bhaijaan 2", ui-rounded, system-ui, sans-serif;
+  --body-stack: "Figtree Variable", "Readex Pro Variable", system-ui, "Segoe UI", sans-serif;
+}
+
+/* Arabic pages: Baloo Bhaijaan 2 for headings, Readex Pro for text */
+:root[lang="ar"] {
+  --display-stack: "Baloo Bhaijaan 2", "Fredoka Variable", system-ui, sans-serif;
+  --body-stack: "Readex Pro Variable", "Figtree Variable", system-ui, sans-serif;
 }
 
 @theme inline {
@@ -30,8 +38,8 @@
   --color-rose: var(--rose);
   --color-line: var(--line);
   --color-muted: var(--muted);
-  --font-display: "Fredoka Variable", "Baloo Bhaijaan 2", ui-rounded, system-ui, sans-serif;
-  --font-sans: "Figtree Variable", "Readex Pro Variable", system-ui, "Segoe UI", sans-serif;
+  --font-display: var(--display-stack);
+  --font-sans: var(--body-stack);
   --radius-card: 22px;
 }
 
@@ -45,7 +53,6 @@ body {
   font-family: var(--font-sans);
 }
 
-[dir="rtl"] body,
 body [dir="rtl"] {
   font-family: "Readex Pro Variable", "Figtree Variable", system-ui, sans-serif;
 }
@@ -123,3 +130,43 @@ h1, h2, h3, h4 {
   background-image: radial-gradient(circle, rgb(242 208 227 / 0.09) 1.25px, transparent 1.7px);
   background-size: 34px 34px;
 }
+
+/* Storefront micro-interactions */
+@keyframes cart-bump {
+  40% { transform: scale(1.35); }
+}
+.cart-count { animation: cart-bump 0.3s cubic-bezier(.22,1,.36,1); }
+@keyframes cart-glow {
+  50% { filter: drop-shadow(0 0 6px rgb(217 96 122 / 0.55)); }
+}
+.cart-full .mark { animation: cart-glow 1.6s ease-in-out infinite; }
+
+/* Orbit hero intro: the mark assembles, the wordmark rises */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-intro .mark-inner { animation: ring-in 1s cubic-bezier(.22,1,.36,1) both; }
+  .hero-intro .mark-arcA { animation: arc-a 1.3s cubic-bezier(.22,1,.36,1) 0.15s both; }
+  .hero-intro .mark-arcB { animation: arc-b 1.3s cubic-bezier(.22,1,.36,1) 0.15s both; }
+  .hero-intro .rise { animation: rise 0.8s cubic-bezier(.22,1,.36,1) both; animation-delay: var(--d, 0.8s); }
+  .hero-intro .ring-grow { animation: ring-grow 1.5s cubic-bezier(.22,1,.36,1) both; }
+}
+@keyframes ring-in { from { transform: scale(0.82) rotate(-20deg); } }
+@keyframes arc-a { from { transform: rotate(-150deg) scale(1.08); } }
+@keyframes arc-b { from { transform: rotate(150deg) scale(1.08); } }
+@keyframes rise { from { transform: translateY(16px); opacity: 0.25; } }
+@keyframes ring-grow { from { transform: translate(-50%, -50%) scale(0.7); } }
+
+/* A round landing on its pouch band */
+.band-splash::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.5);
+  transform: translate(-50%, -50%) scale(0);
+  animation: splash 0.7s cubic-bezier(.22,1,.36,1) forwards;
+  pointer-events: none;
+}
+@keyframes splash { to { transform: translate(-50%, -50%) scale(22); opacity: 0; } }

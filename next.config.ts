@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   experimental: {
     serverActions: { bodySizeLimit: "2mb" },
+    // One 404 for every URL, since the store and admin have separate root layouts.
+    globalNotFound: true,
   },
 };
 
