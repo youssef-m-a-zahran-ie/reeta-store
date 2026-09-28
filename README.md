@@ -14,8 +14,8 @@ The Reeta e-commerce site and its admin, on one domain.
 | 2 · Database, admin sign-in, Catalog, Inventory | ✅ |
 | 3 · Storefront pages (EN + AR), cart | ✅ |
 | 4 · Checkout, delivery fee, orders, emails, admin orders and settings | ✅ |
-| 5 · Rest of the admin (customers, bundles, discounts, content, inbox, manual orders) | next |
-| 6 · Dashboard, reports, ad spend, pixels | |
+| 5 · Rest of the admin (customers, bundles, discounts, content, inbox, manual orders, packing slips) | ✅ |
+| 6 · Dashboard, reports, ad spend, pixels | next |
 | 7 · QA and launch | |
 
 ## Run locally

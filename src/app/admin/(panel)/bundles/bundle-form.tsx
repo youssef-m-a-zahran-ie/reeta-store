@@ -6,7 +6,7 @@ import { egp, slugify } from "@/lib/format";
 import type { Tables } from "@/lib/supabase/database.types";
 import { saveBundle } from "./actions";
 
-export type VariantOption = { id: string; label: string; price: number | null; cost: number | null; color: string | null };
+export type VariantOption = { id: string; label: string; price: number | null; cost: number | null; color: string | null; active?: boolean };
 
 export function BundleForm({
   bundle,

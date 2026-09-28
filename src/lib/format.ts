@@ -38,3 +38,10 @@ export const dateTime = new Intl.DateTimeFormat("en-GB", {
   minute: "2-digit",
   timeZone: "Africa/Cairo",
 });
+
+export const dateOnly = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "Africa/Cairo",
+});

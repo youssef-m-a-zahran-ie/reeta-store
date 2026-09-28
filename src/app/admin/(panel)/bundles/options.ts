@@ -23,5 +23,6 @@ export async function loadVariantOptions(supabase: Supa): Promise<VariantOption[
       price: priceOf.get(v.id)?.price ?? null,
       cost: priceOf.get(v.id)?.cost ?? null,
       color: v.products?.color ?? v.products?.coatings?.color ?? null,
+      active: v.products?.status === "active",
     }));
 }

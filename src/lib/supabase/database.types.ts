@@ -589,8 +589,10 @@ export type Database = {
           email: string | null
           id: string
           is_read: boolean
+          lang: string
           name: string
           phone: string | null
+          replied_at: string | null
         }
         Insert: {
           body: string
@@ -598,8 +600,10 @@ export type Database = {
           email?: string | null
           id?: string
           is_read?: boolean
+          lang?: string
           name: string
           phone?: string | null
+          replied_at?: string | null
         }
         Update: {
           body?: string
@@ -607,8 +611,10 @@ export type Database = {
           email?: string | null
           id?: string
           is_read?: boolean
+          lang?: string
           name?: string
           phone?: string | null
+          replied_at?: string | null
         }
         Relationships: []
       }
@@ -1513,6 +1519,7 @@ export type Database = {
       }
     }
     Functions: {
+      _admin_compute: { Args: { p: Json }; Returns: Json }
       _compute_order: { Args: { p: Json }; Returns: Json }
       _delivery: { Args: { p_lat: number; p_lng: number }; Returns: Json }
       _km: {
@@ -1520,6 +1527,7 @@ export type Database = {
         Returns: number
       }
       _normalize_phone: { Args: { p: string }; Returns: string }
+      _notify_new_message: { Args: { p_id: string }; Returns: undefined }
       _notify_new_order: { Args: { p_order: string }; Returns: undefined }
       _store_images: { Args: { p_product: string }; Returns: Json }
       _store_product_card: {
@@ -1537,6 +1545,8 @@ export type Database = {
         }
         Returns: number
       }
+      admin_place_order: { Args: { p: Json }; Returns: Json }
+      admin_quote: { Args: { p: Json }; Returns: Json }
       admin_set_order_status: {
         Args: {
           p_note?: string
@@ -1550,6 +1560,7 @@ export type Database = {
       place_order: { Args: { p: Json }; Returns: Json }
       store_bundles: { Args: never; Returns: Json }
       store_catalog: { Args: never; Returns: Json }
+      store_contact: { Args: { p: Json }; Returns: undefined }
       store_order: { Args: { p_id: string }; Returns: Json }
       store_product: { Args: { p_slug: string }; Returns: Json }
       store_quote: { Args: { p: Json }; Returns: Json }

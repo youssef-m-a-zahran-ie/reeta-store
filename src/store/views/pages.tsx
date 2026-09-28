@@ -7,6 +7,7 @@ import { ProductBuy } from "../components/product-buy";
 import { ProductCard } from "../components/product-card";
 import { BundleCard } from "../components/bundle-card";
 import { waLink } from "../components/whatsapp";
+import { ContactForm } from "../components/contact-form";
 import { SectionHead } from "./home";
 
 function PageTop({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) {
@@ -247,6 +248,10 @@ export async function ContactView({ lang }: { lang: Lang }) {
         ) : (
           <p className="rounded-[28px] border-2 border-dashed border-plum/20 px-6 py-10 text-center text-lg text-plum">{t.contact.soon}</p>
         )}
+
+        <div className="mx-auto w-full max-w-3xl">
+          <ContactForm lang={lang} />
+        </div>
 
         {faqs.length > 0 && (
           <section aria-labelledby="h-faq" className="mx-auto w-full max-w-3xl">

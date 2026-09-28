@@ -44,6 +44,11 @@ export default async function OrdersPage({ searchParams }: PageProps<"/admin/ord
         eyebrow="Run the store"
         title="Orders"
         description="New orders land here and in your inbox. Confirm each one with the customer, then move it along."
+        actions={
+          <Link href="/admin/orders/new" className="btn btn-primary">
+            Add an order
+          </Link>
+        }
       />
 
       <nav className="mb-4 flex flex-wrap gap-1.5" aria-label="Order status">

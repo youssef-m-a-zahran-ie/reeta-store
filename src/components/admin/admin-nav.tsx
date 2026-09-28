@@ -6,15 +6,15 @@ import { useState } from "react";
 import { Logo } from "@/components/brand/mark";
 import { signOut } from "@/app/admin/login/actions";
 
-type Item = { href: string; label: string; soon?: string; match?: string };
+type Item = { href: string; label: string; soon?: string; match?: string; badge?: "orders" | "inbox" };
 
 const GROUPS: { title: string; items: Item[] }[] = [
   {
     title: "Run the store",
     items: [
       { href: "/admin", label: "Overview" },
-      { href: "/admin/orders", label: "Orders" },
-      { href: "#", label: "Customers", soon: "Phase 5" },
+      { href: "/admin/orders", label: "Orders", badge: "orders" },
+      { href: "/admin/customers", label: "Customers" },
     ],
   },
   {
@@ -36,15 +36,15 @@ const GROUPS: { title: string; items: Item[] }[] = [
   {
     title: "Site",
     items: [
-      { href: "#", label: "Content", soon: "Phase 5" },
-      { href: "#", label: "Inbox", soon: "Phase 5" },
+      { href: "/admin/content", label: "Content" },
+      { href: "/admin/inbox", label: "Inbox", badge: "inbox" },
       { href: "/admin/settings", label: "Settings" },
       { href: "/admin/account", label: "Account" },
     ],
   },
 ];
 
-export function AdminNav({ email }: { email: string }) {
+export function AdminNav({ email, counts }: { email: string; counts: { orders: number; inbox: number } }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   // Close the mobile menu after navigating.
@@ -104,9 +104,14 @@ export function AdminNav({ email }: { email: string }) {
                       key={it.label}
                       href={it.href}
                       aria-current={isActive(it) ? "page" : undefined}
-                      className="rounded-full px-3 py-2 text-[15px] font-medium text-blush/90 transition hover:bg-white/10 aria-[current=page]:bg-blush aria-[current=page]:text-plum"
+                      className="flex items-center justify-between rounded-full px-3 py-2 text-[15px] font-medium text-blush/90 transition hover:bg-white/10 aria-[current=page]:bg-blush aria-[current=page]:text-plum"
                     >
                       {it.label}
+                      {it.badge && counts[it.badge] > 0 && (
+                        <span className="num min-w-6 rounded-full bg-honey px-1.5 text-center text-xs font-bold text-cocoa" aria-label={`${counts[it.badge]} waiting`}>
+                          {counts[it.badge]}
+                        </span>
+                      )}
                     </Link>
                   ),
                 )}

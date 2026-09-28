@@ -13,7 +13,7 @@ const MAX_SIDE = 1600;
 const QUALITY = 0.85;
 
 /** Resizes an image in the browser and encodes it as WebP. */
-async function toWebp(file: File): Promise<Blob> {
+export async function toWebp(file: File): Promise<Blob> {
   const bitmap = await createImageBitmap(file);
   const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
   const w = Math.round(bitmap.width * scale);

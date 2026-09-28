@@ -16,8 +16,11 @@ function wa(phone: string, text: string) {
   return `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
 }
 
-export default async function OrderPage({ params }: PageProps<"/admin/orders/[id]">) {
+const SOURCE_LABEL: Record<string, string> = { whatsapp: "WhatsApp", instagram: "Instagram", phone: "Phone call", other: "Added by hand" };
+
+export default async function OrderPage({ params, searchParams }: PageProps<"/admin/orders/[id]">) {
   const { id } = await params;
+  const created = (await searchParams).created === "1";
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const { supabase } = await requireAdmin();
 
@@ -59,14 +62,25 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               {o.payment_method === "cod" ? "Cash on delivery" : "InstaPay"} · {o.payment_status === "paid" ? "Paid" : "Not paid"}
             </span>
             {o.utm_source && <span className="chip bg-blush text-cocoa">From {o.utm_source}</span>}
+            {o.source !== "web" && <span className="chip bg-blush text-cocoa">{SOURCE_LABEL[o.source] ?? o.source}</span>}
           </span>
         }
         actions={
-          <Link href="/admin/orders" className="btn btn-ghost">
-            All orders
-          </Link>
+          <>
+            <Link href="/admin/orders" className="btn btn-ghost">
+              All orders
+            </Link>
+            <Link href={`/admin/slip/${o.id}`} target="_blank" className="btn btn-secondary">
+              Print slip
+            </Link>
+          </>
         }
       />
+      {created && (
+        <p role="status" className="mb-5 rounded-xl bg-sage/15 px-4 py-2.5 text-sm font-medium text-[#4d5a33]">
+          Order #{o.number} added. Stock is updated.
+        </p>
+      )}
 
       <div className="grid items-start gap-5 lg:grid-cols-[1fr_340px]">
         <div className="grid min-w-0 gap-5">
@@ -166,7 +180,13 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
         <aside className="grid gap-4 lg:sticky lg:top-8">
           <Section title="Customer">
             <div className="grid gap-1.5 text-[15px]">
-              <p className="font-semibold text-plum">{o.customer_name}</p>
+              {o.customer_id ? (
+                <Link href={`/admin/customers/${o.customer_id}`} className="font-semibold text-plum hover:underline">
+                  {o.customer_name}
+                </Link>
+              ) : (
+                <p className="font-semibold text-plum">{o.customer_name}</p>
+              )}
               <p className="num" dir="ltr">
                 {o.phone}
               </p>

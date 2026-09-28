@@ -130,3 +130,13 @@ export const BRAND_COLORS: { value: string; name: string }[] = [
   { value: "#5b4659", name: "Plum" },
   { value: "#f2d0e3", name: "Blush" },
 ];
+
+export function StatTile({ label, value, hint }: { label: string; value: string; hint?: ReactNode }) {
+  return (
+    <div className="card grid content-start gap-1 p-4">
+      <span className="text-sm text-muted">{label}</span>
+      <span className="num font-display text-xl font-semibold text-plum sm:text-2xl">{value}</span>
+      {hint && <span className="text-xs text-muted">{hint}</span>}
+    </div>
+  );
+}
