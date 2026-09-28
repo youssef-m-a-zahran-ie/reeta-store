@@ -116,8 +116,8 @@ export function OrbitStage({ children }: { children: ReactNode }) {
         if (!reduce) {
           const free = 1 - p;
           const t = now / 1000;
-          x += (mx * 46 * r.z + Math.sin(t * 0.7 + r.ph) * 5) * free;
-          y += (my * 34 * r.z + Math.cos(t * 0.6 + r.ph) * 7) * free;
+          x += (mx * 46 * r.z + Math.sin(t * 0.7 + r.ph) * 9) * free;
+          y += (my * 34 * r.z + Math.cos(t * 0.6 + r.ph) * 13) * free;
           const hx = hr.left - sr.left + hr.width / 2;
           const hy = hr.top - sr.top + hr.height * 0.44;
           x = hx + (x - hx) * (0.55 + 0.45 * introE);

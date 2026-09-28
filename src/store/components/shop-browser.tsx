@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Catalog, StoreProduct } from "../data";
 import { dict, href, loc, type Lang } from "../i18n";
 import { ProductCard } from "./product-card";
+import { EmptyOrbit } from "./orbit-decor";
 
 type Sort = "featured" | "low" | "high" | "new";
 
@@ -146,15 +147,13 @@ export function ShopBrowser({
       </div>
 
       {list.length ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="reveal-group grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {list.map((p) => (
             <ProductCard key={p.id} product={p} lang={lang} categoryName={catName(p)} />
           ))}
         </div>
       ) : (
-        <p className="rounded-[28px] border-2 border-dashed border-plum/20 px-6 py-12 text-center text-lg text-plum">
-          {inCategory.length ? t.shop.none : t.shop.empty}
-        </p>
+        <EmptyOrbit text={inCategory.length ? t.shop.none : t.shop.empty} />
       )}
     </div>
   );

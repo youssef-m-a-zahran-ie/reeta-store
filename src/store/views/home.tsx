@@ -6,6 +6,7 @@ import { dict, href, loc, type Lang } from "../i18n";
 import { OrbitStage } from "../components/orbit-stage";
 import { ProductCard } from "../components/product-card";
 import { BundleCard } from "../components/bundle-card";
+import { EmptyOrbit } from "../components/orbit-decor";
 
 type Data = Record<string, unknown>;
 const txt = (d: Data | undefined, key: string, lang: Lang) => (d ? loc(d, key, lang) : "");
@@ -14,7 +15,7 @@ const ARCH_COLORS = ["#3a2420", "#8a9a62", "#a0673f", "#d9607a", "#c9955f", "#5b
 
 export function SectionHead({ eyebrow, title, text, action, id }: { eyebrow?: string; title: string; text?: string; action?: ReactNode; id?: string }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
+    <div className="reveal mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
       <div className="grid max-w-2xl gap-2">
         {eyebrow && <span className="eyebrow">{eyebrow}</span>}
         <h2 id={id} className="text-[32px] leading-[1.15] font-semibold md:text-[48px] md:leading-[1.1]">
@@ -48,7 +49,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
         <section className="px-4 py-16 md:px-6 md:py-24" aria-labelledby="h-cats">
           <div className="mx-auto max-w-[1200px]">
             <SectionHead id="h-cats" eyebrow={txt(cats.data, "eyebrow", lang)} title={txt(cats.data, "title", lang)} />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="reveal-group grid grid-cols-2 gap-4 md:grid-cols-4">
               {catalog.categories.map((c, i) => (
                 <Link
                   key={c.id}
@@ -95,7 +96,9 @@ export async function HomeView({ lang }: { lang: Lang }) {
                 ) : undefined
               }
             />
-            <BundleCard bundle={bundles[0]} lang={lang} />
+            <div className="reveal">
+              <BundleCard bundle={bundles[0]} lang={lang} />
+            </div>
           </div>
         </section>
       ),
@@ -112,7 +115,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
         <section className="px-4 py-16 md:px-6 md:py-24" aria-labelledby="h-why">
           <div className="dot-grid mx-auto max-w-[1200px] rounded-[36px] bg-blush px-6 py-12 md:px-12 md:py-16">
             <SectionHead id="h-why" eyebrow={txt(why.data, "eyebrow", lang)} title={txt(why.data, "title", lang)} />
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="reveal-group grid gap-8 md:grid-cols-3">
               {points.map((pt, i) => (
                 <div key={i} className="grid content-start gap-3">
                   <span
@@ -140,7 +143,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
         <section className="px-4 py-16 md:px-6 md:py-24" aria-labelledby="h-testi">
           <div className="mx-auto max-w-[1200px]">
             <SectionHead id="h-testi" eyebrow={txt(testi.data, "eyebrow", lang)} title={txt(testi.data, "title", lang)} />
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="reveal-group grid gap-4 md:grid-cols-3">
               {testimonials.map((q) => (
                 <figure key={q.id} className="grid content-start gap-4 rounded-[28px] bg-cream p-6">
                   {q.image_path && (
@@ -165,11 +168,11 @@ export async function HomeView({ lang }: { lang: Lang }) {
       sort: cta.sort,
       node: (
         <section className="px-4 pt-8 md:px-6">
-          <div className="dot-grid-dark mx-auto grid max-w-[1200px] justify-items-center gap-4 rounded-[36px] bg-plum px-6 py-14 text-center text-blush md:py-20">
-            <span className="mark mark-full size-16" aria-hidden="true" />
+          <div className="reveal dot-grid-dark mx-auto grid max-w-[1200px] justify-items-center gap-4 rounded-[36px] bg-plum px-6 py-14 text-center text-blush md:py-20">
+            <span className="float mark mark-full size-16" aria-hidden="true" />
             <h2 className="text-[32px] leading-tight font-semibold text-blush md:text-[44px]">{txt(cta.data, "title", lang)}</h2>
             <p className="text-blush/80">{txt(cta.data, "text", lang)}</p>
-            <Link href={href(lang, "/shop")} className="mt-2 rounded-full bg-blush px-7 py-3 font-display text-lg font-semibold text-plum hover:bg-cream">
+            <Link href={href(lang, "/shop")} className="lift mt-2 rounded-full bg-blush px-7 py-3 font-display text-lg font-semibold text-plum hover:bg-cream">
               {txt(cta.data, "button", lang)}
             </Link>
           </div>
@@ -185,14 +188,16 @@ export async function HomeView({ lang }: { lang: Lang }) {
       <OrbitStage>
         <section data-hero className="hero-intro dot-grid relative overflow-hidden bg-blush px-4 pt-14 pb-16 text-center md:pt-20 md:pb-24">
           <div className="pointer-events-none absolute top-[44%] left-1/2" aria-hidden="true">
-            <span className="ring-grow absolute top-1/2 left-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-dashed border-plum/20 max-md:size-[620px]" />
+            <span className="ring-grow spin-r absolute top-1/2 left-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-dashed border-plum/20 max-md:size-[620px]" />
             <span className="ring-grow absolute top-1/2 left-1/2 size-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-plum/20 max-md:size-[400px]" />
           </div>
           <div className="relative z-[2] mx-auto grid max-w-3xl justify-items-center gap-5">
             <div className="grid justify-items-center gap-4 text-plum" role="img" aria-label="Reeta">
               <div className="relative size-[172px] md:size-[240px]">
-                <span className="mark mark-arcA absolute inset-0" />
-                <span className="mark mark-arcB absolute inset-0" />
+                <span className="sway absolute inset-0">
+                  <span className="mark mark-arcA absolute inset-0" />
+                  <span className="mark mark-arcB absolute inset-0" />
+                </span>
                 <span className="mark mark-inner absolute inset-0" />
               </div>
               <div className="flex font-display text-[50px] leading-none font-semibold tracking-[0.07em] md:text-[72px]" dir="ltr" aria-hidden="true">
@@ -212,12 +217,12 @@ export async function HomeView({ lang }: { lang: Lang }) {
               </p>
             )}
             <div className="rise mt-1 flex flex-wrap justify-center gap-3" style={{ "--d": "1.05s" } as React.CSSProperties}>
-              <Link href={href(lang, "/shop")} className="rounded-full bg-plum px-6 py-3 font-display text-[17px] font-semibold text-blush hover:bg-plum-hover">
+              <Link href={href(lang, "/shop")} className="lift rounded-full bg-plum px-6 py-3 font-display text-[17px] font-semibold text-blush hover:bg-plum-hover">
                 {txt(hero, "primary", lang) || t.nav.shop}
               </Link>
               <Link
                 href={href(lang, bundles.length ? "/bundles" : "/shop")}
-                className="rounded-full border-2 border-plum px-6 py-[10px] font-display text-[17px] font-semibold text-plum hover:bg-page"
+                className="lift rounded-full border-2 border-plum px-6 py-[10px] font-display text-[17px] font-semibold text-plum hover:bg-page"
               >
                 {txt(hero, "secondary", lang) || t.nav.bundles}
               </Link>
@@ -240,13 +245,13 @@ export async function HomeView({ lang }: { lang: Lang }) {
               }
             />
             {best.length ? (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="reveal-group grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {best.map((p) => (
                   <ProductCard key={p.id} product={p} lang={lang} categoryName={catName(p)} />
                 ))}
               </div>
             ) : (
-              <p className="rounded-[28px] border-2 border-dashed border-plum/20 px-6 py-12 text-center text-lg text-plum">{t.shop.empty}</p>
+              <EmptyOrbit text={t.shop.empty} />
             )}
           </div>
         </section>

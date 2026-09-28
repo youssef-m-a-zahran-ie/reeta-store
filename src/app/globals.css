@@ -212,3 +212,35 @@ body [dir="rtl"] {
 }
 .reeta-pin-test { background: var(--toffee); }
 .reeta-pin-test::after { background: var(--toffee); }
+
+/* Orbit motion: floating rounds, slow rings, page titles rising in */
+@media (prefers-reduced-motion: no-preference) {
+  .float { animation: float 7s ease-in-out infinite; animation-delay: var(--fd, 0s); }
+  .spin-r { animation: spin-r 80s linear infinite; }
+  .orbit-spin { animation: spin-r 14s linear infinite; }
+  .sway { animation: sway 10s ease-in-out infinite; }
+  .page-rise > * { animation: rise 0.8s cubic-bezier(.22,1,.36,1) both; }
+  .page-rise > :nth-child(2) { animation-delay: 0.08s; }
+  .page-rise > :nth-child(3) { animation-delay: 0.16s; }
+  .lift { transition: translate 0.25s cubic-bezier(.22,1,.36,1), box-shadow 0.25s, background-color 0.2s; }
+  .lift:hover { translate: 0 -3px; box-shadow: 0 10px 20px -10px rgb(58 36 32 / 0.45); }
+}
+@keyframes float { 50% { translate: 0 -12px; } }
+@keyframes spin-r { to { rotate: 360deg; } }
+@keyframes sway { 50% { rotate: 7deg; } }
+
+/* Sections glide in as they scroll into view (browsers without support just show them). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal,
+    .reveal-group > * {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 26%;
+    }
+    .reveal-group > :nth-child(4n + 2) { animation-range: entry 6% cover 32%; }
+    .reveal-group > :nth-child(4n + 3) { animation-range: entry 12% cover 38%; }
+    .reveal-group > :nth-child(4n + 4) { animation-range: entry 18% cover 44%; }
+  }
+}
+@keyframes reveal { from { opacity: 0; translate: 0 40px; scale: 0.97; } }

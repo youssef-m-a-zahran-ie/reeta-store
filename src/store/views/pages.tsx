@@ -8,12 +8,15 @@ import { ProductCard } from "../components/product-card";
 import { BundleCard } from "../components/bundle-card";
 import { waLink } from "../components/whatsapp";
 import { ContactForm } from "../components/contact-form";
+import { RichText } from "../components/rich-text";
+import { EmptyOrbit, OrbitDecor } from "../components/orbit-decor";
 import { SectionHead } from "./home";
 
 function PageTop({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) {
   return (
-    <div className="dot-grid bg-blush px-4 pt-14 pb-12 md:px-6 md:pt-20 md:pb-16">
-      <div className="mx-auto grid max-w-[1200px] gap-3">
+    <div className="dot-grid relative overflow-hidden bg-blush px-4 pt-14 pb-12 md:px-6 md:pt-20 md:pb-16">
+      <OrbitDecor />
+      <div className="page-rise relative mx-auto grid max-w-[1200px] gap-3 md:pe-[34%]">
         <span className="eyebrow">{eyebrow}</span>
         <h1 className="text-[40px] leading-[1.05] font-semibold md:text-[64px]">{title}</h1>
         {text && <p className="max-w-2xl text-lg text-cocoa/85">{text}</p>}
@@ -138,7 +141,7 @@ export async function BundlesView({ lang }: { lang: Lang }) {
         {bundles.length ? (
           bundles.map((b) => <BundleCard key={b.id} bundle={b} lang={lang} headingLevel="h2" />)
         ) : (
-          <p className="rounded-[28px] border-2 border-dashed border-plum/20 px-6 py-12 text-center text-lg text-plum">{t.bundles.none}</p>
+          <EmptyOrbit text={t.bundles.none} />
         )}
       </div>
     </main>
@@ -169,23 +172,20 @@ export async function AboutView({ lang }: { lang: Lang }) {
     <main>
       <PageTop eyebrow={t.about.eyebrow} title={page ? loc(page, "title", lang) : t.about.title} />
       <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-4 pt-12 md:grid-cols-[1.2fr_1fr] md:px-6">
-        <div className="grid gap-5 text-lg leading-relaxed text-cocoa/90">
-          {body.split(/\n{2,}/).map((para, i) => (
-            <p key={i} className="whitespace-pre-line">
-              {para}
-            </p>
-          ))}
+        <div className="reveal grid gap-5 text-lg leading-relaxed text-cocoa/90">
+          <RichText text={body} />
           <Link href={href(lang, "/shop")} className="justify-self-start rounded-full bg-plum px-6 py-3 font-display font-semibold text-blush hover:bg-plum-hover">
             {t.nav.shop}
           </Link>
         </div>
-        <div className="dot-grid-dark relative grid aspect-square place-items-center overflow-hidden rounded-[36px] bg-plum text-blush" aria-hidden="true">
-          <span className="mark mark-full size-2/5" />
+        <div className="reveal dot-grid-dark relative grid aspect-square place-items-center overflow-hidden rounded-[36px] bg-plum text-blush" aria-hidden="true">
+          <span className="sway mark mark-full size-2/5" />
           {["#3a2420", "#f5ead8", "#8a9a62", "#d9607a", "#c9955f"].map((c, i) => (
             <span
               key={c}
-              className="absolute rounded-full shadow-[inset_-6px_-8px_0_rgb(0_0_0/.14)]"
+              className="float absolute rounded-full shadow-[inset_-6px_-8px_0_rgb(0_0_0/.14)]"
               style={{
+                ["--fd" as string]: `${-i * 1.3}s`,
                 background: c,
                 width: [70, 90, 44, 30, 52][i],
                 height: [70, 90, 44, 30, 52][i],
@@ -228,14 +228,14 @@ export async function ContactView({ lang }: { lang: Lang }) {
       <PageTop eyebrow={t.contact.eyebrow} title={t.contact.title} text={channels.length ? t.contact.text : undefined} />
       <div className="mx-auto grid max-w-[1200px] gap-14 px-4 pt-10 md:px-6">
         {channels.length ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="reveal-group grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {channels.map((c) => (
               <a
                 key={c.label}
                 href={c.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group grid gap-3 rounded-[28px] bg-cream p-6 transition-colors hover:bg-blush"
+                className="lift group grid gap-3 rounded-[28px] bg-cream p-6 transition-colors hover:bg-blush"
               >
                 <span className="size-11 rounded-full shadow-[inset_-4px_-5px_0_rgb(0_0_0/.13)]" style={{ background: c.color }} aria-hidden="true" />
                 <span className="font-display text-2xl font-semibold text-plum">{c.label}</span>
@@ -249,14 +249,14 @@ export async function ContactView({ lang }: { lang: Lang }) {
           <p className="rounded-[28px] border-2 border-dashed border-plum/20 px-6 py-10 text-center text-lg text-plum">{t.contact.soon}</p>
         )}
 
-        <div className="mx-auto w-full max-w-3xl">
+        <div className="reveal mx-auto w-full max-w-3xl">
           <ContactForm lang={lang} />
         </div>
 
         {faqs.length > 0 && (
           <section aria-labelledby="h-faq" className="mx-auto w-full max-w-3xl">
             <SectionHead id="h-faq" title={t.contact.faq} />
-            <div className="grid gap-3">
+            <div className="reveal-group grid gap-3">
               {faqs.map((f) => (
                 <details key={f.id} className="group rounded-[24px] bg-cream/70 px-5 py-4 open:bg-cream">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-semibold text-plum [&::-webkit-details-marker]:hidden">
@@ -284,12 +284,8 @@ export async function PolicyView({ lang, slug }: { lang: Lang; slug: string }) {
   return (
     <main>
       <PageTop eyebrow="Reeta" title={loc(page, "title", lang)} />
-      <article className="mx-auto grid max-w-3xl gap-5 px-4 pt-10 text-lg leading-relaxed text-cocoa/90 md:px-6">
-        {body.split(/\n{2,}/).map((para, i) => (
-          <p key={i} className="whitespace-pre-line">
-            {para}
-          </p>
-        ))}
+      <article className="mx-auto max-w-3xl px-4 pt-10 text-lg leading-relaxed text-cocoa/90 md:px-6">
+        <RichText text={body} />
       </article>
     </main>
   );
