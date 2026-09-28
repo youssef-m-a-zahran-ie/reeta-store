@@ -6,6 +6,7 @@ import { dict, href, loc, type Lang } from "../i18n";
 import { CartDrawer } from "./cart-drawer";
 import { Header } from "./header";
 import { Toast } from "./toast";
+import { UtmCapture } from "./utm-capture";
 import { WhatsAppFloat, waLink } from "./whatsapp";
 
 export async function StoreShell({ lang, children }: { lang: Lang; children: ReactNode }) {
@@ -85,6 +86,7 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
       {settings.whatsapp_button && settings.whatsapp_number && <WhatsAppFloat lang={lang} number={settings.whatsapp_number} />}
       <CartDrawer lang={lang} freeOver={settings.free_shipping_over} paused={settings.orders_paused} pausedMessage={pausedMessage} />
       <Toast />
+      <UtmCapture />
     </CartProvider>
   );
 }

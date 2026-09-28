@@ -1244,6 +1244,7 @@ export type Database = {
           paused_message_en: string | null
           seo_description: string | null
           seo_title: string | null
+          site_url: string
           store_address: string | null
           store_lat: number | null
           store_lng: number | null
@@ -1275,6 +1276,7 @@ export type Database = {
           paused_message_en?: string | null
           seo_description?: string | null
           seo_title?: string | null
+          site_url?: string
           store_address?: string | null
           store_lat?: number | null
           store_lng?: number | null
@@ -1306,6 +1308,7 @@ export type Database = {
           paused_message_en?: string | null
           seo_description?: string | null
           seo_title?: string | null
+          site_url?: string
           store_address?: string | null
           store_lat?: number | null
           store_lng?: number | null
@@ -1507,6 +1510,14 @@ export type Database = {
       }
     }
     Functions: {
+      _compute_order: { Args: { p: Json }; Returns: Json }
+      _delivery: { Args: { p_lat: number; p_lng: number }; Returns: Json }
+      _km: {
+        Args: { lat1: number; lat2: number; lng1: number; lng2: number }
+        Returns: number
+      }
+      _normalize_phone: { Args: { p: string }; Returns: string }
+      _notify_new_order: { Args: { p_order: string }; Returns: undefined }
       _store_images: { Args: { p_product: string }; Returns: Json }
       _store_product_card: {
         Args: { p: Database["public"]["Tables"]["products"]["Row"] }
@@ -1523,12 +1534,24 @@ export type Database = {
         }
         Returns: number
       }
+      admin_set_order_status: {
+        Args: {
+          p_note?: string
+          p_order: string
+          p_status: Database["public"]["Enums"]["order_status"]
+        }
+        Returns: undefined
+      }
       is_admin: { Args: never; Returns: boolean }
       is_admin_email: { Args: { p_email: string }; Returns: boolean }
+      place_order: { Args: { p: Json }; Returns: Json }
       store_bundles: { Args: never; Returns: Json }
       store_catalog: { Args: never; Returns: Json }
+      store_order: { Args: { p_id: string }; Returns: Json }
       store_product: { Args: { p_slug: string }; Returns: Json }
+      store_quote: { Args: { p: Json }; Returns: Json }
       store_settings: { Args: never; Returns: Json }
+      store_track_checkout: { Args: { p: Json }; Returns: undefined }
     }
     Enums: {
       ad_platform: "meta" | "tiktok" | "google" | "snapchat" | "other"

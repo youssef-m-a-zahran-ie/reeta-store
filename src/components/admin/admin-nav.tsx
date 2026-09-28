@@ -13,7 +13,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
     title: "Run the store",
     items: [
       { href: "/admin", label: "Overview" },
-      { href: "#", label: "Orders", soon: "Phase 4" },
+      { href: "/admin/orders", label: "Orders" },
       { href: "#", label: "Customers", soon: "Phase 5" },
     ],
   },
@@ -38,7 +38,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
     items: [
       { href: "#", label: "Content", soon: "Phase 5" },
       { href: "#", label: "Inbox", soon: "Phase 5" },
-      { href: "#", label: "Settings", soon: "Phase 5" },
+      { href: "/admin/settings", label: "Settings" },
       { href: "/admin/account", label: "Account" },
     ],
   },

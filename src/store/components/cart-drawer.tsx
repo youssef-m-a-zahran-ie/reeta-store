@@ -8,7 +8,7 @@ import { dict, href, loc, money, type Lang } from "../i18n";
 
 export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: Lang; freeOver: number | null; paused: boolean; pausedMessage: string | null }) {
   const t = dict[lang];
-  const { items, subtotal, setQty, open, setOpen, toast } = useCart();
+  const { items, subtotal, setQty, open, setOpen } = useCart();
   const closeRef = useRef<HTMLButtonElement>(null);
   const lastFocus = useRef<Element | null>(null);
 
@@ -141,14 +141,19 @@ export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: La
             <b className="font-display text-[26px] font-semibold tabular-nums">{money(subtotal, lang)}</b>
           </div>
           <p className="text-xs text-blush/75">{paused ? (pausedMessage ?? t.paused) : t.cart.deliveryNote}</p>
-          <button
-            type="button"
-            disabled={!items.length || paused}
-            onClick={() => toast(t.cart.checkoutSoon)}
-            className="w-full rounded-full bg-blush px-5 py-3 font-display text-lg font-semibold text-plum transition-colors hover:bg-cream disabled:opacity-50"
-          >
-            {t.cart.checkout}
-          </button>
+          {items.length && !paused ? (
+            <Link
+              href={href(lang, "/checkout")}
+              onClick={() => setOpen(false)}
+              className="w-full rounded-full bg-blush px-5 py-3 text-center font-display text-lg font-semibold text-plum transition-colors hover:bg-cream"
+            >
+              {t.cart.checkout}
+            </Link>
+          ) : (
+            <button type="button" disabled className="w-full rounded-full bg-blush px-5 py-3 font-display text-lg font-semibold text-plum opacity-50">
+              {t.cart.checkout}
+            </button>
+          )}
         </div>
       </aside>
     </>

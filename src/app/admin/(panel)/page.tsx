@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/guard";
 import { PageHeader, Section, StatusChip, Swatch } from "@/components/admin/ui";
-import { stockLabel } from "@/lib/format";
+import { egp, stockLabel } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Overview" };
 
@@ -13,7 +13,7 @@ function greeting() {
 
 export default async function OverviewPage() {
   const { supabase } = await requireAdmin();
-  const [{ data: products }, { data: prices }, { data: templateItems }, { data: settings }] = await Promise.all([
+  const [{ data: products }, { data: prices }, { data: templateItems }, { data: settings }, { data: openOrders }, { data: abandoned }] = await Promise.all([
     supabase
       .from("products")
       .select("id, name_en, status, color, stock_unit, stock_grams, low_stock_threshold, ingredients_en, coatings(color), product_images(id), variants(stock_qty, is_active)")
@@ -22,7 +22,23 @@ export default async function OverviewPage() {
     supabase.from("variant_prices").select("product_id, price, is_active"),
     supabase.from("price_template_items").select("price"),
     supabase.from("settings").select("store_lat, fee_per_km, instapay_handle").eq("id", 1).maybeSingle(),
+    supabase
+      .from("orders")
+      .select("id, number, customer_name, total, status, payment_method, payment_status, created_at")
+      .in("status", ["new", "confirmed", "preparing", "out_for_delivery"])
+      .order("created_at", { ascending: false })
+      .limit(50),
+    supabase
+      .from("abandoned_checkouts")
+      .select("id, name, phone, subtotal, created_at")
+      .is("recovered_order_id", null)
+      .eq("contacted", false)
+      .gte("created_at", daysAgo(3))
+      .order("created_at", { ascending: false })
+      .limit(10),
   ]);
+  const newOrders = (openOrders ?? []).filter((o) => o.status === "new");
+  const awaitingTransfer = (openOrders ?? []).filter((o) => o.payment_method === "instapay" && o.payment_status === "unpaid");
 
   const list = (products ?? []).map((p) => {
     const stock =
@@ -76,8 +92,8 @@ export default async function OverviewPage() {
     {
       done: Boolean(settings?.store_lat && settings?.fee_per_km && settings?.instapay_handle),
       title: "Delivery and payment settings",
-      detail: "Store location, price per km and InstaPay details. Comes with Settings in phase 5.",
-      href: null,
+      detail: "Store location, price per km and InstaPay details.",
+      href: "/admin/settings",
     },
   ];
   const doneCount = launch.filter((l) => l.done).length;
@@ -142,8 +158,47 @@ export default async function OverviewPage() {
         </Section>
 
         <div className="grid gap-5">
-          <Section title="Orders" description="New orders, InstaPay transfers to confirm and left checkouts will show up here.">
-            <p className="rounded-2xl bg-page px-4 py-3 text-sm text-muted">Orders arrive with the checkout in phase 4.</p>
+          <Section
+            title="Needs you now"
+            actions={
+              <Link href="/admin/orders" className="btn btn-ghost btn-sm">
+                Orders
+              </Link>
+            }
+          >
+            {!newOrders.length && !awaitingTransfer.length && !(abandoned ?? []).length ? (
+              <p className="text-sm text-muted">Nothing waiting. New orders show up here first.</p>
+            ) : (
+              <div className="grid gap-4">
+                {newOrders.length > 0 && (
+                  <NeedList title={`${newOrders.length} new order${newOrders.length === 1 ? "" : "s"} to confirm`}>
+                    {newOrders.slice(0, 5).map((o) => (
+                      <NeedRow key={o.id} href={`/admin/orders/${o.id}`} left={`#${o.number} · ${o.customer_name}`} right={egp(o.total)} />
+                    ))}
+                  </NeedList>
+                )}
+                {awaitingTransfer.length > 0 && (
+                  <NeedList title="InstaPay transfers to check">
+                    {awaitingTransfer.slice(0, 5).map((o) => (
+                      <NeedRow key={o.id} href={`/admin/orders/${o.id}`} left={`#${o.number} · ${o.customer_name}`} right={egp(o.total)} />
+                    ))}
+                  </NeedList>
+                )}
+                {(abandoned ?? []).length > 0 && (
+                  <NeedList title="Started checkout but didn't order">
+                    {(abandoned ?? []).slice(0, 5).map((a) => (
+                      <NeedRow
+                        key={a.id}
+                        href={`https://wa.me/${a.phone.replace(/\D/g, "")}`}
+                        external
+                        left={`${a.name || "Someone"} · ${a.phone}`}
+                        right={a.subtotal ? egp(a.subtotal) : ""}
+                      />
+                    ))}
+                  </NeedList>
+                )}
+              </div>
+            )}
           </Section>
 
           <Section
@@ -175,4 +230,39 @@ export default async function OverviewPage() {
       </div>
     </>
   );
+}
+
+function NeedList({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="grid gap-1.5">
+      <p className="text-sm font-semibold text-plum">{title}</p>
+      <ul className="grid gap-1">{children}</ul>
+    </div>
+  );
+}
+
+function NeedRow({ href, left, right, external }: { href: string; left: string; right: string; external?: boolean }) {
+  const cls = "flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm hover:bg-blush/60";
+  return (
+    <li>
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+          <span className="truncate">{left}</span>
+          <span className="num shrink-0 font-semibold">{right}</span>
+        </a>
+      ) : (
+        <Link href={href} className={cls}>
+          <span className="truncate">{left}</span>
+          <span className="num shrink-0 font-semibold">{right}</span>
+        </Link>
+      )}
+    </li>
+  );
+}
+
+/** ISO timestamp for n days ago (server-side, per request). */
+function daysAgo(n: number) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString();
 }

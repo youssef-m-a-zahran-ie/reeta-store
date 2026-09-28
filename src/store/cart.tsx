@@ -75,6 +75,8 @@ type CartCtx = {
   add: (item: Omit<CartItem, "qty">, qty?: number, from?: Element | null) => void;
   setQty: (key: string, qty: number) => void;
   clear: () => void;
+  /** Updates prices from the server so the cart always shows what the customer will pay. */
+  syncPrices: (prices: Record<string, number>) => void;
   open: boolean;
   setOpen: (v: boolean) => void;
   cartButton: React.RefObject<HTMLButtonElement | null>;
@@ -184,11 +186,17 @@ export function CartProvider({
 
   const clear = useCallback(() => save([]), []);
 
+  const syncPrices = useCallback((prices: Record<string, number>) => {
+    const cur = snapshot();
+    if (!cur.some((i) => prices[i.key] !== undefined && prices[i.key] !== i.price)) return;
+    save(cur.map((i) => (prices[i.key] !== undefined ? { ...i, price: prices[i.key] } : i)));
+  }, []);
+
   const value = useMemo<CartCtx>(() => {
     const count = list.reduce((s, i) => s + i.qty, 0);
     const subtotal = list.reduce((s, i) => s + i.qty * i.price, 0);
-    return { items: list, count, subtotal, add, setQty, clear, open, setOpen, cartButton, toast, toastMsg, bump };
-  }, [list, add, setQty, clear, open, toast, toastMsg, bump]);
+    return { items: list, count, subtotal, add, setQty, clear, syncPrices, open, setOpen, cartButton, toast, toastMsg, bump };
+  }, [list, add, setQty, clear, syncPrices, open, toast, toastMsg, bump]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

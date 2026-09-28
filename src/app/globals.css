@@ -57,10 +57,13 @@ body [dir="rtl"] {
   font-family: "Readex Pro Variable", "Figtree Variable", system-ui, sans-serif;
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  color: var(--plum);
-  text-wrap: balance;
+/* In the base layer so color utilities (text-blush on dark sections) can override it. */
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--plum);
+    text-wrap: balance;
+  }
 }
 
 :focus-visible {
@@ -170,3 +173,42 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 @keyframes splash { to { transform: translate(-50%, -50%) scale(22); opacity: 0; } }
+
+/* Checkout map pin: the Reeta seal */
+.reeta-pin {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--plum);
+  color: var(--blush);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 18px -6px rgb(58 36 32 / 0.55);
+}
+.reeta-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 14px;
+  height: 14px;
+  background: var(--plum);
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 2px;
+  z-index: -1;
+}
+.reeta-pin .mark { width: 30px; height: 30px; }
+.leaflet-container { font-family: var(--font-sans); }
+
+/* Order confirmation: the seal presses down */
+@media (prefers-reduced-motion: no-preference) {
+  .order-seal > span { animation: seal-press 0.9s cubic-bezier(.22,1,.36,1) 0.2s both; }
+}
+@keyframes seal-press {
+  0% { transform: translateY(-60px) scale(1.4) rotate(-25deg); opacity: 0; }
+  60% { transform: translateY(0) scale(0.92) rotate(4deg); opacity: 1; }
+  100% { transform: none; }
+}
+.reeta-pin-test { background: var(--toffee); }
+.reeta-pin-test::after { background: var(--toffee); }

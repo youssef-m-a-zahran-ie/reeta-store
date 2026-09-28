@@ -194,3 +194,35 @@ export function fromPrice(p: StoreProduct) {
 export function inStock(p: StoreProduct) {
   return p.variants.some((v) => v.available);
 }
+
+export type StoreOrder = {
+  id: string;
+  number: number;
+  created_at: string;
+  status: string;
+  payment_method: "cod" | "instapay";
+  payment_status: "paid" | "unpaid";
+  customer_name: string;
+  phone: string;
+  address_line: string;
+  building: string | null;
+  floor: string | null;
+  apartment: string | null;
+  landmark: string | null;
+  subtotal: number;
+  discount_total: number;
+  shipping_fee: number;
+  total: number;
+  discount_code: string | null;
+  items: { name_en: string; name_ar: string; label: string | null; qty: number; line_total: number }[];
+  instapay_handle: string | null;
+  instapay_name: string | null;
+  whatsapp_number: string | null;
+};
+
+export async function getOrder(id: string): Promise<StoreOrder | null> {
+  await connection();
+  if (!/^[0-9a-f-]{36}$/.test(id)) return null;
+  const { data } = await db().rpc("store_order", { p_id: id });
+  return (data as unknown as StoreOrder) ?? null;
+}

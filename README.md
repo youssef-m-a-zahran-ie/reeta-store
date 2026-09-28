@@ -13,8 +13,8 @@ The Reeta e-commerce site and its admin, on one domain.
 | 1 · Prototype (Orbit hero, pouch cards, cart ring) | ✅ separate artifact |
 | 2 · Database, admin sign-in, Catalog, Inventory | ✅ |
 | 3 · Storefront pages (EN + AR), cart | ✅ |
-| 4 · Checkout, delivery fee, orders, emails | next |
-| 5 · Rest of the admin (orders, customers, bundles, discounts, content, settings) | |
+| 4 · Checkout, delivery fee, orders, emails, admin orders and settings | ✅ |
+| 5 · Rest of the admin (customers, bundles, discounts, content, inbox, manual orders) | next |
 | 6 · Dashboard, reports, ad spend, pixels | |
 | 7 · QA and launch | |
 
@@ -36,6 +36,12 @@ Migrations live in `supabase/migrations` and are already applied to the `reeta` 
 - Stock only changes through `stock_movements`; a trigger updates the balance.
 - Orders keep a snapshot of name, price and cost at the time of sale.
 - After changing the schema, regenerate `src/lib/supabase/database.types.ts`.
+
+## Orders
+
+- Checkout sends the cart to `place_order` in the database, which re-prices everything, checks stock, applies the discount, computes delivery and takes the stock off in one transaction. The browser can't change a price.
+- Delivery fee = straight-line km from the store × road factor × price per km, rounded up, never below the minimum. The store location never leaves the database. Settings → Delivery has a calculator.
+- New-order emails go out from the database through Resend. The API key is in Supabase Vault as `resend_api_key`.
 
 ## Admin access
 
