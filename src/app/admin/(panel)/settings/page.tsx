@@ -60,6 +60,11 @@ export default async function SettingsPage() {
               <input className="input" name="instapay_name" defaultValue={s.instapay_name ?? ""} />
               <span className="hint">Helps customers check they&apos;re sending to the right person.</span>
             </label>
+            <label className="field sm:col-span-2">
+              <span className="label">InstaPay payment link</span>
+              <input className="input" name="instapay_link" defaultValue={s.instapay_link ?? ""} dir="ltr" placeholder="https://ipn.eg/S/…" />
+              <span className="hint">Customers who pick InstaPay get a “Pay now” button that opens this link.</span>
+            </label>
             <div className="sm:col-span-2">
               <SubmitButton className="btn btn-primary btn-sm">Save</SubmitButton>
             </div>

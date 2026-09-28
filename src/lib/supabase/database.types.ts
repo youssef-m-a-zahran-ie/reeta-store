@@ -1235,6 +1235,7 @@ export type Database = {
           id: number
           instagram_url: string | null
           instapay_handle: string | null
+          instapay_link: string | null
           instapay_name: string | null
           meta_pixel_id: string | null
           min_shipping_fee: number
@@ -1267,6 +1268,7 @@ export type Database = {
           id?: number
           instagram_url?: string | null
           instapay_handle?: string | null
+          instapay_link?: string | null
           instapay_name?: string | null
           meta_pixel_id?: string | null
           min_shipping_fee?: number
@@ -1299,6 +1301,7 @@ export type Database = {
           id?: number
           instagram_url?: string | null
           instapay_handle?: string | null
+          instapay_link?: string | null
           instapay_name?: string | null
           meta_pixel_id?: string | null
           min_shipping_fee?: number

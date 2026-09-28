@@ -45,7 +45,12 @@ export async function saveDelivery(_prev: ActionState, fd: FormData): Promise<Ac
 }
 
 export async function savePayments(_prev: ActionState, fd: FormData): Promise<ActionState> {
-  return save({ instapay_handle: optStr(fd, "instapay_handle"), instapay_name: optStr(fd, "instapay_name") }, "Payment details saved.");
+  const link = optStr(fd, "instapay_link");
+  if (link && !/^https:\/\/\S+$/.test(link)) return fail("The InstaPay link should start with https://", { instapay_link: "Starts with https://" });
+  return save(
+    { instapay_handle: optStr(fd, "instapay_handle"), instapay_name: optStr(fd, "instapay_name"), instapay_link: link },
+    "Payment details saved.",
+  );
 }
 
 export async function saveStore(_prev: ActionState, fd: FormData): Promise<ActionState> {

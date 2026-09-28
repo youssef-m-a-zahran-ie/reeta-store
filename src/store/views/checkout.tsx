@@ -59,6 +59,19 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
           <section className="grid gap-3 rounded-[28px] bg-plum p-6 text-blush">
             <h2 className="text-2xl font-semibold text-blush">{t.order.instapayTitle}</h2>
             <p className="text-blush/85">{t.order.instapayText(money(o.total, lang))}</p>
+            {o.instapay_link && (
+              <div className="grid gap-1.5">
+                <a
+                  href={o.instapay_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-blush px-6 py-3.5 text-center font-display text-lg font-semibold text-plum transition-colors hover:bg-cream"
+                >
+                  {t.order.payNow}
+                </a>
+                <p className="text-center text-sm text-blush/75">{t.order.payNowHint(money(o.total, lang))}</p>
+              </div>
+            )}
             <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-blush px-4 py-3 text-plum">
               <span className="flex-1 font-display text-2xl font-semibold tracking-wide select-all" dir="ltr">
                 {o.instapay_handle}
