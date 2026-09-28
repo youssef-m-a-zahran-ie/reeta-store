@@ -214,7 +214,7 @@ export type StoreOrder = {
   shipping_fee: number;
   total: number;
   discount_code: string | null;
-  items: { name_en: string; name_ar: string; label: string | null; qty: number; line_total: number }[];
+  items: { id: string | null; name_en: string; name_ar: string; label: string | null; qty: number; unit_price: number; line_total: number }[];
   instapay_handle: string | null;
   instapay_name: string | null;
   instapay_link: string | null;

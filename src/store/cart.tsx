@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "./analytics";
 import { createContext, useCallback, useContext, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
 export type CartItem = {
@@ -172,6 +173,7 @@ export function CartProvider({
         : [...cur, { ...item, qty }];
       save(next);
       setBump((b) => b + 1);
+      track("add_to_cart", { items: [{ id: item.id, name: item.name_en, price: item.price, qty, variant: item.label_en }] });
       const after = next.reduce((s, i) => s + i.qty * i.price, 0);
       if (freeOver !== null && before < freeOver && after >= freeOver) setTimeout(() => toast(freeMessage), 1200);
     };

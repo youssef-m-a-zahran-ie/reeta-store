@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { track } from "../analytics";
 import { useCart } from "../cart";
 import { dict, href, loc, money, number, type Lang } from "../i18n";
 import { readUtm } from "../utm";
@@ -49,6 +50,18 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
     [items],
   );
   const refsKey = JSON.stringify(refs);
+
+  // Tell the pixels a checkout started, once per visit to this page.
+  const checkoutTracked = useRef(false);
+  useEffect(() => {
+    if (checkoutTracked.current || !items.length) return;
+    checkoutTracked.current = true;
+    const t = setTimeout(
+      () => track("begin_checkout", { items: items.map((i) => ({ id: i.id, name: i.name_en, price: i.price, qty: i.qty, variant: i.label_en })) }),
+      800,
+    );
+    return () => clearTimeout(t);
+  }, [items]);
 
   // Live quote: prices, stock, discount, delivery.
   useEffect(() => {

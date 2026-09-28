@@ -7,6 +7,8 @@ import { CartDrawer } from "./cart-drawer";
 import { Header } from "./header";
 import { Toast } from "./toast";
 import { UtmCapture } from "./utm-capture";
+import { Pixels } from "./pixels";
+import { PixelPageViews } from "./track";
 import { WhatsAppFloat, waLink } from "./whatsapp";
 
 export async function StoreShell({ lang, children }: { lang: Lang; children: ReactNode }) {
@@ -35,6 +37,8 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
           {pausedMessage ?? announcement}
         </div>
       )}
+      <Pixels meta={settings.meta_pixel_id} tiktok={settings.tiktok_pixel_id} ga4={settings.ga4_id} />
+      <PixelPageViews />
       <Header lang={lang} freeOver={settings.free_shipping_over} />
       <div id="content">{children}</div>
 

@@ -9,6 +9,7 @@ import { BundleCard } from "../components/bundle-card";
 import { waLink } from "../components/whatsapp";
 import { ContactForm } from "../components/contact-form";
 import { RichText } from "../components/rich-text";
+import { TrackView } from "../components/track";
 import { EmptyOrbit, OrbitDecor } from "../components/orbit-decor";
 import { SectionHead } from "./home";
 
@@ -93,6 +94,15 @@ export async function ProductView({ lang, slug }: { lang: Lang; slug: string }) 
             </Link>
           </nav>
           <ProductBuy product={product} lang={lang} />
+          <TrackView
+            item={{
+              id: product.variants[0]?.id ?? product.id,
+              name: product.name_en,
+              price: product.variants.find((v) => v.price !== null)?.price ?? 0,
+              qty: 1,
+              variant: product.variants[0]?.label_en ?? null,
+            }}
+          />
         </div>
       </div>
 

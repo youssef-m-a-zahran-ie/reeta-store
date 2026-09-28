@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin/guard";
 import { PageHeader, Section } from "@/components/admin/ui";
 import { ActionForm, SubmitButton, Toggle } from "@/components/admin/form-bits";
 import { DeliverySettings } from "./delivery-map";
+import { TrackingForm } from "./tracking-form";
 import { saveContact, saveNotifications, savePayments, saveStore } from "./actions";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -23,6 +24,7 @@ export default async function SettingsPage() {
           ["#store", "Store status"],
           ["#contact", "Contact"],
           ["#notifications", "Order emails"],
+          ["#tracking", "Tracking"],
         ].map(([h, l]) => (
           <a key={h} href={h} className="rounded-full px-4 py-1.5 font-semibold text-plum hover:bg-blush">
             {l}
@@ -148,6 +150,11 @@ export default async function SettingsPage() {
               <SubmitButton className="btn btn-primary btn-sm">Save</SubmitButton>
             </div>
           </ActionForm>
+        </Section>
+
+        <Section title="Tracking pixels" description="Connect Meta, TikTok and Google Analytics so ads can learn who buys.">
+          <div id="tracking" className="scroll-mt-24" />
+          <TrackingForm values={{ meta_pixel_id: s.meta_pixel_id, tiktok_pixel_id: s.tiktok_pixel_id, ga4_id: s.ga4_id }} />
         </Section>
       </div>
     </>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackPurchase } from "../components/track";
 import { getOrder, getSettings } from "../data";
 import { dict, href, loc, money, type Lang } from "../i18n";
 import { CheckoutForm } from "../components/checkout-form";
@@ -43,6 +44,12 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
   return (
     <main className="px-4 pt-10 pb-10 md:px-6 md:pt-16">
       <div className="mx-auto grid max-w-2xl gap-6">
+        <TrackPurchase
+          orderId={o.id}
+          orderNumber={o.number}
+          value={o.total}
+          items={o.items.map((i) => ({ id: i.id ?? i.name_en, name: i.name_en, price: i.unit_price, qty: i.qty, variant: i.label }))}
+        />
         <div className="dot-grid grid justify-items-center gap-4 rounded-[32px] bg-blush px-6 py-10 text-center">
           {/* The seal closes the pouch. */}
           <div className="order-seal relative size-28" aria-hidden="true">

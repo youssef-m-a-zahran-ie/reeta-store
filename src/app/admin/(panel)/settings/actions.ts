@@ -94,3 +94,15 @@ export async function saveNotifications(_prev: ActionState, fd: FormData): Promi
   if (bad) return fail(`“${bad}” isn't a valid email.`);
   return save({ notify_emails: emails }, "Saved.");
 }
+
+export async function saveTracking(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  const meta = optStr(fd, "meta_pixel_id")?.replace(/\s/g, "") ?? null;
+  const tiktok = optStr(fd, "tiktok_pixel_id")?.replace(/\s/g, "").toUpperCase() ?? null;
+  const ga4 = optStr(fd, "ga4_id")?.replace(/\s/g, "").toUpperCase() ?? null;
+  const errors: Record<string, string> = {};
+  if (meta && !/^\d{8,20}$/.test(meta)) errors.meta_pixel_id = "A Meta Pixel ID is only numbers, like 1234567890123456.";
+  if (tiktok && !/^[A-Z0-9]{10,30}$/.test(tiktok)) errors.tiktok_pixel_id = "A TikTok Pixel ID is letters and numbers, like CABC123DEF456GHI.";
+  if (ga4 && !/^G-[A-Z0-9]{4,15}$/.test(ga4)) errors.ga4_id = "A Google Analytics ID starts with G-, like G-AB12CD34EF.";
+  if (Object.keys(errors).length) return fail("Check the highlighted fields.", errors);
+  return save({ meta_pixel_id: meta, tiktok_pixel_id: tiktok, ga4_id: ga4 }, "Saved. Tracking starts on the next page load.");
+}

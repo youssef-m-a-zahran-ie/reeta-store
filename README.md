@@ -15,8 +15,8 @@ The Reeta e-commerce site and its admin, on one domain.
 | 3 · Storefront pages (EN + AR), cart | ✅ |
 | 4 · Checkout, delivery fee, orders, emails, admin orders and settings | ✅ |
 | 5 · Rest of the admin (customers, bundles, discounts, content, inbox, manual orders, packing slips) | ✅ |
-| 6 · Dashboard, reports, ad spend, pixels | next |
-| 7 · QA and launch | |
+| 6 · Dashboard, reports, ad spend, pixels | ✅ |
+| 7 · QA and launch | next |
 
 ## Run locally
 
@@ -55,3 +55,10 @@ To add another admin: `insert into public.admins (email) values ('name@example.c
 1. Cloudflare dashboard → **Workers & Pages → Create → Import a repository** → pick `reeta-store`.
 2. Build command: `npx opennextjs-cloudflare build` · Deploy command: `npx opennextjs-cloudflare deploy`.
 3. In Supabase → **Authentication → URL Configuration**, set the Site URL to the live address and add `https://<your-domain>/**` to the redirect URLs, so email links open the site.
+
+## Ads and tracking
+
+- Ad links carry `?utm_source=meta|tiktok|google&utm_medium=paid&utm_campaign=<name>`. Instagram and Facebook links can use `instagram` or `facebook` too; they count as Meta.
+- Ad spend is entered by hand in Admin → Ad spend (one row per platform and period). Reports split a period's spend across its days and compare it with sales from that platform's links.
+- Pixel IDs (Meta, TikTok, GA4) live in Admin → Settings → Tracking. The store sends PageView, ViewContent, AddToCart, InitiateCheckout and Purchase (once per order, event id = order id).
+- All report numbers come from `admin_report(from, to)` in the database, in Cairo time.

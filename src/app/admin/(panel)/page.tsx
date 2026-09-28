@@ -3,6 +3,10 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/guard";
 import { PageHeader, Section, StatusChip, Swatch } from "@/components/admin/ui";
 import { egp, stockLabel } from "@/lib/format";
+import { change, resolvePeriod } from "@/lib/admin/period";
+import { loadReport } from "@/lib/admin/report";
+import { DailySalesChart } from "@/components/admin/charts";
+import { BarList, KpiTile, PeriodPicker } from "@/components/admin/stats";
 
 export const metadata: Metadata = { title: "Overview" };
 
@@ -11,8 +15,10 @@ function greeting() {
   return hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 }
 
-export default async function OverviewPage() {
+export default async function OverviewPage({ searchParams }: PageProps<"/admin">) {
+  const period = resolvePeriod(await searchParams, "7d");
   const { supabase } = await requireAdmin();
+  const report = await loadReport(supabase, period.from, period.to);
   const [{ data: products }, { data: prices }, { data: templateItems }, { data: settings }, { data: openOrders }, { data: abandoned }] = await Promise.all([
     supabase
       .from("products")
@@ -100,7 +106,59 @@ export default async function OverviewPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Overview" title={greeting()} description="Here's what needs you in the store." />
+      <PageHeader
+        eyebrow="Overview"
+        title={greeting()}
+        description="How the store is doing, and what needs you."
+        actions={
+          <Link href={`/admin/reports?range=${period.key}${period.key === "custom" ? `&from=${period.from}&to=${period.to}` : ""}`} className="btn btn-secondary">
+            Full reports
+          </Link>
+        }
+      />
+
+      <PeriodPicker path="/admin" current={period.key} from={period.from} to={period.to} />
+      {report && (
+        <>
+          <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <KpiTile label="Sales" value={egp(report.kpi.sales)} delta={change(report.kpi.sales, report.prev.sales)} compare={period.compare} />
+            <KpiTile label="Orders" value={String(report.kpi.orders)} delta={change(report.kpi.orders, report.prev.orders)} compare={period.compare} />
+            <KpiTile label="Average order" value={egp(report.kpi.aov)} delta={change(report.kpi.aov, report.prev.aov)} compare={period.compare} />
+            <KpiTile
+              label="Profit on products"
+              value={egp(report.kpi.profit)}
+              delta={change(report.kpi.profit, report.prev.profit)}
+              compare={period.compare}
+              hint={report.kpi.profit_complete ? "Sales minus product cost and discounts" : "Some items have no cost set, so this is too high"}
+            />
+          </div>
+          <div className="mb-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
+            <Section title="Sales per day" description={`${period.label} · cancelled and refused orders left out`}>
+              {report.kpi.all_orders === 0 ? (
+                <p className="text-sm text-muted">No orders in this period yet.</p>
+              ) : (
+                <DailySalesChart data={report.daily} />
+              )}
+            </Section>
+            <Section title="Best sellers" description={period.label}>
+              <BarList
+                empty="Nothing sold in this period yet."
+                rows={report.products.slice(0, 6).map((p) => ({
+                  label: (
+                    <>
+                      {p.name}
+                      {p.label && <span className="text-muted"> · {p.label}</span>}
+                    </>
+                  ),
+                  value: p.sales,
+                  display: egp(p.sales),
+                  sub: `×${p.qty}`,
+                }))}
+              />
+            </Section>
+          </div>
+        </>
+      )}
 
       <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
         {[

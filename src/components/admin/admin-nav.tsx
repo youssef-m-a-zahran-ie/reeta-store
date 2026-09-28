@@ -29,8 +29,8 @@ const GROUPS: { title: string; items: Item[] }[] = [
   {
     title: "Grow",
     items: [
-      { href: "#", label: "Reports", soon: "Phase 6" },
-      { href: "#", label: "Ad spend", soon: "Phase 6" },
+      { href: "/admin/reports", label: "Reports" },
+      { href: "/admin/ad-spend", label: "Ad spend" },
     ],
   },
   {

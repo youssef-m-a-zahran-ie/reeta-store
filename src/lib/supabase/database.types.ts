@@ -1529,6 +1529,14 @@ export type Database = {
       _normalize_phone: { Args: { p: string }; Returns: string }
       _notify_new_message: { Args: { p_id: string }; Returns: undefined }
       _notify_new_order: { Args: { p_order: string }; Returns: undefined }
+      _source_platform: { Args: { p_source: string }; Returns: string }
+      _spend_between: {
+        Args: { p_from: string; p_to: string }
+        Returns: {
+          amount: number
+          platform: string
+        }[]
+      }
       _store_images: { Args: { p_product: string }; Returns: Json }
       _store_product_card: {
         Args: { p: Database["public"]["Tables"]["products"]["Row"] }
@@ -1547,6 +1555,7 @@ export type Database = {
       }
       admin_place_order: { Args: { p: Json }; Returns: Json }
       admin_quote: { Args: { p: Json }; Returns: Json }
+      admin_report: { Args: { p_from: string; p_to: string }; Returns: Json }
       admin_set_order_status: {
         Args: {
           p_note?: string
