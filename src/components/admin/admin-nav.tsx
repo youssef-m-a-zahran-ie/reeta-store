@@ -22,8 +22,8 @@ const GROUPS: { title: string; items: Item[] }[] = [
     items: [
       { href: "/admin/catalog/products", label: "Catalog", match: "/admin/catalog" },
       { href: "/admin/inventory", label: "Inventory" },
-      { href: "#", label: "Bundles", soon: "Phase 5" },
-      { href: "#", label: "Discounts", soon: "Phase 5" },
+      { href: "/admin/bundles", label: "Bundles" },
+      { href: "/admin/discounts", label: "Discounts" },
     ],
   },
   {

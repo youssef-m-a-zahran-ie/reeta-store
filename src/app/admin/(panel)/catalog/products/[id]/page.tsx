@@ -9,8 +9,8 @@ import { stockLabel } from "@/lib/format";
 import { loadLookups } from "../lookups";
 import { ProductForm } from "../product-form";
 import { VariantsForm, type VariantRow } from "../variants-form";
-import { ImageManager } from "../image-manager";
-import { deleteProduct, duplicateProduct } from "../actions";
+import { ImageManager } from "@/components/admin/image-manager";
+import { addProductImages, deleteProduct, deleteProductImage, duplicateProduct, updateProductImages } from "../actions";
 
 export const metadata: Metadata = { title: "Edit product" };
 
@@ -113,7 +113,13 @@ export default async function EditProductPage({ params, searchParams }: PageProp
           </Section>
 
           <Section title="Photos" description="The first photo is the main one on the store. Square photos look best.">
-            <ImageManager productId={product.id} images={images ?? []} />
+            <ImageManager
+              folder={`products/${product.id}`}
+              images={images ?? []}
+              onAdd={addProductImages.bind(null, product.id)}
+              onUpdate={updateProductImages.bind(null, product.id)}
+              onDelete={deleteProductImage.bind(null, product.id)}
+            />
           </Section>
 
           <ProductForm product={product} lookups={lookups} />

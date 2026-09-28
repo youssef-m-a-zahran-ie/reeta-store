@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { MEDIA_BUCKET, mediaUrl } from "@/lib/supabase/env";
 import type { ActionState } from "@/lib/admin/state";
 import { Notice } from "@/components/admin/form-bits";
-import { addProductImages, deleteProductImage, updateProductImages } from "./actions";
 
 type Img = { id: string; path: string; alt_en: string | null; alt_ar: string | null };
 
@@ -31,7 +30,23 @@ async function toWebp(file: File): Promise<Blob> {
   return blob;
 }
 
-export function ImageManager({ productId, images }: { productId: string; images: Img[] }) {
+/**
+ * Upload, order, describe and remove photos. Works for any record: pass the storage folder
+ * and three server actions already bound to the record.
+ */
+export function ImageManager({
+  folder,
+  images,
+  onAdd,
+  onUpdate,
+  onDelete,
+}: {
+  folder: string;
+  images: Img[];
+  onAdd: (paths: string[]) => Promise<ActionState>;
+  onUpdate: (images: { id: string; alt_en: string; alt_ar: string }[]) => Promise<ActionState>;
+  onDelete: (imageId: string) => Promise<ActionState>;
+}) {
   const router = useRouter();
   const [list, setList] = useState(images);
   const [dirty, setDirty] = useState(false);
@@ -62,7 +77,7 @@ export function ImageManager({ productId, images }: { productId: string; images:
       setBusy(`Preparing photo ${i + 1} of ${picked.length}…`);
       try {
         const blob = await toWebp(file);
-        const path = `products/${productId}/${crypto.randomUUID()}.webp`;
+        const path = `${folder}/${crypto.randomUUID()}.webp`;
         setBusy(`Uploading photo ${i + 1} of ${picked.length}…`);
         const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, blob, {
           contentType: "image/webp",
@@ -76,7 +91,7 @@ export function ImageManager({ productId, images }: { productId: string; images:
     }
     setBusy(paths.length ? "Saving…" : null);
     if (paths.length) {
-      const res = await addProductImages(productId, paths);
+      const res = await onAdd(paths);
       setState(
         failed.length && res?.ok
           ? { ok: false, message: `${res.message} These didn't upload: ${failed.join(", ")}.` }
@@ -108,8 +123,7 @@ export function ImageManager({ productId, images }: { productId: string; images:
 
   async function saveOrder() {
     setBusy("Saving…");
-    const res = await updateProductImages(
-      productId,
+    const res = await onUpdate(
       list.map((im) => ({ id: im.id, alt_en: im.alt_en ?? "", alt_ar: im.alt_ar ?? "" })),
     );
     setState(res);
@@ -122,7 +136,7 @@ export function ImageManager({ productId, images }: { productId: string; images:
 
   async function remove(id: string) {
     setBusy("Removing…");
-    const res = await deleteProductImage(productId, id);
+    const res = await onDelete(id);
     setState(res);
     setBusy(null);
     if (res?.ok) {
