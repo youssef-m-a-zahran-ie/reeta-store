@@ -249,7 +249,7 @@ export async function ContactView({ lang }: { lang: Lang }) {
               >
                 <span className="size-11 rounded-full shadow-[inset_-4px_-5px_0_rgb(0_0_0/.13)]" style={{ background: c.color }} aria-hidden="true" />
                 <span className="font-display text-2xl font-semibold text-plum">{c.label}</span>
-                <span className="truncate text-cocoa/75" dir="ltr">
+                <span className="max-w-full justify-self-start truncate text-cocoa/75" dir="ltr">
                   {c.value}
                 </span>
               </a>
@@ -293,7 +293,7 @@ export async function PolicyView({ lang, slug }: { lang: Lang; slug: string }) {
   const body = loc(page, "body", lang);
   return (
     <main>
-      <PageTop eyebrow="Reeta" title={loc(page, "title", lang)} />
+      <PageTop eyebrow={lang === "ar" ? "ريتا" : "Reeta"} title={loc(page, "title", lang)} />
       <article className="mx-auto max-w-3xl px-4 pt-10 text-lg leading-relaxed text-cocoa/90 md:px-6">
         <RichText text={body} />
       </article>

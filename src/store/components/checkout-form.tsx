@@ -149,6 +149,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
     else if (res.code === "invalid_name") setErrors({ name: c.errors.name });
     else if (res.code === "invalid_address") setErrors({ address: c.errors.address });
     else if (res.code === "too_many_orders") setFormError(c.errors.too_many_orders);
+    else if (res.code === "store_busy") setFormError(c.errors.store_busy);
     else if (first?.code === "out_of_stock") setFormError(c.errors.out_of_stock(lang === "ar" ? (first.name_ar ?? "") : (first.name_en ?? "")));
     else if (first?.code === "unavailable") setFormError(c.errors.unavailable);
     else if (first?.code === "invalid_code") setFormError(c.errors.invalid_code);

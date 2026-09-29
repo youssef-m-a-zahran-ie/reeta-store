@@ -72,7 +72,7 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
             <FooterCol title={t.footer.follow}>
               {socials.map((s) => (
                 <li key={s.label}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-blush/85 underline-offset-4 hover:text-blush hover:underline">
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-block py-1 text-blush/85 underline-offset-4 hover:text-blush hover:underline">
                     {s.label}
                   </a>
                 </li>
@@ -99,7 +99,7 @@ function FooterCol({ title, children }: { title: string; children: ReactNode }) 
   return (
     <div className="grid content-start gap-3">
       <p className="font-display text-[13px] font-medium tracking-[0.1em] text-blush/55 uppercase">{title}</p>
-      <ul className="grid gap-2">{children}</ul>
+      <ul className="grid">{children}</ul>
     </div>
   );
 }
@@ -107,7 +107,7 @@ function FooterCol({ title, children }: { title: string; children: ReactNode }) 
 function FooterLink({ to, children }: { to: string; children: ReactNode }) {
   return (
     <li>
-      <Link href={to} className="text-blush/85 underline-offset-4 hover:text-blush hover:underline">
+      <Link href={to} className="inline-block py-1 text-blush/85 underline-offset-4 hover:text-blush hover:underline">
         {children}
       </Link>
     </li>
