@@ -111,7 +111,7 @@ export function ManualOrderForm({
       <div className="grid min-w-0 gap-5">
         <fieldset className="card grid gap-4 p-5 md:p-6">
           <legend className="sr-only">Where it came from</legend>
-          <h2 className="text-xl font-semibold">Where it came from</h2>
+          <h2 className="text-[22px] font-semibold">Where it came from</h2>
           <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Source">
             {SOURCES.map(([v, l]) => (
               <label key={v} className="cursor-pointer rounded-full border border-line px-4 py-1.5 text-sm font-semibold text-plum has-[:checked]:border-plum has-[:checked]:bg-plum has-[:checked]:text-blush">
@@ -124,7 +124,7 @@ export function ManualOrderForm({
 
         <fieldset className="card grid gap-4 p-5 md:p-6">
           <legend className="sr-only">Items</legend>
-          <h2 className="text-xl font-semibold">Items</h2>
+          <h2 className="text-[22px] font-semibold">Items</h2>
           <div className="grid gap-2">
             {rows.map((r, i) => (
               <div key={i} className="flex flex-wrap items-center gap-2">
@@ -179,7 +179,7 @@ export function ManualOrderForm({
 
         <fieldset className="card grid gap-4 p-5 md:p-6">
           <legend className="sr-only">Customer</legend>
-          <h2 className="text-xl font-semibold">Customer</h2>
+          <h2 className="text-[22px] font-semibold">Customer</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="field">
               <span className="label">Phone</span>
@@ -250,7 +250,7 @@ export function ManualOrderForm({
 
         <fieldset className="card grid gap-4 p-5 md:p-6">
           <legend className="sr-only">Payment and notes</legend>
-          <h2 className="text-xl font-semibold">Payment and notes</h2>
+          <h2 className="text-[22px] font-semibold">Payment and notes</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="field">
               <span className="label">Pays with</span>
@@ -284,7 +284,7 @@ export function ManualOrderForm({
       </div>
 
       <aside className="card grid gap-4 p-5 lg:sticky lg:top-8">
-        <h2 className="text-xl font-semibold">Summary</h2>
+        <h2 className="text-[22px] font-semibold">Summary</h2>
         {!shown ? (
           <p className="text-sm text-muted">Pick items to see the total.</p>
         ) : (
@@ -307,7 +307,7 @@ export function ManualOrderForm({
                 label={`Delivery${shown.distance_km ? ` · ${shown.distance_km} km` : ""}${shown.fee_overridden ? " · typed" : ""}`}
                 value={shown.free_shipping && !shown.fee_overridden ? "Free" : egp(shown.shipping_fee)}
               />
-              <div className="flex justify-between gap-4 border-t border-line pt-2 font-display text-lg font-semibold text-plum">
+              <div className="flex justify-between gap-4 border-t border-line pt-2 text-lg font-medium text-plum">
                 <dt>Total</dt>
                 <dd className="num">{egp(shown.total)}</dd>
               </div>

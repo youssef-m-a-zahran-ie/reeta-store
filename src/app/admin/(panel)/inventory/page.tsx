@@ -88,7 +88,7 @@ export default async function InventoryPage({ searchParams }: PageProps<"/admin/
                     {p.name_en}
                   </Link>
                   <span className="flex flex-wrap items-center gap-2 text-sm">
-                    <span className="num font-display text-lg font-semibold text-cocoa">{stockLabel(p.stock_unit, stock)}</span>
+                    <span className="num text-lg font-medium text-cocoa">{stockLabel(p.stock_unit, stock)}</span>
                     <StatusChip status={level} />
                     {p.status === "draft" && <StatusChip status="draft" />}
                   </span>
@@ -128,10 +128,10 @@ export default async function InventoryPage({ searchParams }: PageProps<"/admin/
             <table className="w-full min-w-[560px] border-collapse text-sm">
               <thead>
                 <tr className="text-start">
-                  <th className="py-2 pe-3 text-start font-display font-semibold text-plum">When</th>
-                  <th className="py-2 pe-3 text-start font-display font-semibold text-plum">Product</th>
-                  <th className="py-2 pe-3 text-start font-display font-semibold text-plum">Change</th>
-                  <th className="py-2 pe-3 text-start font-display font-semibold text-plum">Why</th>
+                  <th className="py-2 pe-3 text-start font-medium text-plum">When</th>
+                  <th className="py-2 pe-3 text-start font-medium text-plum">Product</th>
+                  <th className="py-2 pe-3 text-start font-medium text-plum">Change</th>
+                  <th className="py-2 pe-3 text-start font-medium text-plum">Why</th>
                 </tr>
               </thead>
               <tbody>

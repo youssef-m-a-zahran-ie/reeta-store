@@ -168,7 +168,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
     return (
       <div className="grid justify-items-center gap-4 rounded-[28px] border-2 border-dashed border-plum/20 px-6 py-14 text-center">
         <p className="text-lg text-plum">{c.empty}</p>
-        <Link href={href(lang, "/shop")} className="rounded-full bg-plum px-6 py-3 font-display font-semibold text-blush hover:bg-plum-hover">
+        <Link href={href(lang, "/shop")} className="rounded-full bg-plum px-6 py-3 font-medium text-blush hover:bg-plum-hover">
           {t.nav.shop}
         </Link>
       </div>
@@ -314,7 +314,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
                 className="grid cursor-pointer gap-1 rounded-2xl border-2 border-plum/15 bg-white p-4 transition-colors has-[:checked]:border-plum has-[:checked]:bg-blush has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-rose"
               >
                 <input type="radio" name="pay" value={m} checked={pay === m} onChange={() => setPay(m)} className="sr-only" />
-                <span className="font-display text-lg font-semibold text-plum">{m === "cod" ? c.cod : c.instapay}</span>
+                <span className="text-lg font-medium text-plum">{m === "cod" ? c.cod : c.instapay}</span>
                 <span className="text-sm text-cocoa/75">{m === "cod" ? c.codHint : c.instapayHint}</span>
               </label>
             ))}
@@ -349,7 +349,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
               <li key={it.key} className={`flex items-center gap-3 rounded-2xl bg-white/60 p-2.5 ${bad ? "opacity-60" : ""}`}>
                 <span className="size-8 shrink-0 rounded-full shadow-[inset_-3px_-4px_0_rgb(0_0_0/.13)]" style={{ background: it.color ?? "#5b4659" }} aria-hidden="true" />
                 <span className="min-w-0 flex-1">
-                  <b className="block truncate font-display font-semibold text-plum">
+                  <b className="block truncate font-medium text-plum">
                     {it.qty > 1 ? `${number(it.qty, lang)} × ` : ""}
                     {loc(it, "name", lang)}
                   </b>
@@ -453,8 +453,8 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
             </dd>
           </div>
           <div className="flex items-baseline justify-between gap-3 border-t border-plum/15 pt-3">
-            <dt className="font-display text-lg font-semibold text-plum">{c.total}</dt>
-            <dd className="font-display text-[28px] font-semibold text-plum tabular-nums">
+            <dt className="text-lg font-medium text-plum">{c.total}</dt>
+            <dd className="text-[28px] font-medium text-plum tabular-nums">
               {money(quote ? quote.total : items.reduce((s, i) => s + i.price * i.qty, 0), lang)}
             </dd>
           </div>
@@ -471,7 +471,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
             type="button"
             onClick={submit}
             disabled={placing || isPaused || unavailable.size > 0}
-            className="w-full rounded-full bg-plum px-6 py-4 font-display text-xl font-semibold text-blush shadow-[0_14px_28px_-12px_rgb(58_36_32/.6)] transition-colors hover:bg-plum-hover disabled:cursor-not-allowed disabled:bg-plum/40 lg:shadow-none"
+            className="w-full rounded-full bg-plum px-6 py-4 text-xl font-medium text-blush shadow-[0_14px_28px_-12px_rgb(58_36_32/.6)] transition-colors hover:bg-plum-hover disabled:cursor-not-allowed disabled:bg-plum/40 lg:shadow-none"
           >
             {placing ? c.placing : quote ? `${c.place} · ${money(quote.total, lang)}` : c.place}
           </button>

@@ -32,7 +32,7 @@ export default async function CoatingsPage() {
               <input type="hidden" name="id" value={c.id} />
               <div className="flex flex-wrap items-center gap-3">
                 <Swatch color={c.color} size={26} />
-                <h2 className="text-lg font-semibold">{c.name_en}</h2>
+                <h2 className="font-sans text-lg font-medium">{c.name_en}</h2>
                 <span className="text-sm text-muted">{counts.get(c.id) ?? 0} products</span>
               </div>
               <CoatingFields c={c} />

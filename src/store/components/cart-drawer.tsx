@@ -86,7 +86,7 @@ export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: La
               <Link
                 href={href(lang, "/shop")}
                 onClick={() => setOpen(false)}
-                className="rounded-full border-2 border-plum px-5 py-2 font-display font-semibold text-plum hover:bg-cream"
+                className="rounded-full border-2 border-plum px-5 py-2 font-medium text-plum hover:bg-cream"
               >
                 {t.cart.emptyCta}
               </Link>
@@ -105,7 +105,7 @@ export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: La
                     )}
                   </div>
                   <div className="min-w-0">
-                    <b className="block truncate font-display leading-tight font-semibold text-plum">{name}</b>
+                    <b className="block truncate leading-tight font-medium text-plum">{name}</b>
                     <small className="text-sm text-cocoa/70">
                       {[loc(it, "label", lang), money(it.price, lang)].filter(Boolean).join(" · ")}
                     </small>
@@ -138,19 +138,19 @@ export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: La
         <div className={`grid gap-3 bg-plum px-5 pt-4 pb-[calc(20px+env(safe-area-inset-bottom,0px))] text-blush ${lang === "ar" ? "rounded-se-[26px]" : "rounded-ss-[26px]"}`}>
           <div className="flex items-baseline justify-between">
             <span>{t.cart.subtotal}</span>
-            <b className="font-display text-[26px] font-semibold tabular-nums">{money(subtotal, lang)}</b>
+            <b className="text-[26px] font-medium tabular-nums">{money(subtotal, lang)}</b>
           </div>
           <p className="text-xs text-blush/75">{paused ? (pausedMessage ?? t.paused) : t.cart.deliveryNote}</p>
           {items.length && !paused ? (
             <Link
               href={href(lang, "/checkout")}
               onClick={() => setOpen(false)}
-              className="w-full rounded-full bg-blush px-5 py-3 text-center font-display text-lg font-semibold text-plum transition-colors hover:bg-cream"
+              className="w-full rounded-full bg-blush px-5 py-3 text-center text-lg font-medium text-plum transition-colors hover:bg-cream"
             >
               {t.cart.checkout}
             </Link>
           ) : (
-            <button type="button" disabled className="w-full rounded-full bg-blush px-5 py-3 font-display text-lg font-semibold text-plum opacity-50">
+            <button type="button" disabled className="w-full rounded-full bg-blush px-5 py-3 text-lg font-medium text-plum opacity-50">
               {t.cart.checkout}
             </button>
           )}

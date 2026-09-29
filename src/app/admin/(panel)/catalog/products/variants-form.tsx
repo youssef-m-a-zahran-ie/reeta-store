@@ -37,12 +37,12 @@ export function VariantsForm({
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <thead>
             <tr className="bg-page">
-              <th className="px-4 py-3 text-start font-display font-semibold text-plum">Size</th>
-              <th className="px-3 py-3 text-start font-display font-semibold text-plum">Sell it</th>
-              <th className="px-3 py-3 text-start font-display font-semibold text-plum">Price</th>
-              <th className="px-3 py-3 text-start font-display font-semibold text-plum">Cost</th>
-              <th className="px-3 py-3 text-start font-display font-semibold text-plum">Margin</th>
-              {stockUnit === "pieces" && <th className="px-3 py-3 text-start font-display font-semibold text-plum">Stock</th>}
+              <th className="px-4 py-3 text-start font-medium text-plum">Size</th>
+              <th className="px-3 py-3 text-start font-medium text-plum">Sell it</th>
+              <th className="px-3 py-3 text-start font-medium text-plum">Price</th>
+              <th className="px-3 py-3 text-start font-medium text-plum">Cost</th>
+              <th className="px-3 py-3 text-start font-medium text-plum">Margin</th>
+              {stockUnit === "pieces" && <th className="px-3 py-3 text-start font-medium text-plum">Stock</th>}
             </tr>
           </thead>
           <tbody>

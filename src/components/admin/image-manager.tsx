@@ -160,7 +160,7 @@ export function ImageManager({
         }}
         className={`grid justify-items-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${dragOver ? "border-plum bg-blush" : "border-line bg-page"}`}
       >
-        <p className="font-display text-base font-semibold text-plum">Drop photos here</p>
+        <p className="text-base font-medium text-plum">Drop photos here</p>
         <p className="text-sm text-muted">They&apos;re resized and converted to WebP before upload, so the store stays fast.</p>
         <label className="btn btn-secondary btn-sm mt-1 cursor-pointer">
           Choose photos

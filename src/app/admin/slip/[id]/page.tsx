@@ -76,12 +76,12 @@ export default async function SlipPage({ params }: PageProps<"/admin/slip/[id]">
         <header className="flex items-center justify-between gap-4 border-b-2 border-plum pb-4">
           <span className="flex items-center gap-2.5 text-plum">
             <Mark className="size-11" />
-            <span className="font-display text-2xl font-semibold tracking-[0.07em]" dir="ltr">
+            <span className="font-wordmark text-2xl font-semibold tracking-[0.07em]" dir="ltr">
               REETA
             </span>
           </span>
           <span className="grid text-end">
-            <span className="font-display text-2xl font-semibold text-plum">
+            <span className="text-2xl font-medium text-plum">
               {t.order} <span dir="ltr">#{o.number}</span>
             </span>
             <span className="text-sm text-muted">{date}</span>
@@ -89,7 +89,7 @@ export default async function SlipPage({ params }: PageProps<"/admin/slip/[id]">
         </header>
 
         <section className="grid gap-1">
-          <h2 className="text-sm font-semibold tracking-wide text-toffee uppercase">{t.to}</h2>
+          <h2 className="font-sans text-sm font-medium tracking-[0.1em] text-toffee uppercase">{t.to}</h2>
           <p className="text-lg font-semibold text-plum">
             <bdi>{o.customer_name}</bdi>
           </p>
@@ -117,7 +117,7 @@ export default async function SlipPage({ params }: PageProps<"/admin/slip/[id]">
         </section>
 
         <section className="grid gap-2">
-          <h2 className="text-sm font-semibold tracking-wide text-toffee uppercase">{t.items}</h2>
+          <h2 className="font-sans text-sm font-medium tracking-[0.1em] text-toffee uppercase">{t.items}</h2>
           <table className="w-full border-collapse text-[15px]">
             <tbody>
               {(items ?? []).map((i, k) => (
@@ -146,7 +146,7 @@ export default async function SlipPage({ params }: PageProps<"/admin/slip/[id]">
             <Row k={t.subtotal} v={n(o.subtotal)} />
             {o.discount_total > 0 && <Row k={`${t.discount}${o.discount_code ? ` (${o.discount_code})` : ""}`} v={`−${n(o.discount_total)}`} />}
             <Row k={t.delivery} v={o.shipping_fee > 0 ? n(o.shipping_fee) : t.free} />
-            <div className="flex justify-between gap-4 border-t border-plum pt-1.5 font-display text-lg font-semibold text-plum">
+            <div className="flex justify-between gap-4 border-t border-plum pt-1.5 text-lg font-medium text-plum">
               <dt>{t.total}</dt>
               <dd className="num">{n(o.total)}</dd>
             </div>
@@ -154,7 +154,7 @@ export default async function SlipPage({ params }: PageProps<"/admin/slip/[id]">
         </section>
 
         <p
-          className={`rounded-2xl px-4 py-3 text-center font-display text-lg font-semibold ${
+          className={`rounded-2xl px-4 py-3 text-center text-lg font-medium ${
             collect ? "bg-plum text-blush" : o.payment_status === "paid" ? "border-2 border-sage text-[#56633a]" : "border-2 border-honey text-cocoa"
           }`}
         >

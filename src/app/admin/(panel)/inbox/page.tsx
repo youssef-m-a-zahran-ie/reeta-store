@@ -75,7 +75,7 @@ export default async function InboxPage({ searchParams }: PageProps<"/admin/inbo
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="grid gap-0.5">
                     <span className="flex flex-wrap items-center gap-2">
-                      <span className="font-display text-lg font-semibold text-plum">{m.name}</span>
+                      <span className="text-lg font-medium text-plum">{m.name}</span>
                       {!m.is_read && <span className="chip bg-honey text-cocoa">New</span>}
                       {m.replied_at && <span className="chip bg-sage/15 text-[#56633a]">Replied</span>}
                       <span className="chip bg-cream text-cocoa">{m.lang === "ar" ? "Arabic" : "English"}</span>

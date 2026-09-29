@@ -217,7 +217,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/admin/re
               ].map(([a, b]) => (
                 <div key={a} className="rounded-2xl bg-page px-2 py-3">
                   <dt className="text-xs text-muted">{a}</dt>
-                  <dd className="font-display text-lg font-semibold text-plum">{b}</dd>
+                  <dd className="text-lg font-medium text-plum">{b}</dd>
                 </div>
               ))}
             </dl>
@@ -235,7 +235,7 @@ function Table({ head, rows, foot }: { head: string[]; rows: ReactNode[][]; foot
         <thead>
           <tr className="text-sm">
             {head.map((h, i) => (
-              <th key={h} className={`py-2 pe-3 align-bottom font-display text-sm font-semibold text-plum ${i ? "text-end" : "text-start"}`}>
+              <th key={h} className={`py-2 pe-3 align-bottom text-sm font-medium text-plum ${i ? "text-end" : "text-start"}`}>
                 {h}
               </th>
             ))}

@@ -36,7 +36,7 @@ export function BundleBox({ bundle, className = "" }: { bundle: StoreBundle; cla
       <div className="relative z-[2] grid h-[164px] w-[244px] place-items-center rounded-[24px] bg-plum bg-[radial-gradient(circle,rgb(242_208_227/.16)_1.2px,transparent_1.6px)] bg-[length:17px_17px] text-blush shadow-[0_22px_34px_-20px_rgb(58_36_32/.6)]">
         <div className="grid justify-items-center gap-1.5">
           <span className="mark mark-full size-12" />
-          <span className="font-display text-sm font-semibold tracking-[0.07em]" dir="ltr">
+          <span className="font-wordmark text-sm font-semibold tracking-[0.07em]" dir="ltr">
             REETA
           </span>
         </div>
@@ -84,7 +84,7 @@ export function BundleCard({ bundle, lang, headingLevel = "h3" }: { bundle: Stor
         </div>
         {save > 0 && <span className="rounded-full bg-rose px-3.5 py-1 text-[15px] font-semibold text-white">{t.bundles.save(money(save, lang))}</span>}
         <div className="flex flex-wrap items-baseline gap-3">
-          <span className="font-display text-[28px] leading-none font-semibold text-plum tabular-nums">{money(bundle.price, lang)}</span>
+          <span className="text-[28px] leading-none font-medium text-plum tabular-nums">{money(bundle.price, lang)}</span>
           {save > 0 && bundle.separate_price !== null && (
             <span className="text-cocoa/55 tabular-nums line-through">{money(bundle.separate_price, lang)}</span>
           )}
@@ -113,7 +113,7 @@ export function BundleCard({ bundle, lang, headingLevel = "h3" }: { bundle: Stor
             );
             toast(t.cart.added(name));
           }}
-          className="rounded-full bg-plum px-6 py-3 font-display text-[17px] font-semibold text-blush transition-colors hover:bg-plum-hover disabled:cursor-not-allowed disabled:bg-plum/30"
+          className="rounded-full bg-plum px-6 py-3 text-[17px] font-medium text-blush transition-colors hover:bg-plum-hover disabled:cursor-not-allowed disabled:bg-plum/30"
         >
           {bundle.available ? t.bundles.add : t.bundles.unavailable}
         </button>

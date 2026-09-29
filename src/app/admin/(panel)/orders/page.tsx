@@ -84,7 +84,7 @@ export default async function OrdersPage({ searchParams }: PageProps<"/admin/ord
             <thead>
               <tr className="bg-page text-sm">
                 {["Order", "Customer", "Items", "Total", "Payment", "Status", "From"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-start font-display font-semibold text-plum">
+                  <th key={h} className="px-4 py-3 text-start font-medium text-plum">
                     {h}
                   </th>
                 ))}
@@ -98,7 +98,7 @@ export default async function OrdersPage({ searchParams }: PageProps<"/admin/ord
                   <tr key={o.id} className={`border-t border-line hover:bg-page/60 ${o.status === "new" ? "bg-honey/[.07]" : ""}`}>
                     <td className="px-4 py-3">
                       <Link href={`/admin/orders/${o.id}`} className="grid">
-                        <span className="num font-display font-semibold text-plum hover:underline">#{o.number}</span>
+                        <span className="num font-medium text-plum hover:underline">#{o.number}</span>
                         <span className="num text-xs text-muted">{dateTime.format(new Date(o.created_at))}</span>
                       </Link>
                     </td>

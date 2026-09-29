@@ -11,7 +11,8 @@ Custom e-commerce site + admin for Reeta (chocolate-coated nuts), Cairo & Giza. 
 - **Plan:** phases 0–7 are listed in `README.md`.
 
 ## Rules that matter
-- Brand only: colors from the Reeta palette (plum, blush, cream, cocoa, toffee, sage, honey, rose), fonts Fredoka + Figtree (English), Baloo Bhaijaan 2 + Readex Pro (Arabic). Buttons are pill-shaped. Accents never for body text.
+- Brand only: colors from the Reeta palette (plum, blush, cream, cocoa, toffee, sage, honey, rose), fonts Cormorant Garamond + Jost (English), Amiri + IBM Plex Sans Arabic (Arabic). Buttons are pill-shaped. Accents never for body text.
+- Type rules: the script R is the logo only. Headings font (`font-display`, h1–h4) only at 22px and up; text, buttons, prices, numbers and labels use the text font. Labels are 13px caps in English, 14px with no letter-spacing in Arabic (`.eyebrow`). The REETA wordmark uses `font-wordmark` (Cormorant) in both languages.
 - Every table has RLS; admin = email in `public.admins`. Every server action calls `assertAdmin()`.
 - Shoppers read only through `store_*` SQL functions (no costs, no stock numbers, no drafts).
 - Stock changes only through `stock_movements`. Orders snapshot price and cost.

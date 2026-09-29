@@ -23,14 +23,14 @@ export function Pouch({
       <div className="mx-[4%] h-[3px] bg-[radial-gradient(circle,rgb(91_70_89/.45)_1px,transparent_1.4px)] bg-[length:6px_3px]" />
       <div className="grid content-center justify-items-center gap-2 text-plum">
         <span className="mark mark-full size-[28%] min-w-10" />
-        <span className="font-display text-[clamp(12px,1.4vw,17px)] font-semibold tracking-[0.07em]" dir="ltr">
+        <span className="font-wordmark text-[clamp(12px,1.4vw,17px)] font-semibold tracking-[0.07em]" dir="ltr">
           REETA
         </span>
       </div>
       {name && (
         <div className="grid gap-px rounded-[20px] px-[7%] py-[6%]" style={{ background: c, color: inkOn(c) }}>
           {line && <span className="text-[11px] opacity-80">{line}</span>}
-          <span className="font-display text-[clamp(14px,1.6vw,19px)] leading-tight font-semibold">{name}</span>
+          <span className="text-[clamp(14px,1.6vw,19px)] leading-tight font-medium">{name}</span>
           {caps && <span className="justify-self-end text-[10px] font-semibold tracking-[0.1em] uppercase opacity-85">{caps}</span>}
         </div>
       )}

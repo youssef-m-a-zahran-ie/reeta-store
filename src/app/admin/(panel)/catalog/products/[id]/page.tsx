@@ -143,7 +143,7 @@ export default async function EditProductPage({ params, searchParams }: PageProp
             </ul>
           </Section>
           <Section title="Stock">
-            <p className="num font-display text-2xl font-semibold text-plum">{stockLabel(product.stock_unit, stock)}</p>
+            <p className="num text-2xl font-medium text-plum">{stockLabel(product.stock_unit, stock)}</p>
             <p className="mt-1 text-sm text-muted">
               Warns at {stockLabel(product.stock_unit, product.low_stock_threshold)}.
             </p>

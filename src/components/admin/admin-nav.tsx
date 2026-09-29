@@ -83,13 +83,13 @@ export function AdminNav({ email, counts }: { email: string; counts: { orders: n
         <div className="dot-grid-dark flex min-h-full flex-col gap-6 px-4 py-6 md:px-5 md:py-8">
           <Link href="/admin" className="hidden items-center gap-2.5 px-2 text-blush md:flex" aria-label="Overview">
             <span className="mark mark-full size-9" aria-hidden="true" />
-            <span className="font-display text-[21px] font-semibold tracking-[0.07em]">REETA</span>
+            <span className="font-wordmark text-[21px] font-semibold tracking-[0.07em]">REETA</span>
           </Link>
 
           <nav className="grid gap-5" aria-label="Admin">
             {GROUPS.map((g) => (
               <div key={g.title} className="grid gap-1">
-                <p className="px-3 pb-1 font-display text-[11px] font-medium tracking-[0.1em] text-blush/55 uppercase">{g.title}</p>
+                <p className="px-3 pb-1 text-[11px] font-medium tracking-[0.1em] text-blush/55 uppercase">{g.title}</p>
                 {g.items.map((it) =>
                   it.soon ? (
                     <span

@@ -84,7 +84,7 @@ export function ProductCard({ product, lang, categoryName }: { product: StorePro
                 <div className="mx-auto aspect-[228/312] w-full rounded-[26px] bg-blush shadow-[0_18px_30px_-18px_rgb(58_36_32/.45)]">
                   <div className="grid h-full content-center justify-items-center gap-2 pb-[30%] text-plum">
                     <span className="mark mark-full size-14" />
-                    <span className="font-display text-base font-semibold tracking-[0.07em]" dir="ltr">
+                    <span className="font-wordmark text-base font-semibold tracking-[0.07em]" dir="ltr">
                       REETA
                     </span>
                   </div>
@@ -93,7 +93,7 @@ export function ProductCard({ product, lang, categoryName }: { product: StorePro
             )}
           </div>
           {v?.amount && (
-            <span className="absolute top-3 end-3 grid size-14 rotate-6 place-items-center rounded-full bg-plum font-display text-sm font-semibold text-blush shadow-md">
+            <span className="absolute top-3 end-3 grid size-14 rotate-6 place-items-center rounded-full bg-plum text-sm font-medium text-blush shadow-md">
               {lang === "ar" ? `${v.amount} جم` : `${v.amount}g`}
             </span>
           )}
@@ -111,7 +111,7 @@ export function ProductCard({ product, lang, categoryName }: { product: StorePro
         style={{ background: color, color: ink }}
       >
         {categoryName && <span className="text-xs opacity-80">{categoryName}</span>}
-        <h3 className="font-display text-xl leading-tight font-semibold" style={{ color: ink }}>
+        <h3 className="font-display text-[22px] leading-tight font-semibold" style={{ color: ink }}>
           <Link href={link} className="after:absolute after:inset-0">
             {name}
           </Link>
@@ -138,14 +138,14 @@ export function ProductCard({ product, lang, categoryName }: { product: StorePro
           </div>
         )}
         <div className="flex items-center justify-between gap-3">
-          <span className="font-display text-2xl leading-none font-semibold text-plum tabular-nums">
+          <span className="text-2xl leading-none font-medium text-plum tabular-nums">
             {v ? money(price, lang) : ""}
           </span>
           <button
             type="button"
             onClick={onAdd}
             disabled={!v?.available}
-            className="relative z-10 inline-flex items-center rounded-full bg-plum px-4 py-2.5 font-display text-[15px] font-semibold text-blush transition-[background,transform] hover:bg-plum-hover active:scale-95 disabled:cursor-not-allowed disabled:bg-plum/30"
+            className="relative z-10 inline-flex items-center rounded-full bg-plum px-4 py-2.5 text-[15px] font-medium text-blush transition-[background,transform] hover:bg-plum-hover active:scale-95 disabled:cursor-not-allowed disabled:bg-plum/30"
           >
             {v?.available ? t.product.addToPouch : t.product.soldOut}
           </button>

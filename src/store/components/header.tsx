@@ -35,7 +35,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center gap-4 px-4 md:gap-6 md:px-6">
         <Link href={href(lang, "/")} className="flex items-center gap-2.5 text-plum" aria-label="Reeta">
           <span className="mark mark-full size-[38px]" aria-hidden="true" />
-          <span className="font-display text-[22px] leading-none font-semibold tracking-[0.07em]" dir="ltr">
+          <span className="font-wordmark text-[22px] leading-none font-semibold tracking-[0.07em]" dir="ltr">
             REETA
           </span>
         </Link>
@@ -46,7 +46,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
               key={l.href}
               href={l.href}
               aria-current={isActive(l.href) ? "page" : undefined}
-              className="rounded-full px-3.5 py-2 font-display text-base font-medium text-plum transition-colors hover:bg-blush aria-[current=page]:bg-blush"
+              className="rounded-full px-3.5 py-2 text-base font-medium text-plum transition-colors hover:bg-blush aria-[current=page]:bg-blush"
             >
               {l.label}
             </Link>
@@ -95,7 +95,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
 
         <button
           type="button"
-          className="rounded-full border-2 border-plum px-3.5 py-1.5 font-display text-sm font-semibold text-plum transition-colors hover:bg-blush md:hidden"
+          className="rounded-full border-2 border-plum px-3.5 py-1.5 text-sm font-medium text-plum transition-colors hover:bg-blush md:hidden"
           aria-expanded={menu}
           aria-controls="store-menu"
           onClick={() => setMenu((m) => !m)}
@@ -112,7 +112,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
                 <Link
                   href={l.href}
                   aria-current={isActive(l.href) ? "page" : undefined}
-                  className="block rounded-2xl px-4 py-3 font-display text-xl font-semibold text-plum aria-[current=page]:bg-blush"
+                  className="block rounded-2xl px-4 py-3 text-xl font-medium text-plum aria-[current=page]:bg-blush"
                 >
                   {l.label}
                 </Link>

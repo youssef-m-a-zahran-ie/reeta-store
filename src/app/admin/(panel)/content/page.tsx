@@ -45,7 +45,7 @@ export default async function ContentPage() {
                 {def.points &&
                   Array.from({ length: def.points }, (_, i) => (
                     <fieldset key={i} className="grid gap-3 rounded-2xl border border-line p-4">
-                      <legend className="px-1 font-display text-sm font-semibold text-plum">Reason {i + 1}</legend>
+                      <legend className="px-1 text-sm font-medium text-plum">Reason {i + 1}</legend>
                       <Bilingual name={`p${i}_title`} label="Title" en={s(points[i], "title_en")} ar={s(points[i], "title_ar")} />
                       <Bilingual name={`p${i}_text`} label="Text" long en={s(points[i], "text_en")} ar={s(points[i], "text_ar")} />
                     </fieldset>

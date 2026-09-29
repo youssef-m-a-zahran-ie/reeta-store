@@ -15,14 +15,16 @@
   --line: rgb(91 70 89 / 0.14);
   --muted: rgb(58 36 32 / 0.66);
   --dot: rgb(91 70 89 / 0.13);
-  --display-stack: "Fredoka Variable", "Baloo Bhaijaan 2", ui-rounded, system-ui, sans-serif;
-  --body-stack: "Figtree Variable", "Readex Pro Variable", system-ui, "Segoe UI", sans-serif;
+  /* Type rules (Brand Typography): the script R is the logo only. Headings font only at 22px and up;
+     everything else (text, buttons, prices, labels) is the text font. Never more than two fonts in one design. */
+  --display-stack: "Cormorant Garamond Variable", "Amiri", Georgia, serif;
+  --body-stack: "Jost Variable", "IBM Plex Sans Arabic", system-ui, "Segoe UI", sans-serif;
 }
 
-/* Arabic pages: Baloo Bhaijaan 2 for headings, Readex Pro for text */
+/* Arabic pages: Amiri for headings, IBM Plex Sans Arabic for text */
 :root[lang="ar"] {
-  --display-stack: "Baloo Bhaijaan 2", "Fredoka Variable", system-ui, sans-serif;
-  --body-stack: "Readex Pro Variable", "Figtree Variable", system-ui, sans-serif;
+  --display-stack: "Amiri", "Cormorant Garamond Variable", serif;
+  --body-stack: "IBM Plex Sans Arabic", "Jost Variable", system-ui, sans-serif;
 }
 
 @theme inline {
@@ -40,6 +42,8 @@
   --color-muted: var(--muted);
   --font-display: var(--display-stack);
   --font-sans: var(--body-stack);
+  /* The REETA wordmark is part of the logo: same letters in English and Arabic pages. */
+  --font-wordmark: "Cormorant Garamond Variable", Georgia, serif;
   --radius-card: 22px;
 }
 
@@ -51,10 +55,13 @@ body {
   background: var(--page);
   color: var(--cocoa);
   font-family: var(--font-sans);
+  font-size: 17px;
+  /* Only the weights in the brand spec are loaded; never fake bold or italic. */
+  font-synthesis: none;
 }
 
 body [dir="rtl"] {
-  font-family: "Readex Pro Variable", "Figtree Variable", system-ui, sans-serif;
+  font-family: "IBM Plex Sans Arabic", "Jost Variable", system-ui, sans-serif;
 }
 
 /* In the base layer so color utilities (text-blush on dark sections) can override it. */
@@ -63,6 +70,8 @@ body [dir="rtl"] {
     font-family: var(--font-display);
     color: var(--plum);
     text-wrap: balance;
+    /* Cormorant and Amiri default to old-style figures; order numbers and prices read better lining. */
+    font-variant-numeric: lining-nums;
   }
   /* Tailwind 4 leaves buttons with the default arrow; show the hand like links do. */
   button:not(:disabled),
@@ -101,8 +110,7 @@ body [dir="rtl"] {
 /* Shared admin controls */
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-semibold whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50;
-    font-family: var(--font-display);
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-medium whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary { @apply bg-plum text-blush hover:bg-plum-hover; }
   .btn-secondary { @apply border-2 border-plum text-plum hover:bg-blush; }
@@ -120,10 +128,9 @@ body [dir="rtl"] {
   select.input { @apply pe-9; }
 
   .card { @apply rounded-[22px] border border-line bg-white; }
-  .eyebrow {
-    @apply text-[13px] font-medium uppercase tracking-[0.08em] text-toffee;
-    font-family: var(--font-display);
-  }
+  .eyebrow { @apply text-[13px] font-medium uppercase tracking-[0.1em] text-toffee; }
+  /* Arabic labels: 14px, no letter-spacing (it breaks the joins). */
+  :root[lang="ar"] .eyebrow { @apply text-[14px] tracking-normal; }
   .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold; }
 }
 

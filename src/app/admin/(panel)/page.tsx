@@ -169,7 +169,7 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
         ].map((s) => (
           <div key={s.label} className="card grid gap-1 p-4">
             <span className="text-sm text-muted">{s.label}</span>
-            <span className="num font-display text-3xl font-semibold text-plum">{s.value}</span>
+            <span className="num text-3xl font-medium text-plum">{s.value}</span>
           </div>
         ))}
       </div>

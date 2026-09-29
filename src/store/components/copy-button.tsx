@@ -16,7 +16,7 @@ export function CopyButton({ text, label, done }: { text: string; label: string;
           // Clipboard blocked: the number is selectable text next to the button.
         }
       }}
-      className="rounded-full border-2 border-plum px-4 py-1.5 font-display text-sm font-semibold text-plum hover:bg-blush"
+      className="rounded-full border-2 border-plum px-4 py-1.5 text-sm font-medium text-plum hover:bg-blush"
     >
       {copied ? done : label}
     </button>

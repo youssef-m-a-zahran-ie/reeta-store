@@ -60,7 +60,7 @@ export function ShopBrowser({
           <Link
             href={href(lang, "/shop")}
             aria-current={!cat ? "page" : undefined}
-            className="rounded-full border-2 border-plum/20 px-4 py-1.5 font-display font-semibold text-plum aria-[current=page]:border-plum aria-[current=page]:bg-plum aria-[current=page]:text-blush"
+            className="rounded-full border-2 border-plum/20 px-4 py-1.5 font-medium text-plum aria-[current=page]:border-plum aria-[current=page]:bg-plum aria-[current=page]:text-blush"
           >
             {t.shop.all}
           </Link>
@@ -69,7 +69,7 @@ export function ShopBrowser({
               key={c.id}
               href={href(lang, `/shop/${c.slug}`)}
               aria-current={cat?.id === c.id ? "page" : undefined}
-              className="rounded-full border-2 border-plum/20 px-4 py-1.5 font-display font-semibold text-plum aria-[current=page]:border-plum aria-[current=page]:bg-plum aria-[current=page]:text-blush"
+              className="rounded-full border-2 border-plum/20 px-4 py-1.5 font-medium text-plum aria-[current=page]:border-plum aria-[current=page]:bg-plum aria-[current=page]:text-blush"
             >
               {loc(c, "name", lang)}
             </Link>

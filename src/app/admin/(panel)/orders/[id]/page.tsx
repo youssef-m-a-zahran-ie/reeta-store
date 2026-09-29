@@ -131,7 +131,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/ad
                 <thead>
                   <tr className="text-sm">
                     {["Item", "Qty", "Price", "Total", "Margin"].map((h) => (
-                      <th key={h} className="py-2 pe-3 text-start font-display font-semibold text-plum">
+                      <th key={h} className="py-2 pe-3 text-start font-medium text-plum">
                         {h}
                       </th>
                     ))}
@@ -257,7 +257,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/ad
 
 function Row({ label, value, strong, muted }: { label: string; value: string; strong?: boolean; muted?: boolean }) {
   return (
-    <div className={`flex justify-between gap-4 ${strong ? "border-t border-line pt-2 font-display text-lg font-semibold text-plum" : ""} ${muted ? "text-sm text-muted" : ""}`}>
+    <div className={`flex justify-between gap-4 ${strong ? "border-t border-line pt-2 text-lg font-medium text-plum" : ""} ${muted ? "text-sm text-muted" : ""}`}>
       <dt>{label}</dt>
       <dd className="num">{value}</dd>
     </div>

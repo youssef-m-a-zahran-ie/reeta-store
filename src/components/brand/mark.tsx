@@ -9,7 +9,7 @@ export function Logo({ className = "" }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2.5 text-plum ${className}`}>
       <Mark className="size-9" />
-      <span className="font-display text-[21px] font-semibold leading-none tracking-[0.07em]">REETA</span>
+      <span className="font-wordmark text-[21px] font-semibold leading-none tracking-[0.07em]">REETA</span>
     </span>
   );
 }

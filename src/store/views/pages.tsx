@@ -111,7 +111,7 @@ export async function ProductView({ lang, slug }: { lang: Lang; slug: string }) 
           <div className="mx-auto grid max-w-3xl gap-3">
             {details.map((d, i) => (
               <details key={d.key} open={i === 0} className="group rounded-[24px] bg-cream/70 px-5 py-4 open:bg-cream">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-xl font-semibold text-plum [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-xl font-medium text-plum [&::-webkit-details-marker]:hidden">
                   {d.title}
                   <span className="grid size-8 place-items-center rounded-full bg-white/70 text-lg transition-transform group-open:rotate-45" aria-hidden="true">
                     +
@@ -184,7 +184,7 @@ export async function AboutView({ lang }: { lang: Lang }) {
       <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-4 pt-12 md:grid-cols-[1.2fr_1fr] md:px-6">
         <div className="reveal grid gap-5 text-lg leading-relaxed text-cocoa/90">
           <RichText text={body} />
-          <Link href={href(lang, "/shop")} className="justify-self-start rounded-full bg-plum px-6 py-3 font-display font-semibold text-blush hover:bg-plum-hover">
+          <Link href={href(lang, "/shop")} className="justify-self-start rounded-full bg-plum px-6 py-3 font-medium text-blush hover:bg-plum-hover">
             {t.nav.shop}
           </Link>
         </div>
@@ -269,7 +269,7 @@ export async function ContactView({ lang }: { lang: Lang }) {
             <div className="reveal-group grid gap-3">
               {faqs.map((f) => (
                 <details key={f.id} className="group rounded-[24px] bg-cream/70 px-5 py-4 open:bg-cream">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-semibold text-plum [&::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium text-plum [&::-webkit-details-marker]:hidden">
                     {loc(f, "question", lang)}
                     <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/70 text-lg transition-transform group-open:rotate-45" aria-hidden="true">
                       +
@@ -314,7 +314,7 @@ export function NotFoundView({ lang }: { lang: Lang }) {
         </div>
         <h1 className="text-[36px] leading-tight font-semibold md:text-[48px]">{t.notFound.title}</h1>
         <p className="text-lg text-cocoa/80">{t.notFound.text}</p>
-        <Link href={href(lang, "/shop")} className="rounded-full bg-plum px-6 py-3 font-display font-semibold text-blush hover:bg-plum-hover">
+        <Link href={href(lang, "/shop")} className="rounded-full bg-plum px-6 py-3 font-medium text-blush hover:bg-plum-hover">
           {t.notFound.cta}
         </Link>
       </div>

@@ -49,9 +49,9 @@ export default async function PricesPage() {
                   <table className="w-full min-w-[640px] border-collapse text-sm">
                     <thead>
                       <tr className="bg-page text-start">
-                        <th className="px-4 py-3 text-start font-display font-semibold text-plum">Template</th>
+                        <th className="px-4 py-3 text-start font-medium text-plum">Template</th>
                         {g.values.map((v) => (
-                          <th key={v.id} className="px-3 py-3 text-start font-display font-semibold text-plum">
+                          <th key={v.id} className="px-3 py-3 text-start font-medium text-plum">
                             {v.label_en}
                           </th>
                         ))}

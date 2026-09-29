@@ -47,7 +47,7 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
           <div className="grid content-start gap-3">
             <Link href={href(lang, "/")} className="flex items-center gap-2.5" aria-label="Reeta">
               <span className="mark mark-full size-11" aria-hidden="true" />
-              <span className="font-display text-2xl font-semibold tracking-[0.07em]" dir="ltr">
+              <span className="font-wordmark text-2xl font-semibold tracking-[0.07em]" dir="ltr">
                 REETA
               </span>
             </Link>
@@ -98,7 +98,7 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
 function FooterCol({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="grid content-start gap-3">
-      <p className="font-display text-[13px] font-medium tracking-[0.1em] text-blush/55 uppercase">{title}</p>
+      <p className="text-[13px] font-medium tracking-[0.1em] text-blush/55 uppercase">{title}</p>
       <ul className="grid">{children}</ul>
     </div>
   );

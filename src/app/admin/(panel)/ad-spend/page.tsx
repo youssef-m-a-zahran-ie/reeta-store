@@ -50,7 +50,7 @@ export default async function AdSpendPage() {
                 <thead>
                   <tr className="text-sm">
                     {["Dates", "Platform", "Campaign", "Amount", ""].map((h, i) => (
-                      <th key={i} className="py-2 pe-3 text-start font-display font-semibold text-plum">
+                      <th key={i} className="py-2 pe-3 text-start font-medium text-plum">
                         {h}
                       </th>
                     ))}

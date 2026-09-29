@@ -94,7 +94,7 @@ export default async function CustomersPage({ searchParams }: PageProps<"/admin/
             <thead>
               <tr className="bg-page text-sm">
                 {["Customer", "Orders", "Spent", "Last order", "Came from", ""].map((h, i) => (
-                  <th key={i} className="px-4 py-3 text-start font-display font-semibold text-plum">
+                  <th key={i} className="px-4 py-3 text-start font-medium text-plum">
                     {h}
                   </th>
                 ))}

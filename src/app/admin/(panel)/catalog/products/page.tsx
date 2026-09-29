@@ -104,11 +104,11 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/c
           <table className="w-full min-w-[760px] border-collapse text-[15px]">
             <thead>
               <tr className="bg-page text-sm">
-                <th className="px-4 py-3 text-start font-display font-semibold text-plum">Product</th>
-                <th className="px-4 py-3 text-start font-display font-semibold text-plum">Category</th>
-                <th className="px-4 py-3 text-start font-display font-semibold text-plum">Price</th>
-                <th className="px-4 py-3 text-start font-display font-semibold text-plum">Stock</th>
-                <th className="px-4 py-3 text-start font-display font-semibold text-plum">Status</th>
+                <th className="px-4 py-3 text-start font-medium text-plum">Product</th>
+                <th className="px-4 py-3 text-start font-medium text-plum">Category</th>
+                <th className="px-4 py-3 text-start font-medium text-plum">Price</th>
+                <th className="px-4 py-3 text-start font-medium text-plum">Stock</th>
+                <th className="px-4 py-3 text-start font-medium text-plum">Status</th>
               </tr>
             </thead>
             <tbody>

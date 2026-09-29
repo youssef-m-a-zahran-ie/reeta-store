@@ -65,7 +65,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
                       className="absolute inset-0 size-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                     />
                   )}
-                  <span className="relative rounded-full bg-page/90 px-4 py-2 font-display text-lg font-semibold text-plum">{loc(c, "name", lang)}</span>
+                  <span className="relative rounded-full bg-page/90 px-4 py-2 text-lg font-medium text-plum">{loc(c, "name", lang)}</span>
                 </Link>
               ))}
             </div>
@@ -90,7 +90,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
               text={txt(bund.data, "text", lang)}
               action={
                 bundles.length > 1 ? (
-                  <Link href={href(lang, "/bundles")} className="rounded-full border-2 border-plum px-5 py-2 font-display font-semibold text-plum hover:bg-blush">
+                  <Link href={href(lang, "/bundles")} className="rounded-full border-2 border-plum px-5 py-2 font-medium text-plum hover:bg-blush">
                     {t.nav.bundles}
                   </Link>
                 ) : undefined
@@ -151,7 +151,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
                     <img src={mediaUrl(q.image_path)!} alt="" className="w-full rounded-2xl" loading="lazy" />
                   )}
                   {loc(q, "text", lang) && <blockquote className="text-lg text-cocoa">{loc(q, "text", lang)}</blockquote>}
-                  {q.name && <figcaption className="font-display font-semibold text-plum">{q.name}</figcaption>}
+                  {q.name && <figcaption className="font-medium text-plum">{q.name}</figcaption>}
                 </figure>
               ))}
             </div>
@@ -172,7 +172,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
             <span className="float mark mark-full size-16" aria-hidden="true" />
             <h2 className="text-[32px] leading-tight font-semibold text-blush md:text-[44px]">{txt(cta.data, "title", lang)}</h2>
             <p className="text-blush/80">{txt(cta.data, "text", lang)}</p>
-            <Link href={href(lang, "/shop")} className="lift mt-2 rounded-full bg-blush px-7 py-3 font-display text-lg font-semibold text-plum hover:bg-cream">
+            <Link href={href(lang, "/shop")} className="lift mt-2 rounded-full bg-blush px-7 py-3 text-lg font-medium text-plum hover:bg-cream">
               {txt(cta.data, "button", lang)}
             </Link>
           </div>
@@ -200,7 +200,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
                 </span>
                 <span className="mark mark-inner absolute inset-0" />
               </div>
-              <div className="flex font-display text-[50px] leading-none font-semibold tracking-[0.07em] md:text-[72px]" dir="ltr" aria-hidden="true">
+              <div className="flex font-wordmark text-[50px] leading-none font-semibold tracking-[0.07em] md:text-[72px]" dir="ltr" aria-hidden="true">
                 {"REETA".split("").map((ch, i) => (
                   <span key={i} className="rise inline-block" style={{ "--d": `${0.55 + i * 0.06}s` } as React.CSSProperties}>
                     {ch}
@@ -217,12 +217,12 @@ export async function HomeView({ lang }: { lang: Lang }) {
               </p>
             )}
             <div className="rise mt-1 flex flex-wrap justify-center gap-3" style={{ "--d": "1.05s" } as React.CSSProperties}>
-              <Link href={href(lang, "/shop")} className="lift rounded-full bg-plum px-6 py-3 font-display text-[17px] font-semibold text-blush hover:bg-plum-hover">
+              <Link href={href(lang, "/shop")} className="lift rounded-full bg-plum px-6 py-3 text-[17px] font-medium text-blush hover:bg-plum-hover">
                 {txt(hero, "primary", lang) || t.nav.shop}
               </Link>
               <Link
                 href={href(lang, bundles.length ? "/bundles" : "/shop")}
-                className="lift rounded-full border-2 border-plum px-6 py-[10px] font-display text-[17px] font-semibold text-plum hover:bg-page"
+                className="lift rounded-full border-2 border-plum px-6 py-[10px] text-[17px] font-medium text-plum hover:bg-page"
               >
                 {txt(hero, "secondary", lang) || t.nav.bundles}
               </Link>
@@ -238,7 +238,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
               title={txt(bestBlock?.data, "title", lang) || t.shop.title}
               action={
                 catalog.products.length > best.length ? (
-                  <Link href={href(lang, "/shop")} className="rounded-full border-2 border-plum px-5 py-2 font-display font-semibold text-plum hover:bg-blush">
+                  <Link href={href(lang, "/shop")} className="rounded-full border-2 border-plum px-5 py-2 font-medium text-plum hover:bg-blush">
                     {t.shop.title}
                   </Link>
                 ) : undefined

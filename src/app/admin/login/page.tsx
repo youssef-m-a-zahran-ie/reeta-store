@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/admin/logi
       <div className="grid w-full max-w-[420px] gap-6">
         <div className="grid justify-items-center gap-3 text-plum">
           <Mark className="size-20" />
-          <p className="font-display text-3xl font-semibold tracking-[0.07em]">REETA</p>
+          <p className="font-wordmark text-3xl font-semibold tracking-[0.07em]">REETA</p>
           <span className="eyebrow">Admin</span>
         </div>
         <LoginPanel notice={notice} />

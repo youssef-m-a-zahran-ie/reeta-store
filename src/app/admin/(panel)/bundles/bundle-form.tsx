@@ -38,7 +38,7 @@ export function BundleForm({
 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Basics</legend>
-            <h2 className="text-xl font-semibold">Box</h2>
+            <h2 className="text-[22px] font-semibold">Box</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <label className="field">
                 <span className="label">Name (English)</span>
@@ -90,7 +90,7 @@ export function BundleForm({
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Contents</legend>
             <div className="grid gap-1">
-              <h2 className="text-xl font-semibold">What&apos;s inside</h2>
+              <h2 className="text-[22px] font-semibold">What&apos;s inside</h2>
               <p className="text-sm text-muted">Stock is taken from each product when a box is ordered.</p>
             </div>
             <div className="grid gap-2">
@@ -133,7 +133,7 @@ export function BundleForm({
 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Price</legend>
-            <h2 className="text-xl font-semibold">Price</h2>
+            <h2 className="text-[22px] font-semibold">Price</h2>
             <div className="grid gap-4 sm:grid-cols-[200px_1fr] sm:items-end">
               <label className="field">
                 <span className="label">Box price (EGP)</span>
@@ -148,7 +148,7 @@ export function BundleForm({
                 ].map(([k, v]) => (
                   <div key={k} className="rounded-2xl bg-page px-3 py-2.5">
                     <p className="text-xs text-muted">{k}</p>
-                    <p className="num font-display text-lg font-semibold text-plum">{v}</p>
+                    <p className="num text-lg font-medium text-plum">{v}</p>
                   </div>
                 ))}
               </div>

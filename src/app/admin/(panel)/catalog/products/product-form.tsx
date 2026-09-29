@@ -48,7 +48,7 @@ export function ProductForm({ product, lookups }: { product: Tables<"products"> 
 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Basics</legend>
-            <h2 className="text-xl font-semibold">Basics</h2>
+            <h2 className="text-[22px] font-semibold">Basics</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <label className="field">
                 <span className="label">Name (English)</span>
@@ -110,7 +110,7 @@ export function ProductForm({ product, lookups }: { product: Tables<"products"> 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Flavor</legend>
             <div className="grid gap-1">
-              <h2 className="text-xl font-semibold">Flavor and color</h2>
+              <h2 className="text-[22px] font-semibold">Flavor and color</h2>
               <p className="text-sm text-muted">Optional. Set these for coated products so filters and the pouch band work.</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
@@ -147,7 +147,7 @@ export function ProductForm({ product, lookups }: { product: Tables<"products"> 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Selling</legend>
             <div className="grid gap-1">
-              <h2 className="text-xl font-semibold">How it&apos;s sold</h2>
+              <h2 className="text-[22px] font-semibold">How it&apos;s sold</h2>
               <p className="text-sm text-muted">
                 Pick the option and a price template. Each size then gets its price from the template, and you can override
                 one size below after saving.
@@ -229,7 +229,7 @@ export function ProductForm({ product, lookups }: { product: Tables<"products"> 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Details</legend>
             <div className="grid gap-1">
-              <h2 className="text-xl font-semibold">Product page details</h2>
+              <h2 className="text-[22px] font-semibold">Product page details</h2>
               <p className="text-sm text-muted">Shown on the product page. Ingredients and allergens matter for trust, so fill them before going live.</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
@@ -257,7 +257,7 @@ export function ProductForm({ product, lookups }: { product: Tables<"products"> 
 
           <fieldset className="card grid gap-4 p-5 md:p-6">
             <legend className="sr-only">Visibility</legend>
-            <h2 className="text-xl font-semibold">Visibility</h2>
+            <h2 className="text-[22px] font-semibold">Visibility</h2>
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Status">
               {STATUSES.map((s) => (
                 <label

@@ -61,7 +61,7 @@ export default async function BundlesPage({ searchParams }: PageProps<"/admin/bu
                   </span>
                   <StatusChip status={b.status} />
                 </div>
-                <span className="num font-display text-xl font-semibold text-plum">{egp(b.price)}</span>
+                <span className="num text-xl font-medium text-plum">{egp(b.price)}</span>
               </Link>
             );
           })}

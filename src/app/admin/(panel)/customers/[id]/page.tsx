@@ -88,7 +88,7 @@ export default async function CustomerPage({ params }: PageProps<"/admin/custome
                   <li key={o.id}>
                     <Link href={`/admin/orders/${o.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line px-4 py-3 hover:bg-page">
                       <span className="grid">
-                        <span className="num font-display font-semibold text-plum">#{o.number}</span>
+                        <span className="num font-medium text-plum">#{o.number}</span>
                         <span className="num text-xs text-muted">{dateTime.format(new Date(o.created_at))}</span>
                       </span>
                       <span className="hidden min-w-0 flex-1 truncate text-sm text-muted sm:block">

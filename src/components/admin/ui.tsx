@@ -42,7 +42,7 @@ export function Section({
       {(title || actions) && (
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div className="grid gap-1">
-            {title && <h2 className="text-xl font-semibold">{title}</h2>}
+            {title && <h2 className="text-[22px] font-semibold">{title}</h2>}
             {description && <p className="text-sm text-muted">{description}</p>}
           </div>
           {actions}
@@ -87,7 +87,7 @@ export function Swatch({ color, size = 18, className = "" }: { color: string | n
 export function EmptyState({ title, children, action }: { title: string; children?: ReactNode; action?: ReactNode }) {
   return (
     <div className="grid justify-items-center gap-3 rounded-[22px] border-2 border-dashed border-line px-6 py-12 text-center">
-      <p className="font-display text-lg font-semibold text-plum">{title}</p>
+      <p className="text-lg font-medium text-plum">{title}</p>
       {children && <div className="max-w-md text-sm text-muted">{children}</div>}
       {action}
     </div>
@@ -135,7 +135,7 @@ export function StatTile({ label, value, hint }: { label: string; value: string;
   return (
     <div className="card grid content-start gap-1 p-4">
       <span className="text-sm text-muted">{label}</span>
-      <span className="num font-display text-xl font-semibold text-plum sm:text-2xl">{value}</span>
+      <span className="num text-xl font-medium text-plum sm:text-2xl">{value}</span>
       {hint && <span className="text-xs text-muted">{hint}</span>}
     </div>
   );

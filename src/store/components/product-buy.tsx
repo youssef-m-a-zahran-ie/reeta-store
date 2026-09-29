@@ -65,20 +65,20 @@ export function ProductBuy({ product, lang }: { product: StoreProductFull; lang:
                   <div className="mx-[4%] h-[3px] bg-[radial-gradient(circle,rgb(91_70_89/.45)_1px,transparent_1.4px)] bg-[length:6px_3px]" />
                   <div className="grid content-center justify-items-center gap-2 text-plum">
                     <span className="mark mark-full size-20" aria-hidden="true" />
-                    <span className="font-display text-xl font-semibold tracking-[0.07em]" dir="ltr">
+                    <span className="font-wordmark text-xl font-semibold tracking-[0.07em]" dir="ltr">
                       REETA
                     </span>
                   </div>
                   <div className="grid gap-px rounded-[20px] px-[8%] py-[7%]" style={{ background: color, color: inkOn(color) }}>
                     <span className="text-xs opacity-80">{loc(product, "category_name", lang)}</span>
-                    <span className="font-display text-lg leading-tight font-semibold">{name}</span>
+                    <span className="font-display text-[22px] leading-tight font-semibold">{name}</span>
                   </div>
                 </div>
               </div>
             )}
           </div>
           {v?.amount && (
-            <span className="absolute top-4 end-4 grid size-16 rotate-6 place-items-center rounded-full bg-plum font-display font-semibold text-blush shadow-md">
+            <span className="absolute top-4 end-4 grid size-16 rotate-6 place-items-center rounded-full bg-plum font-medium text-blush shadow-md">
               {lang === "ar" ? `${v.amount} جم` : `${v.amount}g`}
             </span>
           )}
@@ -122,7 +122,7 @@ export function ProductBuy({ product, lang }: { product: StoreProductFull; lang:
                   onClick={() => setIdx(i)}
                   className="grid gap-0.5 rounded-2xl border-2 border-plum/15 bg-white/70 px-3 py-2.5 text-start transition-colors hover:border-plum/40 aria-checked:border-plum aria-checked:bg-blush"
                 >
-                  <span className={`font-display text-lg font-semibold text-plum ${x.available ? "" : "line-through decoration-1 opacity-60"}`}>
+                  <span className={`text-lg font-medium text-plum ${x.available ? "" : "line-through decoration-1 opacity-60"}`}>
                     {loc(x, "label", lang)}
                   </span>
                   <span className="text-sm text-cocoa/70 tabular-nums">{x.available ? money(x.price, lang) : t.product.soldOut}</span>
@@ -154,7 +154,7 @@ export function ProductBuy({ product, lang }: { product: StoreProductFull; lang:
               +
             </button>
           </div>
-          <span className="font-display text-[32px] leading-none font-semibold text-plum tabular-nums">{v ? money(price, lang) : ""}</span>
+          <span className="text-[32px] leading-none font-medium text-plum tabular-nums">{v ? money(price, lang) : ""}</span>
         </div>
 
         {/* On phones the button sticks to the bottom of the screen. */}
@@ -164,7 +164,7 @@ export function ProductBuy({ product, lang }: { product: StoreProductFull; lang:
             type="button"
             onClick={onAdd}
             disabled={!v?.available}
-            className="w-full rounded-full bg-plum px-6 py-4 font-display text-xl font-semibold text-blush shadow-[0_14px_28px_-12px_rgb(58_36_32/.6)] transition-[background,transform] hover:bg-plum-hover active:scale-[.98] disabled:cursor-not-allowed disabled:bg-plum/35 lg:shadow-none"
+            className="w-full rounded-full bg-plum px-6 py-4 text-xl font-medium text-blush shadow-[0_14px_28px_-12px_rgb(58_36_32/.6)] transition-[background,transform] hover:bg-plum-hover active:scale-[.98] disabled:cursor-not-allowed disabled:bg-plum/35 lg:shadow-none"
           >
             {v?.available ? t.product.addToPouch : t.product.unavailableSize}
           </button>

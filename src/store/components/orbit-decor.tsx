@@ -49,7 +49,7 @@ export function EmptyOrbit({ text, children }: { text: string; children?: React.
           <span className="absolute -bottom-2 left-[22%] size-3.5 rounded-full bg-rose shadow-[inset_-2px_-2px_0_rgb(0_0_0/.15)]" />
         </span>
       </div>
-      <p className="max-w-md font-display text-xl font-semibold text-plum md:text-2xl">{text}</p>
+      <p className="max-w-md font-display text-[22px] font-semibold text-plum md:text-[28px]">{text}</p>
       {children}
     </div>
   );

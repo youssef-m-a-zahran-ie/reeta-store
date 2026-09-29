@@ -32,7 +32,7 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
       <main className="grid min-h-[60vh] place-items-center px-4 text-center">
         <div className="grid gap-4">
           <p className="text-xl text-plum">{t.order.notFound}</p>
-          <Link href={href(lang, "/shop")} className="justify-self-center rounded-full bg-plum px-6 py-3 font-display font-semibold text-blush">
+          <Link href={href(lang, "/shop")} className="justify-self-center rounded-full bg-plum px-6 py-3 font-medium text-blush">
             {t.order.keepShopping}
           </Link>
         </div>
@@ -72,7 +72,7 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
                   href={o.instapay_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-blush px-6 py-3.5 text-center font-display text-lg font-semibold text-plum transition-colors hover:bg-cream"
+                  className="rounded-full bg-blush px-6 py-3.5 text-center text-lg font-medium text-plum transition-colors hover:bg-cream"
                 >
                   {t.order.payNow}
                 </a>
@@ -80,7 +80,7 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
               </div>
             )}
             <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-blush px-4 py-3 text-plum">
-              <span className="flex-1 font-display text-2xl font-semibold tracking-wide select-all" dir="ltr">
+              <span className="flex-1 text-2xl font-medium tracking-wide select-all" dir="ltr">
                 {o.instapay_handle}
               </span>
               <CopyButton text={o.instapay_handle} label={t.order.copy} done={t.order.copied} />
@@ -90,7 +90,7 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
         )}
 
         <section className="grid gap-3 rounded-[28px] bg-cream p-6">
-          <h2 className="text-xl font-semibold">{t.order.items}</h2>
+          <h2 className="text-[22px] font-semibold">{t.order.items}</h2>
           <ul className="grid gap-2">
             {o.items.map((i, k) => (
               <li key={k} className="flex justify-between gap-3">
@@ -124,7 +124,7 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
               <dt>{t.checkout.delivery}</dt>
               <dd className="tabular-nums">{o.shipping_fee > 0 ? money(o.shipping_fee, lang) : t.checkout.deliveryFree}</dd>
             </div>
-            <div className="flex justify-between border-t border-plum/15 pt-2 font-display text-xl font-semibold text-plum">
+            <div className="flex justify-between border-t border-plum/15 pt-2 text-xl font-medium text-plum">
               <dt>{t.checkout.total}</dt>
               <dd className="tabular-nums">{money(o.total, lang)}</dd>
             </div>
@@ -140,12 +140,12 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
               href={waLink(o.whatsapp_number, t.order.waText(o.number))}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-sage px-6 py-3 font-display font-semibold text-white hover:brightness-95"
+              className="rounded-full bg-sage px-6 py-3 font-medium text-white hover:brightness-95"
             >
               {t.order.whatsapp}
             </a>
           )}
-          <Link href={href(lang, "/shop")} className="rounded-full border-2 border-plum px-6 py-[10px] font-display font-semibold text-plum hover:bg-blush">
+          <Link href={href(lang, "/shop")} className="rounded-full border-2 border-plum px-6 py-[10px] font-medium text-plum hover:bg-blush">
             {t.order.keepShopping}
           </Link>
         </div>

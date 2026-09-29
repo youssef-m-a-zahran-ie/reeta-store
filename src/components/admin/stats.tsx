@@ -22,7 +22,7 @@ export function KpiTile({
   return (
     <div className="card grid content-start gap-1 p-4">
       <span className="text-sm text-muted">{label}</span>
-      <span className="font-display text-2xl font-semibold text-plum md:text-[28px]">{value}</span>
+      <span className="text-2xl font-medium text-plum md:text-[28px]">{value}</span>
       {delta !== undefined && (
         <span className="flex flex-wrap items-center gap-1.5 text-xs text-muted">
           {delta === null ? (

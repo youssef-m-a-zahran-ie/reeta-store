@@ -69,7 +69,7 @@ export default async function DiscountsPage() {
                   ].map(([k, v]) => (
                     <div key={k} className="rounded-2xl bg-page px-4 py-3">
                       <p className="text-xs text-muted">{k}</p>
-                      <p className="num font-display text-xl font-semibold text-plum">{v}</p>
+                      <p className="num text-xl font-medium text-plum">{v}</p>
                     </div>
                   ))}
                 </div>

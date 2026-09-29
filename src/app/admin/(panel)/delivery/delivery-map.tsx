@@ -181,7 +181,7 @@ export function DeliverySettings({
             {dist !== null && (
               <div className="absolute end-3 top-3 z-[500] grid gap-0.5 rounded-2xl bg-white/95 px-4 py-3 shadow-lg">
                 <span className="text-xs text-muted">Customer here pays</span>
-                <span className="num font-display text-2xl font-semibold text-plum">{show(dist)}</span>
+                <span className="num text-2xl font-medium text-plum">{show(dist)}</span>
                 <span className="num text-xs text-muted">≈ {dist.toFixed(1)} km by road</span>
               </div>
             )}

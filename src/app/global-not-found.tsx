@@ -16,10 +16,10 @@ export default function GlobalNotFound() {
             <h1 className="text-[40px] leading-tight font-semibold">This pouch rolled away.</h1>
             <p className="text-lg text-cocoa/80">The page you&apos;re looking for isn&apos;t here.</p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/shop" className="rounded-full bg-plum px-6 py-3 font-display font-semibold text-blush">
+              <Link href="/shop" className="rounded-full bg-plum px-6 py-3 font-medium text-blush">
                 Back to the shop
               </Link>
-              <Link href="/ar/shop" className="rounded-full border-2 border-plum px-6 py-[10px] font-display font-semibold text-plum">
+              <Link href="/ar/shop" className="rounded-full border-2 border-plum px-6 py-[10px] font-medium text-plum">
                 ارجع للمنتجات
               </Link>
             </div>

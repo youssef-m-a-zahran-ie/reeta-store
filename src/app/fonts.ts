@@ -1,6 +1,10 @@
 // Self-hosted brand fonts (no request to Google at runtime).
-import "@fontsource-variable/fredoka";
-import "@fontsource-variable/figtree";
-import "@fontsource-variable/readex-pro";
-import "@fontsource/baloo-bhaijaan-2/600.css";
-import "@fontsource/baloo-bhaijaan-2/700.css";
+// English: Cormorant Garamond for headings, Jost for text. Arabic: Amiri for headings, IBM Plex Sans Arabic for text.
+import "@fontsource-variable/cormorant-garamond";
+import "@fontsource-variable/cormorant-garamond/wght-italic.css";
+import "@fontsource-variable/jost";
+import "@fontsource/amiri/400.css";
+import "@fontsource/amiri/700.css";
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
