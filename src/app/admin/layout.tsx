@@ -5,7 +5,7 @@ import "../globals.css";
 export const metadata: Metadata = {
   title: { default: "Admin", template: "%s · Reeta Admin" },
   robots: { index: false, follow: false },
-  icons: { icon: "/brand/mark-full.png" },
+  icons: { icon: "/brand/favicon.png", apple: "/brand/apple-touch-icon.png" },
 };
 
 export default function AdminRootLayout({ children }: LayoutProps<"/admin">) {

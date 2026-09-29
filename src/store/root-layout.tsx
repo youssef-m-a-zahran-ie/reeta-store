@@ -14,7 +14,7 @@ export function storeMetadata(lang: Lang): Metadata {
       lang === "ar"
         ? "كاجو ولوز وسوداني متغطيين شوكولاتة دارك ووايت. اطلب أونلاين والتوصيل في القاهرة والجيزة."
         : "Cashews, almonds and peanuts coated in dark and white chocolate. Order online, delivered across Cairo and Giza.",
-    icons: { icon: "/brand/mark-full.png", apple: "/brand/mark-full.png" },
+    icons: { icon: "/brand/favicon.png", apple: "/brand/apple-touch-icon.png" },
   };
 }
 
