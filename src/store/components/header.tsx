@@ -67,7 +67,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
           type="button"
           onClick={() => setOpen(true)}
           aria-label={t.cart.open(count)}
-          className={`relative size-[52px] shrink-0 rounded-full text-plum ${full ? "cart-full" : ""}`}
+          className={`relative size-[52px] shrink-0 rounded-full text-plum transition-colors hover:bg-blush ${full ? "cart-full" : ""}`}
         >
           <svg viewBox="0 0 52 52" className="absolute inset-0 size-full -rotate-90 overflow-visible" aria-hidden="true">
             <circle cx="26" cy="26" r={R} fill="none" stroke="rgb(91 70 89 / .22)" strokeWidth="2" strokeDasharray="2 4" />
@@ -95,7 +95,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
 
         <button
           type="button"
-          className="rounded-full border-2 border-plum px-3.5 py-1.5 font-display text-sm font-semibold text-plum md:hidden"
+          className="rounded-full border-2 border-plum px-3.5 py-1.5 font-display text-sm font-semibold text-plum transition-colors hover:bg-blush md:hidden"
           aria-expanded={menu}
           aria-controls="store-menu"
           onClick={() => setMenu((m) => !m)}

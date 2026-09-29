@@ -94,7 +94,7 @@ export function ProductCard({ product, lang, categoryName }: { product: StorePro
           </div>
           {v?.amount && (
             <span className="absolute top-3 end-3 grid size-14 rotate-6 place-items-center rounded-full bg-plum font-display text-sm font-semibold text-blush shadow-md">
-              {lang === "ar" ? `${v.amount} ج` : `${v.amount}g`}
+              {lang === "ar" ? `${v.amount} جم` : `${v.amount}g`}
             </span>
           )}
           {soldOut && (

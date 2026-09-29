@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { assertAdmin, NotAdminError } from "@/lib/admin/guard";
-import { bool, num, optStr, str } from "@/lib/admin/form";
+import { bool, optStr, str } from "@/lib/admin/form";
 import { fail, friendlyDbError, ok, type ActionState } from "@/lib/admin/state";
 import type { Database } from "@/lib/supabase/database.types";
 
@@ -21,27 +21,6 @@ async function save(update: SettingsUpdate, message: string): Promise<ActionStat
     if (e instanceof NotAdminError) return fail(e.message);
     throw e;
   }
-}
-
-export async function saveDelivery(_prev: ActionState, fd: FormData): Promise<ActionState> {
-  const lat = num(fd, "store_lat");
-  const lng = num(fd, "store_lng");
-  const perKm = num(fd, "fee_per_km");
-  const min = num(fd, "min_shipping_fee");
-  const factor = num(fd, "distance_factor");
-  const round = num(fd, "fee_round_to");
-  const errors: Record<string, string> = {};
-  if (lat === null || Number.isNaN(lat) || lat < 21.5 || lat > 32) errors.store_lat = "Place the store pin on the map.";
-  if (lng === null || Number.isNaN(lng) || lng < 24.5 || lng > 37) errors.store_lat = "Place the store pin on the map.";
-  if (perKm === null || Number.isNaN(perKm) || perKm < 0) errors.fee_per_km = "Enter a price per km.";
-  if (min === null || Number.isNaN(min) || min < 0) errors.min_shipping_fee = "Enter a minimum (0 is fine).";
-  if (factor === null || Number.isNaN(factor) || factor < 1 || factor > 2.5) errors.distance_factor = "Use a number between 1 and 2.5.";
-  if (round === null || Number.isNaN(round) || round < 1) errors.fee_round_to = "Use 1 or more.";
-  if (Object.keys(errors).length) return fail("Check the highlighted fields.", errors);
-  return save(
-    { store_lat: lat, store_lng: lng, fee_per_km: perKm, min_shipping_fee: min!, distance_factor: factor!, fee_round_to: Math.round(round!) },
-    "Delivery pricing saved. New checkouts use it right away.",
-  );
 }
 
 export async function savePayments(_prev: ActionState, fd: FormData): Promise<ActionState> {

@@ -99,7 +99,7 @@ export async function OrderView({ lang, id }: { lang: Lang; id: string }) {
                   {i.label && (
                     <span className="text-cocoa/65">
                       {" · "}
-                      <bdi>{i.label}</bdi>
+                      <bdi>{(lang === "ar" && i.label_ar) || i.label}</bdi>
                     </span>
                   )}
                 </span>

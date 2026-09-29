@@ -64,6 +64,11 @@ body [dir="rtl"] {
     color: var(--plum);
     text-wrap: balance;
   }
+  /* Tailwind 4 leaves buttons with the default arrow; show the hand like links do. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
 }
 
 :focus-visible {

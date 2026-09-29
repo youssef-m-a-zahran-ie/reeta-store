@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin/guard";
 import { PageHeader, Section } from "@/components/admin/ui";
 import { ActionForm, SubmitButton, Toggle } from "@/components/admin/form-bits";
-import { DeliverySettings } from "./delivery-map";
 import { TrackingForm } from "./tracking-form";
 import { saveContact, saveNotifications, savePayments, saveStore } from "./actions";
 
@@ -15,11 +14,10 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Site" title="Settings" description="Delivery pricing, payment details, contact links and whether the store is taking orders." />
+      <PageHeader eyebrow="Site" title="Settings" description="Payment details, contact links and whether the store is taking orders. Delivery pricing has its own page." />
 
       <nav className="mb-6 flex flex-wrap gap-1.5 text-sm" aria-label="Settings sections">
         {[
-          ["#delivery", "Delivery"],
           ["#payments", "Payments"],
           ["#store", "Store status"],
           ["#contact", "Contact"],
@@ -33,23 +31,6 @@ export default async function SettingsPage() {
       </nav>
 
       <div className="grid gap-5">
-        <Section
-          title="Delivery pricing"
-          description="Fee = distance from the store × price per km, rounded up, never below the minimum. Free-delivery offers come from Discounts."
-        >
-          <div id="delivery" className="scroll-mt-24" />
-          <DeliverySettings
-            initial={{
-              lat: s.store_lat,
-              lng: s.store_lng,
-              perKm: s.fee_per_km,
-              min: s.min_shipping_fee,
-              factor: s.distance_factor,
-              round: s.fee_round_to,
-            }}
-          />
-        </Section>
-
         <Section title="Payments" description="Shown to customers who pick InstaPay, on their order page.">
           <div id="payments" className="scroll-mt-24" />
           <ActionForm action={savePayments} className="grid gap-4 sm:grid-cols-2">

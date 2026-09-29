@@ -79,7 +79,7 @@ export function ProductBuy({ product, lang }: { product: StoreProductFull; lang:
           </div>
           {v?.amount && (
             <span className="absolute top-4 end-4 grid size-16 rotate-6 place-items-center rounded-full bg-plum font-display font-semibold text-blush shadow-md">
-              {lang === "ar" ? `${v.amount} ج` : `${v.amount}g`}
+              {lang === "ar" ? `${v.amount} جم` : `${v.amount}g`}
             </span>
           )}
         </div>

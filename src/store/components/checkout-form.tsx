@@ -104,6 +104,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
     if (name.trim().length < 2) e.name = c.errors.name;
     if (!validPhone(phone)) e.phone = c.errors.phone;
     if (!pin) e.location = c.errors.location;
+    else if (quote?.out_of_range) e.location = c.errors.out_of_range;
     if (address.trim().length < 3) e.address = c.errors.address;
     setErrors(e);
     return e;
@@ -150,7 +151,10 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
     else if (res.code === "invalid_address") setErrors({ address: c.errors.address });
     else if (res.code === "too_many_orders") setFormError(c.errors.too_many_orders);
     else if (res.code === "store_busy") setFormError(c.errors.store_busy);
-    else if (first?.code === "out_of_stock") setFormError(c.errors.out_of_stock(lang === "ar" ? (first.name_ar ?? "") : (first.name_en ?? "")));
+    else if (first?.code === "out_of_range") {
+      setErrors({ location: c.errors.out_of_range });
+      setFormError(c.errors.out_of_range);
+    } else if (first?.code === "out_of_stock") setFormError(c.errors.out_of_stock(lang === "ar" ? (first.name_ar ?? "") : (first.name_en ?? "")));
     else if (first?.code === "unavailable") setFormError(c.errors.unavailable);
     else if (first?.code === "invalid_code") setFormError(c.errors.invalid_code);
     else if (first?.code === "code_min") setFormError(c.errors.code_min(money(first.min ?? 0, lang)));
@@ -253,7 +257,16 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
               }}
             />
           </div>
-          {errors.location && <span className="text-sm font-medium text-[#a33a52]">{errors.location}</span>}
+          {errors.location ? (
+            <span className="text-sm font-medium text-[#a33a52]">{errors.location}</span>
+          ) : (
+            pin &&
+            quote?.out_of_range && (
+              <span className="text-sm font-medium text-[#a33a52]" role="status">
+                {c.errors.out_of_range}
+              </span>
+            )
+          )}
           <label className="field">
             <span className="label">{c.address}</span>
             <input
@@ -319,7 +332,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
             tabIndex={-1}
             autoComplete="off"
             aria-hidden="true"
-            className="absolute -left-[9999px] size-px opacity-0"
+            className="pointer-events-none absolute size-px overflow-hidden opacity-0 [clip-path:inset(50%)]"
           />
         </section>
       </div>
@@ -430,6 +443,8 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
             <dd className="text-end tabular-nums">
               {!pin || !quote?.has_location ? (
                 <span className="text-sm text-cocoa/70">{c.pinFirst}</span>
+              ) : quote.out_of_range ? (
+                <span className="text-sm font-medium text-[#a33a52]">{c.deliveryNone}</span>
               ) : quote.free_shipping ? (
                 c.deliveryFree
               ) : (

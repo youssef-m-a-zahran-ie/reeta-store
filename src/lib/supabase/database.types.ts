@@ -1,4 +1,3 @@
-// Generated from the Supabase schema. Regenerate after migrations.
 export type Json =
   | string
   | number
@@ -1243,6 +1242,8 @@ export type Database = {
           instapay_handle: string | null
           instapay_link: string | null
           instapay_name: string | null
+          max_delivery_km: number | null
+          max_shipping_fee: number | null
           meta_pixel_id: string | null
           min_shipping_fee: number
           notify_emails: string[]
@@ -1276,6 +1277,8 @@ export type Database = {
           instapay_handle?: string | null
           instapay_link?: string | null
           instapay_name?: string | null
+          max_delivery_km?: number | null
+          max_shipping_fee?: number | null
           meta_pixel_id?: string | null
           min_shipping_fee?: number
           notify_emails?: string[]
@@ -1309,6 +1312,8 @@ export type Database = {
           instapay_handle?: string | null
           instapay_link?: string | null
           instapay_name?: string | null
+          max_delivery_km?: number | null
+          max_shipping_fee?: number | null
           meta_pixel_id?: string | null
           min_shipping_fee?: number
           notify_emails?: string[]
@@ -1522,6 +1527,17 @@ export type Database = {
       _admin_compute: { Args: { p: Json }; Returns: Json }
       _compute_order: { Args: { p: Json }; Returns: Json }
       _delivery: { Args: { p_lat: number; p_lng: number }; Returns: Json }
+      _delivery_fee: {
+        Args: {
+          p_km: number
+          p_max: number
+          p_max_km: number
+          p_min: number
+          p_per_km: number
+          p_round: number
+        }
+        Returns: number
+      }
       _km: {
         Args: { lat1: number; lat2: number; lng1: number; lng2: number }
         Returns: number

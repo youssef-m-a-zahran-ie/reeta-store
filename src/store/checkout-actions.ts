@@ -32,6 +32,7 @@ export type Quote = {
   free_shipping: boolean;
   distance_km: number | null;
   has_location: boolean;
+  out_of_range?: boolean;
   shipping_fee: number;
   total: number;
   orders_paused: boolean;

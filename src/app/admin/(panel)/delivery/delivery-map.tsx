@@ -15,21 +15,50 @@ function km(a: Pt, b: Pt) {
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
 
-/** Same formula as the database: straight line × road factor × price per km, rounded up, not below the minimum. */
-function fee(distanceKm: number, perKm: number, min: number, round: number) {
-  return Math.max(min, Math.ceil((distanceKm * perKm) / round) * round);
+/**
+ * Same formula as the database (_delivery_fee): starts at perKm per km, eases off, and reaches
+ * max exactly at maxKm. Rounded up, kept between min and max. null = no delivery that far.
+ */
+function fee(km: number, perKm: number, min: number, max: number | null, maxKm: number | null, round: number) {
+  if (maxKm !== null && km > maxKm) return null;
+  let raw = perKm * km;
+  if (max !== null && maxKm !== null && perKm > 0 && perKm * maxKm > max) {
+    const target = max / perKm;
+    let lo = 0.001;
+    let hi = maxKm * 1000;
+    let k = hi;
+    for (let i = 0; i < 60; i++) {
+      k = (lo + hi) / 2;
+      if (k * (1 - Math.exp(-maxKm / k)) < target) lo = k;
+      else hi = k;
+    }
+    raw = (max * (1 - Math.exp(-km / k))) / (1 - Math.exp(-maxKm / k));
+  }
+  const r = Math.max(1, round);
+  return Math.min(max ?? Infinity, Math.max(min, Math.ceil(raw / r) * r));
 }
 
 export function DeliverySettings({
   initial,
 }: {
-  initial: { lat: number | null; lng: number | null; perKm: number | null; min: number; factor: number; round: number };
+  initial: {
+    lat: number | null;
+    lng: number | null;
+    perKm: number | null;
+    min: number;
+    max: number | null;
+    maxKm: number | null;
+    factor: number;
+    round: number;
+  };
 }) {
   const [store, setStore] = useState<Pt | null>(initial.lat && initial.lng ? { lat: initial.lat, lng: initial.lng } : null);
   const [test, setTest] = useState<Pt | null>(null);
   const [mode, setMode] = useState<"store" | "test">(store ? "test" : "store");
   const [perKm, setPerKm] = useState(String(initial.perKm ?? ""));
   const [min, setMin] = useState(String(initial.min));
+  const [max, setMax] = useState(initial.max === null ? "" : String(initial.max));
+  const [maxKm, setMaxKm] = useState(initial.maxKm === null ? "" : String(initial.maxKm));
   const [factor, setFactor] = useState(String(initial.factor));
   const [round, setRound] = useState(String(initial.round));
 
@@ -110,8 +139,15 @@ export function DeliverySettings({
   }, [store, test]);
 
   const n = (v: string, d = 0) => (Number.isFinite(Number(v)) && v !== "" ? Number(v) : d);
+  const opt = (v: string) => (v.trim() === "" || !Number.isFinite(Number(v)) ? null : Number(v));
+  const price = (d: number) => fee(d, n(perKm), n(min), opt(max), opt(maxKm), n(round, 5));
+  const show = (d: number) => {
+    const f = price(d);
+    return f === null ? "No delivery" : egp(f);
+  };
   const dist = store && test ? km(store, test) * n(factor, 1.3) : null;
-  const examples = [2, 5, 8, 12, 18, 25];
+  const limit = opt(maxKm);
+  const examples = [3, 8, 15, 25, 40, ...(limit ? [limit, Math.round(limit * 1.2)] : [60])];
 
   return (
     <ActionForm action={saveDelivery} className="grid gap-5">
@@ -145,7 +181,7 @@ export function DeliverySettings({
             {dist !== null && (
               <div className="absolute end-3 top-3 z-[500] grid gap-0.5 rounded-2xl bg-white/95 px-4 py-3 shadow-lg">
                 <span className="text-xs text-muted">Customer here pays</span>
-                <span className="num font-display text-2xl font-semibold text-plum">{egp(fee(dist, n(perKm), n(min), Math.max(1, n(round, 5))))}</span>
+                <span className="num font-display text-2xl font-semibold text-plum">{show(dist)}</span>
                 <span className="num text-xs text-muted">≈ {dist.toFixed(1)} km by road</span>
               </div>
             )}
@@ -156,16 +192,29 @@ export function DeliverySettings({
             they&apos;d pay.
           </p>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <label className="field">
               <span className="label">Price per km</span>
               <input className="input num" name="fee_per_km" inputMode="decimal" value={perKm} onChange={(e) => setPerKm(e.target.value)} />
+              <span className="hint">What each km costs near the store. Further out it eases off.</span>
               <FieldError state={state} name="fee_per_km" />
             </label>
             <label className="field">
               <span className="label">Minimum fee</span>
               <input className="input num" name="min_shipping_fee" inputMode="decimal" value={min} onChange={(e) => setMin(e.target.value)} />
               <FieldError state={state} name="min_shipping_fee" />
+            </label>
+            <label className="field">
+              <span className="label">Maximum fee</span>
+              <input className="input num" name="max_shipping_fee" inputMode="decimal" value={max} onChange={(e) => setMax(e.target.value)} />
+              <span className="hint">The fee at the delivery limit. Empty = no cap.</span>
+              <FieldError state={state} name="max_shipping_fee" />
+            </label>
+            <label className="field">
+              <span className="label">Delivery limit (km by road)</span>
+              <input className="input num" name="max_delivery_km" inputMode="decimal" value={maxKm} onChange={(e) => setMaxKm(e.target.value)} />
+              <span className="hint">Further than this, checkout says delivery isn&apos;t available. Empty = no limit.</span>
+              <FieldError state={state} name="max_delivery_km" />
             </label>
             <label className="field">
               <span className="label">Road factor</span>
@@ -182,7 +231,7 @@ export function DeliverySettings({
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-line">
-            <table className="w-full min-w-[480px] border-collapse text-sm">
+            <table className="w-full min-w-[620px] border-collapse text-sm">
               <caption className="px-4 pt-3 text-start text-sm font-semibold text-plum">What customers pay by road distance</caption>
               <thead>
                 <tr>
@@ -197,7 +246,7 @@ export function DeliverySettings({
                 <tr className="border-t border-line">
                   {examples.map((d) => (
                     <td key={d} className="num px-4 py-2.5 font-semibold text-plum">
-                      {egp(fee(d, n(perKm), n(min), Math.max(1, n(round, 5))))}
+                      {show(d)}
                     </td>
                   ))}
                 </tr>
