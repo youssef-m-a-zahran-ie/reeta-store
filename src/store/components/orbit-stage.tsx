@@ -1,57 +1,54 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { NutArt, type NutKind } from "../menu/nut-art";
 
-type RoundDef = { c: string; s: number; d: [number, number]; m: [number, number]; z: number };
+/**
+ * d / m: where the nut floats in the hero (fraction of its width and height) on laptop / phone.
+ * s: size in px on laptop. z: how much it follows the pointer. r: resting tilt.
+ * Each nut with a plate on the page falls into it as you scroll; the rest drift away.
+ */
+type NutDef = { k: NutKind; s: number; d: [number, number]; m: [number, number]; z: number; r: number };
 
-// Coated rounds around the logo (brand guidelines: "Coated rounds" and "Web hero").
-const ROUNDS: RoundDef[] = [
-  { c: "#3a2420", s: 96, d: [0.13, 0.36], m: [0.1, 0.1], z: 1 },
-  { c: "#a0673f", s: 54, d: [0.2, 0.6], m: [0.3, 0.04], z: 0.6 },
-  { c: "#d9607a", s: 30, d: [0.1, 0.76], m: [0.08, 0.3], z: 0.45 },
-  { c: "#8a9a62", s: 62, d: [0.82, 0.3], m: [0.88, 0.1], z: 0.8 },
-  { c: "#f5ead8", s: 100, d: [0.87, 0.58], m: [0.92, 0.3], z: 1.1 },
-  { c: "#c9955f", s: 34, d: [0.76, 0.8], m: [0.7, 0.04], z: 0.5 },
+const NUTS: NutDef[] = [
+  { k: "cashew", s: 112, d: [0.13, 0.34], m: [0.11, 0.1], z: 1, r: -12 },
+  { k: "almond", s: 92, d: [0.84, 0.28], m: [0.89, 0.1], z: 0.85, r: 10 },
+  { k: "hazelnut", s: 96, d: [0.2, 0.68], m: [0.08, 0.3], z: 0.7, r: 6 },
+  { k: "macadamia", s: 100, d: [0.86, 0.64], m: [0.92, 0.32], z: 1.1, r: 0 },
+  { k: "almond", s: 48, d: [0.29, 0.14], m: [0.3, 0.03], z: 0.45, r: -30 },
+  { k: "hazelnut", s: 44, d: [0.73, 0.86], m: [0.7, 0.04], z: 0.5, r: 18 },
 ];
 
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const inOut = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 
 /**
- * Wraps the hero and the product section below it. The rounds float around the logo,
- * follow the pointer, and fall into the pouch band of their color as you scroll.
+ * Wraps the hero and the menu below it. The cartoon nuts float around the logo, follow the
+ * pointer, and drop into their own plate as you scroll down.
  */
 export function OrbitStage({ children }: { children: ReactNode }) {
   const stageRef = useRef<HTMLDivElement>(null);
-  const layerRef = useRef<HTMLDivElement>(null);
+  const nutRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const stage = stageRef.current;
-    const layer = layerRef.current;
-    if (!stage || !layer) return;
+    if (!stage) return;
     const hero = stage.querySelector<HTMLElement>("[data-hero]");
     if (!hero) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const els = ROUNDS.map((r, i) => {
-      const el = document.createElement("div");
-      el.className = "absolute top-0 left-0 rounded-full will-change-transform";
-      el.style.background = r.c;
-      el.style.boxShadow = `inset -${r.s * 0.09}px -${r.s * 0.11}px 0 rgb(0 0 0 / .13), 0 ${r.s * 0.06}px ${r.s * 0.12}px rgb(58 36 32 / .16)`;
-      layer.appendChild(el);
-      return { ...r, el, ph: i * 1.7, band: null as HTMLElement | null, landed: false };
-    });
+    const els = NUTS.map((n, i) => ({ ...n, el: nutRefs.current[i]!, ph: i * 1.7, plate: null as HTMLElement | null, landed: false })).filter((n) => n.el);
 
-    // Each round lands on the first product band of its color.
-    const assignBands = () => {
+    // The first nut of each kind lands on that nut's plate.
+    const assignPlates = () => {
       const taken = new Set<Element>();
-      const bands = [...stage.querySelectorAll<HTMLElement>("[data-band]")];
-      for (const r of els) {
-        r.band = bands.find((b) => !taken.has(b) && b.dataset.color?.toLowerCase() === r.c && b.offsetParent !== null) ?? null;
-        if (r.band) taken.add(r.band);
+      for (const n of els) {
+        const plate = [...stage.querySelectorAll<HTMLElement>(`[data-plate="${n.k}"]`)].find((p) => !taken.has(p) && p.offsetParent !== null) ?? null;
+        n.plate = plate;
+        if (plate) taken.add(plate);
       }
     };
-    assignBands();
+    assignPlates();
 
     let mx = 0,
       my = 0,
@@ -62,7 +59,7 @@ export function OrbitStage({ children }: { children: ReactNode }) {
       ty = e.clientY / window.innerHeight - 0.5;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("resize", assignBands);
+    window.addEventListener("resize", assignPlates);
 
     const introStart = performance.now();
     let raf = 0;
@@ -76,36 +73,39 @@ export function OrbitStage({ children }: { children: ReactNode }) {
       const sy = window.scrollY;
       const rtl = document.documentElement.dir === "rtl";
       const introE = reduce ? 1 : 1 - Math.pow(1 - clamp((now - introStart - 200) / 1400), 3);
+      const t = now / 1000;
 
-      for (const r of els) {
-        const pos = narrow ? r.m : r.d;
+      for (const n of els) {
+        const pos = narrow ? n.m : n.d;
         const px = rtl ? 1 - pos[0] : pos[0];
-        const base = narrow ? r.s * 0.68 : r.s;
+        const base = narrow ? n.s * 0.6 : n.s;
         const x0 = hr.left - sr.left + px * hr.width;
         const y0 = hr.top - sr.top + pos[1] * hr.height;
         let x = x0,
           y = y0,
           size = base,
           op = 1,
+          rot = n.r,
           p = 0;
 
-        if (r.band && !reduce) {
-          const br = r.band.getBoundingClientRect();
+        if (n.plate && !reduce) {
+          const br = n.plate.getBoundingClientRect();
           const x1 = br.left - sr.left + br.width / 2;
-          const y1 = br.top - sr.top + br.height / 2;
-          const end = Math.max(220, br.top + sy + br.height / 2 - vh * 0.62);
+          const y1 = br.top - sr.top + br.height * 0.5;
+          const end = Math.max(220, br.top + sy + br.height / 2 - vh * 0.6);
           p = clamp(sy / end);
           x = x0 + (x1 - x0) * (1 - Math.pow(1 - p, 2.2));
           y = y0 + (y1 - y0) * inOut(p);
-          size = base + (16 - base) * inOut(p);
-          op = 1 - clamp((p - 0.9) / 0.1);
-          if (p > 0.985 && !r.landed) {
-            r.landed = true;
-            r.band.classList.remove("band-splash");
-            void r.band.offsetWidth;
-            r.band.classList.add("band-splash");
+          size = base + (br.width * 0.3 - base) * inOut(p);
+          rot = n.r + 300 * inOut(p) * (px < 0.5 ? 1 : -1);
+          op = 1 - clamp((p - 0.88) / 0.1);
+          if (p > 0.97 && !n.landed) {
+            n.landed = true;
+            n.plate.classList.remove("plate-catch");
+            void n.plate.offsetWidth;
+            n.plate.classList.add("plate-catch");
           }
-          if (p < 0.9) r.landed = false;
+          if (p < 0.88) n.landed = false;
         } else if (!reduce) {
           p = clamp(sy / 520);
           x = x0 + (px < 0.5 ? -90 : 90) * p;
@@ -115,18 +115,19 @@ export function OrbitStage({ children }: { children: ReactNode }) {
 
         if (!reduce) {
           const free = 1 - p;
-          const t = now / 1000;
-          x += (mx * 46 * r.z + Math.sin(t * 0.7 + r.ph) * 9) * free;
-          y += (my * 34 * r.z + Math.cos(t * 0.6 + r.ph) * 13) * free;
+          x += (mx * 46 * n.z + Math.sin(t * 0.7 + n.ph) * 9) * free;
+          y += (my * 34 * n.z + Math.cos(t * 0.6 + n.ph) * 13) * free;
+          rot += Math.sin(t * 0.5 + n.ph) * 6 * free;
           const hx = hr.left - sr.left + hr.width / 2;
           const hy = hr.top - sr.top + hr.height * 0.44;
           x = hx + (x - hx) * (0.55 + 0.45 * introE);
           y = hy + (y - hy) * (0.55 + 0.45 * introE);
           size *= 0.4 + 0.6 * introE;
+          op *= introE;
         }
-        r.el.style.width = r.el.style.height = `${size}px`;
-        r.el.style.opacity = String(op);
-        r.el.style.transform = `translate(${x - size / 2}px, ${y - size / 2}px)`;
+        n.el.style.width = n.el.style.height = `${size}px`;
+        n.el.style.opacity = String(op);
+        n.el.style.transform = `translate(${x - size / 2}px, ${y - size / 2}px) rotate(${rot}deg)`;
       }
       if (!reduce) raf = requestAnimationFrame(frame);
     };
@@ -137,15 +138,26 @@ export function OrbitStage({ children }: { children: ReactNode }) {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("resize", assignBands);
+      window.removeEventListener("resize", assignPlates);
       window.removeEventListener("resize", onResizeStatic);
-      els.forEach((r) => r.el.remove());
     };
   }, []);
 
   return (
     <div ref={stageRef} className="relative">
-      <div ref={layerRef} className="pointer-events-none absolute inset-0 z-[6] overflow-hidden" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-[6] overflow-hidden" aria-hidden="true">
+        {NUTS.map((n, i) => (
+          <div
+            key={i}
+            ref={(el) => {
+              nutRefs.current[i] = el;
+            }}
+            className="hero-nut absolute top-0 left-0 opacity-0 will-change-transform"
+          >
+            <NutArt kind={n.k} className="size-full" />
+          </div>
+        ))}
+      </div>
       {children}
     </div>
   );

@@ -6,7 +6,8 @@ import { bool, int, num, optStr, str } from "@/lib/admin/form";
 import { fail, friendlyDbError, ok, type ActionState } from "@/lib/admin/state";
 import { grams as gramsLabel } from "@/lib/format";
 import { slugify } from "@/lib/format";
-import { isBaseVisual, isCoatingVisual } from "@/store/customize/visuals";
+import { MEDIA_BUCKET } from "@/lib/supabase/env";
+import { isBaseVisual, isCoatingVisual } from "@/store/menu/visuals";
 
 const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -23,24 +24,24 @@ function wrap(fn: (fd: FormData) => Promise<ActionState>) {
 }
 
 function refresh() {
-  revalidatePath("/admin/atelier", "layout");
+  revalidatePath("/admin/menu", "layout");
   revalidatePath("/admin/inventory");
   revalidatePath("/admin");
 }
 
 /* ---------- On / off ---------- */
-export const saveAtelierSwitch = wrap(async (fd) => {
+export const saveMenuSwitch = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const on = bool(fd, "custom_enabled");
   const { error } = await supabase.from("settings").update({ custom_enabled: on }).eq("id", 1);
   if (error) return fail(friendlyDbError(error));
   refresh();
-  return ok(on ? "The Atelier is on. It shows on the store once at least one nut, coating and size are priced." : "The Atelier is off. Shoppers can't see it.");
+  return ok(on ? "Selling is on. The menu shows once at least one nut, sauce and size are priced." : "Selling is off. The menu is hidden from the store.");
 });
 
 /* ---------- Prices and weights ----------
    Fields: bp:<base>:<size>:grams|price|cost and cp:<coating>:<size>:price|cost */
-export const saveAtelierPrices = wrap(async (fd) => {
+export const saveMenuPrices = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   type BaseRow = { base_id: string; size_id: string; grams: number | null; price: number | null; cost: number | null };
   type CoatRow = { coating_id: string; size_id: string; price: number | null; cost: number | null };
@@ -85,32 +86,32 @@ export const saveAtelierPrices = wrap(async (fd) => {
     if (error) return fail(friendlyDbError(error));
   }
   refresh();
-  return ok("Saved. The Atelier shows the new prices right away.");
+  return ok("Saved. The menu shows the new prices right away.");
 });
 
-/* ---------- Nuts in the Atelier ---------- */
-export const addAtelierBase = wrap(async (fd) => {
+/* ---------- Nuts on the menu ---------- */
+export const addMenuBase = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const base_id = str(fd, "base_id");
   const visual = str(fd, "visual");
   if (!base_id) return fail("Pick a nut.", { base_id: "Pick a nut." });
-  if (!isBaseVisual(visual)) return fail("Pick which photos it uses.", { visual: "Pick the photos." });
+  if (!isBaseVisual(visual)) return fail("Pick its drawing.", { visual: "Pick the drawing." });
   const { error } = await supabase.from("custom_bases").insert({ base_id, visual, sort: int(fd, "sort", 10) });
-  if (error) return fail(error.code === "23505" ? "This nut is already in the Atelier." : friendlyDbError(error));
+  if (error) return fail(error.code === "23505" ? "This nut is already on the menu." : friendlyDbError(error));
   const { data: sizes } = await supabase.from("custom_sizes").select("id");
   if (sizes?.length) await supabase.from("custom_base_prices").upsert(sizes.map((s) => ({ base_id, size_id: s.id })), { ignoreDuplicates: true });
   refresh();
   return ok("Added. Set its weights and prices on the Prices tab.");
 });
 
-export const saveAtelierBase = wrap(async (fd) => {
+export const saveMenuBase = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const base_id = str(fd, "base_id");
   const visual = str(fd, "visual");
   const display = str(fd, "display") === "size" ? "size" : "weight";
   const share = num(fd, "coating_share");
   const errors: Record<string, string> = {};
-  if (!isBaseVisual(visual)) errors.visual = "Pick the photos.";
+  if (!isBaseVisual(visual)) errors.visual = "Pick the drawing.";
   if (share === null || Number.isNaN(share) || share < 0 || share > 90) errors.coating_share = "Between 0 and 90.";
   if (Object.keys(errors).length) return fail("Check the highlighted fields.", errors);
   const { error } = await supabase
@@ -130,54 +131,116 @@ export const saveAtelierBase = wrap(async (fd) => {
   return ok("Saved.");
 });
 
-export const removeAtelierBase = wrap(async (fd) => {
+export const removeMenuBase = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const id = str(fd, "id");
   const { error } = await supabase.from("custom_bases").delete().eq("base_id", id);
   if (error) return fail(friendlyDbError(error));
   refresh();
-  return ok("Removed from the Atelier. Past orders keep their details.");
+  return ok("Removed from the menu. Past orders keep their details.");
 });
 
-/* ---------- Coatings in the Atelier ---------- */
-export const addAtelierCoating = wrap(async (fd) => {
+/* ---------- Sauces on the menu ---------- */
+export const addMenuCoating = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const coating_id = str(fd, "coating_id");
   const visual = str(fd, "visual");
   if (!coating_id) return fail("Pick a coating.", { coating_id: "Pick a coating." });
-  if (!isCoatingVisual(visual)) return fail("Pick which photos it uses.", { visual: "Pick the photos." });
+  if (!isCoatingVisual(visual)) return fail("Pick its color family.", { visual: "Pick one." });
   const { error } = await supabase.from("custom_coatings").insert({ coating_id, visual, sort: int(fd, "sort", 10) });
-  if (error) return fail(error.code === "23505" ? "This coating is already in the Atelier." : friendlyDbError(error));
+  if (error) return fail(error.code === "23505" ? "This sauce is already on the menu." : friendlyDbError(error));
   const { data: sizes } = await supabase.from("custom_sizes").select("id");
   if (sizes?.length) await supabase.from("custom_coating_prices").upsert(sizes.map((s) => ({ coating_id, size_id: s.id })), { ignoreDuplicates: true });
   refresh();
   return ok("Added. Set its prices on the Prices tab.");
 });
 
-export const saveAtelierCoating = wrap(async (fd) => {
+export const saveMenuCoating = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const coating_id = str(fd, "coating_id");
   const visual = str(fd, "visual");
-  if (!isCoatingVisual(visual)) return fail("Pick the photos.", { visual: "Pick the photos." });
+  if (!isCoatingVisual(visual)) return fail("Pick its color family.", { visual: "Pick one." });
   const { error } = await supabase
     .from("custom_coatings")
-    .update({ visual, note_en: optStr(fd, "note_en"), note_ar: optStr(fd, "note_ar"), sort: int(fd, "sort"), is_active: bool(fd, "is_active") })
+    .update({
+      visual,
+      label_en: optStr(fd, "label_en"),
+      label_ar: optStr(fd, "label_ar"),
+      note_en: optStr(fd, "note_en"),
+      note_ar: optStr(fd, "note_ar"),
+      sort: int(fd, "sort"),
+      is_active: bool(fd, "is_active"),
+    })
     .eq("coating_id", coating_id);
   if (error) return fail(friendlyDbError(error));
   refresh();
   return ok("Saved.");
 });
 
-export const removeAtelierCoating = wrap(async (fd) => {
+export const removeMenuCoating = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const { error } = await supabase.from("custom_coatings").delete().eq("coating_id", str(fd, "id"));
   if (error) return fail(friendlyDbError(error));
   refresh();
-  return ok("Removed from the Atelier. Past orders keep their details.");
+  return ok("Removed from the menu. Past orders keep their details.");
 });
 
+/* ---------- Plate photos ----------
+   The plain plate lives on custom_bases.image_path; the plate with each sauce in custom_plate_photos.
+   The browser uploads to storage (menu/<uuid>.webp) and then calls this to link it. */
+const PHOTO_RE = /^menu\/[0-9a-f-]{36}\.webp$/;
+const UUID_RE = new RegExp(`^${UUID}$`);
+
+export async function setPlatePhoto(baseId: string, coatingId: string | null, path: string): Promise<ActionState> {
+  try {
+    const { supabase } = await assertAdmin();
+    if (!UUID_RE.test(baseId) || (coatingId !== null && !UUID_RE.test(coatingId)) || !PHOTO_RE.test(path)) return fail("That upload didn't work. Try again.");
+    let old: string | null = null;
+    if (coatingId) {
+      const { data: prev } = await supabase.from("custom_plate_photos").select("image_path").eq("base_id", baseId).eq("coating_id", coatingId).maybeSingle();
+      old = prev?.image_path ?? null;
+      const { error } = await supabase.from("custom_plate_photos").upsert({ base_id: baseId, coating_id: coatingId, image_path: path });
+      if (error) return fail(friendlyDbError(error));
+    } else {
+      const { data: prev } = await supabase.from("custom_bases").select("image_path").eq("base_id", baseId).maybeSingle();
+      old = prev?.image_path ?? null;
+      const { error } = await supabase.from("custom_bases").update({ image_path: path }).eq("base_id", baseId);
+      if (error) return fail(friendlyDbError(error));
+    }
+    if (old && old !== path) await supabase.storage.from(MEDIA_BUCKET).remove([old]);
+    refresh();
+    return ok("Photo saved. It's live on the menu.");
+  } catch (e) {
+    if (e instanceof NotAdminError) return fail(e.message);
+    throw e;
+  }
+}
+
+export async function removePlatePhoto(baseId: string, coatingId: string | null): Promise<ActionState> {
+  try {
+    const { supabase } = await assertAdmin();
+    if (!UUID_RE.test(baseId) || (coatingId !== null && !UUID_RE.test(coatingId))) return fail("Not found.");
+    let old: string | null = null;
+    if (coatingId) {
+      const { data } = await supabase.from("custom_plate_photos").delete().eq("base_id", baseId).eq("coating_id", coatingId).select("image_path");
+      old = data?.[0]?.image_path ?? null;
+    } else {
+      const { data: prev } = await supabase.from("custom_bases").select("image_path").eq("base_id", baseId).maybeSingle();
+      old = prev?.image_path ?? null;
+      const { error } = await supabase.from("custom_bases").update({ image_path: null }).eq("base_id", baseId);
+      if (error) return fail(friendlyDbError(error));
+    }
+    if (old) await supabase.storage.from(MEDIA_BUCKET).remove([old]);
+    refresh();
+    return ok("Photo removed.");
+  } catch (e) {
+    if (e instanceof NotAdminError) return fail(e.message);
+    throw e;
+  }
+}
+
 /* ---------- Sizes ---------- */
-export const saveAtelierSize = wrap(async (fd) => {
+export const saveMenuSize = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const id = optStr(fd, "id");
   const name_en = str(fd, "name_en");
@@ -188,7 +251,7 @@ export const saveAtelierSize = wrap(async (fd) => {
   if (!name_en) errors.name_en = "Add the English name.";
   if (!name_ar) errors.name_ar = "Add the Arabic name.";
   if (!SLUG_RE.test(slug)) errors.slug = "Use lowercase letters, numbers and dashes.";
-  if (![1, 2, 3].includes(tier)) errors.tier = "Pick a bowl.";
+  if (![1, 2, 3].includes(tier)) errors.tier = "Pick a plate size.";
   if (Object.keys(errors).length) return fail("Check the highlighted fields.", errors);
   const row = { name_en, name_ar, slug, tier, sort: int(fd, "sort"), is_active: bool(fd, "is_active") };
 
@@ -210,7 +273,7 @@ export const saveAtelierSize = wrap(async (fd) => {
   return ok(`Added ${name_en}. Set its weights and prices on the Prices tab.`);
 });
 
-export const deleteAtelierSize = wrap(async (fd) => {
+export const deleteMenuSize = wrap(async (fd) => {
   const { supabase } = await assertAdmin();
   const id = str(fd, "id");
   const { count } = await supabase.from("order_items").select("id", { count: "exact", head: true }).eq("custom_size_id", id);

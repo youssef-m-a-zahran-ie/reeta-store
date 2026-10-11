@@ -120,10 +120,10 @@ export default async function InventoryPage({ searchParams }: PageProps<"/admin/
       {ingredients.length > 0 && (
         <Section
           className="mt-6"
-          title="Atelier: nuts and coatings"
+          title="Menu: nuts and sauces"
           description="Made-to-order pouches take grams off the nut and the coating (split by each nut's coating share). Switch on “Sell out” once you've entered real stock."
         >
-          <div id="atelier" className="scroll-mt-24" />
+          <div id="menu" className="scroll-mt-24" />
           <div className="grid gap-3">
             {ingredients.map((g) => {
               const level: "out" | "low" | "ok" = g.stock_grams <= 0 ? "out" : g.stock_grams <= g.low_stock_threshold ? "low" : "ok";
@@ -185,7 +185,7 @@ export default async function InventoryPage({ searchParams }: PageProps<"/admin/
                       <td className="py-2.5 pe-3">
                         {m.products?.name_en ?? ingredient}
                         {size && <span className="text-muted"> · {size}</span>}
-                        {ingredient && <span className="text-muted"> · Atelier</span>}
+                        {ingredient && <span className="text-muted"> · Menu</span>}
                       </td>
                       <td className={`num py-2.5 pe-3 font-semibold ${m.delta > 0 ? "text-[#56633a]" : "text-[#a33a52]"}`}>
                         {m.delta > 0 ? "+" : "−"}

@@ -1,16 +1,6 @@
-import type { Metadata } from "next";
-import { AtelierView } from "@/store/views/atelier";
-import { dict } from "@/store/i18n";
-import { pageMeta } from "@/store/meta";
+import { permanentRedirect } from "next/navigation";
 
-export const metadata: Metadata = pageMeta({
-  lang: "ar",
-  path: "/customize",
-  title: dict.ar.atelier.metaTitle,
-  description: dict.ar.atelier.lede,
-  image: "/atelier/hazelnut-dark-drip.webp",
-});
-
+// The old "make your own" page: everything is on the menu now.
 export default function Page() {
-  return <AtelierView lang={"ar"} />;
+  permanentRedirect("/ar#menu");
 }

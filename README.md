@@ -56,15 +56,16 @@ To add another admin: `insert into public.admins (email) values ('name@example.c
 2. Build command: `npx opennextjs-cloudflare build` · Deploy command: `npx opennextjs-cloudflare deploy`.
 3. In Supabase → **Authentication → URL Configuration**, set the Site URL to the live address and add `https://<your-domain>/**` to the redirect URLs, so email links open the site.
 
-## The Atelier (make your own)
+## The menu (how the store sells)
 
-Shoppers compose a pouch at `/customize` (`/ar/customize`): a nut, a coating and a size. A live stage shows the coating pouring onto the nut, then the bowl filling up for the size picked.
+The home page (and `/shop`) is the store: four plates in a 2 × 2 grid (cashew, almond, hazelnut, macadamia). Tapping a plate opens a bottom sheet on phones, or fills the side panel on laptop: pick a sauce (white, dark, milk, pistachio), a size (70 / 160 / 210 g) and how many, then Add. The plate photo changes with the sauce and grows with the size. In the hero, cartoon nuts float around the logo and fall into their own plate as you scroll.
 
-- **Admin → Atelier:** weights, prices and costs per nut and size; what each coating adds per size; which nuts, coatings and sizes are offered; on/off switch. Price = nut at that size + coating at that size (same for cost).
-- **Stock:** Admin → Inventory → Atelier. Nuts and coatings are tracked in grams; each nut's coating share splits a pouch's weight between them. "Sell out when it runs out" is off until real stock is entered.
-- **Orders:** `place_order` prices made-to-order lines itself (cart id `<base>.<coating>.<size>`), snapshots name, price and cost, and takes stock through `stock_movements` like any product.
-- **Photos:** `public/atelier/`, listed in `src/store/customize/visuals.ts`. A new nut or coating needs its photo set there before it can be offered. The bowl's logo is drawn from `public/brand/mark-full.png`, so a new logo shows on the bowl too.
-- The page and the nav link appear only when the Atelier is on and at least one nut and one coating are priced in the same size.
+- **Admin → Menu:** *Prices and weights* (nut price, weight and cost per size; what each sauce adds per size; on/off switch), *Plate photos* (one plain plate per nut, one per nut × sauce), *Nuts, sauces and sizes* (what's offered, short button names, cartoon per nut, plate size per size). Price = nut at that size + sauce at that size (same for cost).
+- **Heading text:** Admin → Content → The menu.
+- **Stock:** Admin → Inventory → Menu. Nuts and sauces are tracked in grams; each nut's coating share splits a pouch's weight between them. "Sell out when it runs out" is off until real stock is entered.
+- **Orders:** `place_order` prices these lines itself (cart id `<base>.<coating>.<size>`), snapshots name, price and cost, and takes stock through `stock_movements` like any product.
+- **Code:** `src/store/menu/` (grid + sheet, cartoon nuts, photo fallbacks), hero animation in `src/store/components/orbit-stage.tsx`. Until plate photos are uploaded, single-piece stand-ins from `public/menu/` are shown (macadamia shows its cartoon).
+- The menu appears once selling is on and at least one nut and one sauce are priced in the same size. The old `/customize` page redirects to the menu. Ready-made products still have their pages at `/products/<slug>` but aren't linked from the home page.
 
 ## Ads and tracking
 

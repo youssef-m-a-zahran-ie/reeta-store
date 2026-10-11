@@ -17,12 +17,13 @@ export const HOME_BLOCKS: BlockDef[] = [
   },
   {
     key: "home.bestsellers",
-    title: "Bestsellers",
-    hint: "Shows products marked Featured, or the first four.",
+    title: "The menu",
+    hint: "The four plates shoppers order from (also the Shop page). Empty fields use the default wording.",
     alwaysOn: true,
     fields: [
       { name: "eyebrow", label: "Small label" },
       { name: "title", label: "Title" },
+      { name: "text", label: "Line under it" },
     ],
   },
   {

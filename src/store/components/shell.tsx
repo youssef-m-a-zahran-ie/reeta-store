@@ -39,7 +39,7 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
       )}
       <Pixels meta={settings.meta_pixel_id} tiktok={settings.tiktok_pixel_id} ga4={settings.ga4_id} />
       <PixelPageViews />
-      <Header lang={lang} freeOver={settings.free_shipping_over} atelier={settings.custom_ready} />
+      <Header lang={lang} freeOver={settings.free_shipping_over} />
       <div id="content">{children}</div>
 
       <footer className="dot-grid-dark mt-20 bg-plum text-blush">
@@ -55,7 +55,6 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
           </div>
           <FooterCol title={t.footer.shop}>
             <FooterLink to={href(lang, "/shop")}>{t.nav.shop}</FooterLink>
-            {settings.custom_ready && <FooterLink to={href(lang, "/customize")}>{t.nav.atelier}</FooterLink>}
             <FooterLink to={href(lang, "/bundles")}>{t.nav.bundles}</FooterLink>
             <FooterLink to={href(lang, "/about")}>{t.nav.about}</FooterLink>
           </FooterCol>

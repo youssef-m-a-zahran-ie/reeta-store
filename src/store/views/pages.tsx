@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBundles, getCatalog, getFaqs, getPage, getProduct, getSettings } from "../data";
+import { getBundles, getCatalog, getContent, getFaqs, getMenu, getPage, getProduct, getSettings } from "../data";
+import { MenuSection } from "../menu/section";
 import { dict, href, loc, type Lang } from "../i18n";
 import { ShopBrowser } from "../components/shop-browser";
 import { ProductBuy } from "../components/product-buy";
@@ -37,6 +38,15 @@ export async function ShopView({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const t = dict[lang];
+  // The shop is the menu: four nuts, each with a sauce and a size. Category pages keep the older catalog.
+  if (!category) {
+    const [menu, content] = await Promise.all([getMenu(), getContent("home")]);
+    return (
+      <main>
+        <MenuSection data={menu} lang={lang} heading="h1" copy={content["home.bestsellers"]?.data} />
+      </main>
+    );
+  }
   const catalog = await getCatalog();
   const cat = category ? catalog.categories.find((c) => c.slug === category) : null;
   if (category && !cat) notFound();

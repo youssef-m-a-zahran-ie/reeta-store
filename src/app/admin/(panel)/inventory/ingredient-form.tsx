@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ActionForm, FieldError, SubmitButton, Toggle } from "@/components/admin/form-bits";
-import { changeIngredientStock, saveIngredientTracking } from "../atelier/actions";
+import { changeIngredientStock, saveIngredientTracking } from "../menu/actions";
 
 const MODES = [
   { value: "add", label: "Add batch" },
@@ -10,7 +10,7 @@ const MODES = [
   { value: "set", label: "Set count" },
 ] as const;
 
-/** Stock in grams for one Atelier nut or coating, plus whether it can sell out. */
+/** Stock in grams for one menu nut or sauce, plus whether it can sell out. */
 export function IngredientForm({ kind, id, track, low }: { kind: "base" | "coating"; id: string; track: boolean; low: number }) {
   const [mode, setMode] = useState<(typeof MODES)[number]["value"]>("add");
   return (

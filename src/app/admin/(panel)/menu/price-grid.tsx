@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { ActionForm, SubmitButton } from "@/components/admin/form-bits";
 import { Swatch } from "@/components/admin/ui";
 import { margin } from "@/lib/format";
-import { saveAtelierPrices } from "./actions";
+import { saveMenuPrices } from "./actions";
 
 type Cell = { grams?: string; price: string; cost: string };
 export type GridSize = { id: string; name_en: string; is_active: boolean };
@@ -15,8 +15,8 @@ const s = (n: number | null | undefined) => (n === null || n === undefined ? "" 
 const n = (v: string | undefined) => (v === undefined || v.trim() === "" ? null : Number(v));
 const fmt = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 
-/** The whole Atelier price sheet: nut weights and prices per size, coating prices per size, and a live preview of what shoppers pay. */
-export function AtelierPriceGrid({ sizes, bases, coatings }: { sizes: GridSize[]; bases: GridBase[]; coatings: GridCoating[] }) {
+/** The whole menu price sheet: nut weights and prices per size, sauce prices per size, and a live preview of what shoppers pay. */
+export function MenuPriceGrid({ sizes, bases, coatings }: { sizes: GridSize[]; bases: GridBase[]; coatings: GridCoating[] }) {
   const [bp, setBp] = useState<Record<string, Cell>>(() => {
     const o: Record<string, Cell> = {};
     bases.forEach((b) => sizes.forEach((z) => (o[`${b.id}:${z.id}`] = { grams: s(b.prices[z.id]?.grams), price: s(b.prices[z.id]?.price), cost: s(b.prices[z.id]?.cost) })));
@@ -51,7 +51,7 @@ export function AtelierPriceGrid({ sizes, bases, coatings }: { sizes: GridSize[]
   const input = "input num px-2.5 py-1.5 text-sm";
 
   return (
-    <ActionForm action={saveAtelierPrices} className="grid gap-5">
+    <ActionForm action={saveMenuPrices} className="grid gap-5">
       {/* Nuts */}
       <div className="grid gap-3">
         <div className="grid gap-1">
@@ -103,8 +103,8 @@ export function AtelierPriceGrid({ sizes, bases, coatings }: { sizes: GridSize[]
       {/* Coatings */}
       <div className="grid gap-3">
         <div className="grid gap-1">
-          <h3 className="text-[22px] font-semibold">2 · Coatings</h3>
-          <p className="text-sm text-muted">What each coating adds on top of the nut, per size. Cost is your cost for the chocolate.</p>
+          <h3 className="text-[22px] font-semibold">2 · Sauces</h3>
+          <p className="text-sm text-muted">What each sauce adds on top of the nut, per size. Cost is your cost for the chocolate.</p>
         </div>
         {coatings.map((co) => (
           <div key={co.id} className={`grid gap-3 rounded-2xl border border-line p-4 ${co.is_active ? "" : "opacity-60"}`}>
@@ -146,9 +146,9 @@ export function AtelierPriceGrid({ sizes, bases, coatings }: { sizes: GridSize[]
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="grid gap-1">
             <h3 className="text-[22px] font-semibold">What shoppers pay</h3>
-            <p className="text-sm text-muted">Nut + coating, updated as you type. Not saved until you press Save.</p>
+            <p className="text-sm text-muted">Nut + sauce, updated as you type. Not saved until you press Save.</p>
           </div>
-          <div className="flex flex-wrap gap-1 rounded-full bg-white/70 p-1" role="radiogroup" aria-label="Coating for the preview">
+          <div className="flex flex-wrap gap-1 rounded-full bg-white/70 p-1" role="radiogroup" aria-label="Sauce for the preview">
             {coatings.map((co) => (
               <button
                 key={co.id}

@@ -154,9 +154,9 @@ export const getSettings = cache(async (): Promise<StoreSettings> => {
   return { ...EMPTY_SETTINGS, ...((data as unknown as Partial<StoreSettings>) ?? {}) };
 });
 
-/* ---------- The Atelier (made-to-order pouches) ---------- */
-export type AtelierSize = { id: string; slug: string; name_en: string; name_ar: string; tier: 1 | 2 | 3 };
-export type AtelierBase = {
+/* ---------- The menu (made-to-order pouches: nut + sauce + size) ---------- */
+export type MenuSize = { id: string; slug: string; name_en: string; name_ar: string; tier: 1 | 2 | 3 };
+export type MenuBase = {
   id: string;
   slug: string;
   name_en: string;
@@ -165,13 +165,19 @@ export type AtelierBase = {
   display: "weight" | "size";
   note_en: string | null;
   note_ar: string | null;
+  /** The plain plate photo (storage path), and one per sauce: { [coatingId]: path }. */
+  image: string | null;
+  photos: Record<string, string>;
   sizes: { size_id: string; grams: number; price: number }[];
 };
-export type AtelierCoating = {
+export type MenuCoating = {
   id: string;
   slug: string;
   name_en: string;
   name_ar: string;
+  /** Short name for the buttons ("Dark"); falls back to the full name. */
+  label_en: string;
+  label_ar: string;
   color: string;
   visual: string;
   note_en: string | null;
@@ -179,15 +185,18 @@ export type AtelierCoating = {
   prices: { size_id: string; price: number }[];
 };
 /** sold_out: combinations that exist but are out of stock, as "<base>.<coating>.<size>". */
-export type Atelier = { sizes: AtelierSize[]; bases: AtelierBase[]; coatings: AtelierCoating[]; sold_out: string[] };
+export type Menu = { sizes: MenuSize[]; bases: MenuBase[]; coatings: MenuCoating[]; sold_out: string[] };
 
-/** Null when the Atelier is switched off or nothing is priced yet. */
-export const getAtelier = cache(async (): Promise<Atelier | null> => {
+/** Null when selling is switched off or nothing is priced yet. */
+export const getMenu = cache(async (): Promise<Menu | null> => {
   await connection();
   const { data, error } = await db().rpc("store_customizer");
   if (error || !data) return null;
-  const a = data as unknown as Atelier;
-  a.bases.forEach((b) => (b.sizes = (b.sizes ?? []).map((z) => ({ ...z, grams: Number(z.grams), price: Number(z.price) }))));
+  const a = data as unknown as Menu;
+  a.bases.forEach((b) => {
+    b.sizes = (b.sizes ?? []).map((z) => ({ ...z, grams: Number(z.grams), price: Number(z.price) }));
+    b.photos = b.photos ?? {};
+  });
   a.coatings.forEach((c) => (c.prices = (c.prices ?? []).map((z) => ({ ...z, price: Number(z.price) }))));
   return a;
 });

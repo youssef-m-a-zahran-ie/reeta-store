@@ -3,28 +3,28 @@ import { requireAdmin } from "@/lib/admin/guard";
 import { EmptyState, PageHeader, Section, Swatch, Tabs } from "@/components/admin/ui";
 import { ActionForm, SubmitButton, Toggle } from "@/components/admin/form-bits";
 import { DeleteForm } from "@/components/admin/delete-form";
-import { BASE_VISUALS, COATING_VISUALS } from "@/store/customize/visuals";
+import { BASE_VISUALS, COATING_VISUALS } from "@/store/menu/visuals";
 import {
-  addAtelierBase,
-  addAtelierCoating,
-  deleteAtelierSize,
-  removeAtelierBase,
-  removeAtelierCoating,
-  saveAtelierBase,
-  saveAtelierCoating,
-  saveAtelierSize,
+  addMenuBase,
+  addMenuCoating,
+  deleteMenuSize,
+  removeMenuBase,
+  removeMenuCoating,
+  saveMenuBase,
+  saveMenuCoating,
+  saveMenuSize,
 } from "../actions";
-import { ATELIER_TABS } from "../tabs";
+import { MENU_TABS } from "../tabs";
 
-export const metadata: Metadata = { title: "Atelier options" };
+export const metadata: Metadata = { title: "Menu options" };
 
 const TIERS = [
-  { value: 1, label: "Small bowl" },
-  { value: 2, label: "Medium bowl" },
-  { value: 3, label: "Large bowl (overflows)" },
+  { value: 1, label: "Small plate" },
+  { value: 2, label: "Medium plate" },
+  { value: 3, label: "Large plate" },
 ];
 
-export default async function AtelierOptionsPage() {
+export default async function MenuOptionsPage() {
   const { supabase } = await requireAdmin();
   const [{ data: cbases }, { data: ccoatings }, { data: sizes }, { data: allBases }, { data: allCoatings }] = await Promise.all([
     supabase.from("custom_bases").select("*, bases(name_en, name_ar)").order("sort"),
@@ -40,21 +40,21 @@ export default async function AtelierOptionsPage() {
     <>
       <PageHeader
         eyebrow="Products"
-        title="Atelier"
-        description="Which nuts, coatings and sizes shoppers can pick from. Names come from Catalog → Bases and Coatings."
+        title="Menu"
+        description="Which nuts, sauces and sizes shoppers can pick from. Names come from Catalog → Bases and Coatings."
       />
-      <Tabs items={ATELIER_TABS} current="/admin/atelier/options" />
+      <Tabs items={MENU_TABS} current="/admin/menu/options" />
 
       <div className="grid gap-4">
         {/* ---------- Nuts ---------- */}
         <Section
           title="Nuts"
-          description="Each nut needs a photo set. The coating share is how much of the pouch's weight is chocolate; it's used to take the right amount off your nut and chocolate stock."
+          description="The drawing is the cartoon nut that falls into its plate on the home page. The coating share is how much of the pouch's weight is chocolate; it's used to take the right amount off your nut and chocolate stock."
         >
           <div className="grid gap-3">
             {cbases?.map((b) => (
               <div key={b.base_id} className="grid gap-2 rounded-2xl border border-line p-4">
-                <ActionForm action={saveAtelierBase} className="grid gap-3">
+                <ActionForm action={saveMenuBase} className="grid gap-3">
                       <input type="hidden" name="base_id" value={b.base_id} />
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <h3 className="font-sans text-lg font-semibold">{b.bases?.name_en}</h3>
@@ -64,7 +64,7 @@ export default async function AtelierOptionsPage() {
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         <label className="field">
-                          <span className="label">Photos</span>
+                          <span className="label">Drawing</span>
                           <VisualSelect name="visual" value={b.visual} options={BASE_VISUALS} />
                         </label>
                         <label className="field">
@@ -100,11 +100,11 @@ export default async function AtelierOptionsPage() {
                 </ActionForm>
                 <div className="flex justify-end">
                   <DeleteForm
-                    action={removeAtelierBase}
+                    action={removeMenuBase}
                     id={b.base_id}
-                    label="Remove from Atelier"
+                    label="Remove from the menu"
                     confirmText="Yes, remove"
-                    question={`Remove ${b.bases?.name_en} from the Atelier? Its prices and stock here are deleted. To hide it for a while, switch it off instead.`}
+                    question={`Remove ${b.bases?.name_en} from the menu? Its prices and stock here are deleted. To hide it for a while, switch it off instead.`}
                   />
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default async function AtelierOptionsPage() {
             {!cbases?.length && <EmptyState title="No nuts yet" />}
 
             {freeBases.length > 0 && (
-              <ActionForm action={addAtelierBase} resetOnSuccess className="grid gap-3 rounded-2xl border border-dashed border-line p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+              <ActionForm action={addMenuBase} resetOnSuccess className="grid gap-3 rounded-2xl border border-dashed border-line p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
                     <label className="field">
                       <span className="label">Add a nut</span>
                       <select className="input" name="base_id" defaultValue="">
@@ -127,22 +127,22 @@ export default async function AtelierOptionsPage() {
                       </select>
                     </label>
                     <label className="field">
-                      <span className="label">Photos</span>
+                      <span className="label">Drawing</span>
                       <VisualSelect name="visual" value={null} options={BASE_VISUALS} />
                     </label>
                     <SubmitButton pending="Adding…">Add</SubmitButton>
               </ActionForm>
             )}
-            <p className="text-xs text-muted">A nut without its own photo set can&apos;t be shown yet. Send the photos and its look gets added.</p>
+            <p className="text-xs text-muted">Plate photos for each nut and sauce are on the Plate photos tab.</p>
           </div>
         </Section>
 
         {/* ---------- Coatings ---------- */}
-        <Section title="Coatings" description="Each coating needs a photo set for every nut. The pour on the store uses the coating's own colors.">
+        <Section title="Sauces" description="The button name is what shoppers see on the sauce buttons (keep it short: Dark, White). Empty = the full name.">
           <div className="grid gap-3">
             {ccoatings?.map((c) => (
               <div key={c.coating_id} className="grid gap-2 rounded-2xl border border-line p-4">
-                <ActionForm action={saveAtelierCoating} className="grid gap-3">
+                <ActionForm action={saveMenuCoating} className="grid gap-3">
                       <input type="hidden" name="coating_id" value={c.coating_id} />
                       <div className="flex flex-wrap items-center gap-2">
                         <Swatch color={c.coatings?.color} size={22} />
@@ -151,10 +151,15 @@ export default async function AtelierOptionsPage() {
                           {c.coatings?.name_ar}
                         </span>
                       </div>
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                        <input type="hidden" name="visual" value={c.visual ?? ""} />
                         <label className="field">
-                          <span className="label">Photos</span>
-                          <VisualSelect name="visual" value={c.visual} options={COATING_VISUALS} />
+                          <span className="label">Button name, English</span>
+                          <input className="input" name="label_en" defaultValue={c.label_en ?? ""} maxLength={20} placeholder="Dark" />
+                        </label>
+                        <label className="field">
+                          <span className="label">Button name, Arabic</span>
+                          <input className="input" name="label_ar" defaultValue={c.label_ar ?? ""} maxLength={20} dir="rtl" placeholder="دارك" />
                         </label>
                         <label className="field">
                           <span className="label">Short line, English</span>
@@ -176,21 +181,21 @@ export default async function AtelierOptionsPage() {
                 </ActionForm>
                 <div className="flex justify-end">
                   <DeleteForm
-                    action={removeAtelierCoating}
+                    action={removeMenuCoating}
                     id={c.coating_id}
-                    label="Remove from Atelier"
+                    label="Remove from the menu"
                     confirmText="Yes, remove"
-                    question={`Remove ${c.coatings?.name_en} from the Atelier? Its prices and stock here are deleted. To hide it for a while, switch it off instead.`}
+                    question={`Remove ${c.coatings?.name_en} from the menu? Its prices and stock here are deleted. To hide it for a while, switch it off instead.`}
                   />
                 </div>
               </div>
             ))}
-            {!ccoatings?.length && <EmptyState title="No coatings yet" />}
+            {!ccoatings?.length && <EmptyState title="No sauces yet" />}
 
             {freeCoatings.length > 0 && (
-              <ActionForm action={addAtelierCoating} resetOnSuccess className="grid gap-3 rounded-2xl border border-dashed border-line p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+              <ActionForm action={addMenuCoating} resetOnSuccess className="grid gap-3 rounded-2xl border border-dashed border-line p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
                     <label className="field">
-                      <span className="label">Add a coating</span>
+                      <span className="label">Add a sauce</span>
                       <select className="input" name="coating_id" defaultValue="">
                         <option value="" disabled>
                           Pick from Catalog → Coatings
@@ -203,7 +208,7 @@ export default async function AtelierOptionsPage() {
                       </select>
                     </label>
                     <label className="field">
-                      <span className="label">Photos</span>
+                      <span className="label">Color family</span>
                       <VisualSelect name="visual" value={null} options={COATING_VISUALS} />
                     </label>
                     <SubmitButton pending="Adding…">Add</SubmitButton>
@@ -215,12 +220,12 @@ export default async function AtelierOptionsPage() {
         {/* ---------- Sizes ---------- */}
         <Section
           title="Sizes"
-          description="The names shoppers see. Weights and prices per nut are on the Prices tab. The bowl decides how full it looks on the store."
+          description="The names shoppers see. Weights and prices per nut are on the Prices tab. The plate size is how big the plate looks when this size is picked."
         >
           <div className="grid gap-3">
             {sizes?.map((z) => (
               <div key={z.id} className="grid gap-2 rounded-2xl border border-line p-4">
-                <ActionForm action={saveAtelierSize} className="grid gap-3">
+                <ActionForm action={saveMenuSize} className="grid gap-3">
                   <input type="hidden" name="id" value={z.id} />
                   <SizeFields z={z} />
                   <div className="flex flex-wrap items-center justify-between gap-3">
@@ -229,11 +234,11 @@ export default async function AtelierOptionsPage() {
                   </div>
                 </ActionForm>
                 <div className="flex justify-end">
-                  <DeleteForm action={deleteAtelierSize} id={z.id} question={`Delete ${z.name_en}? Only works if it was never ordered.`} />
+                  <DeleteForm action={deleteMenuSize} id={z.id} question={`Delete ${z.name_en}? Only works if it was never ordered.`} />
                 </div>
               </div>
             ))}
-            <ActionForm action={saveAtelierSize} resetOnSuccess className="grid gap-3 rounded-2xl border border-dashed border-line p-4">
+            <ActionForm action={saveMenuSize} resetOnSuccess className="grid gap-3 rounded-2xl border border-dashed border-line p-4">
               <span className="label">Add a size</span>
               <SizeFields />
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -248,15 +253,15 @@ export default async function AtelierOptionsPage() {
   );
 }
 
-function VisualSelect({ name, value, options }: { name: string; value: string | null; options: Record<string, { label: string }> }) {
+function VisualSelect({ name, value, options }: { name: string; value: string | null; options: Record<string, string> }) {
   return (
     <select className="input" name={name} defaultValue={value ?? ""} required>
       <option value="" disabled>
-        Pick a photo set
+        Pick one
       </option>
       {Object.entries(options).map(([k, v]) => (
         <option key={k} value={k}>
-          {v.label}
+          {v}
         </option>
       ))}
     </select>
@@ -275,7 +280,7 @@ function SizeFields({ z }: { z?: { name_en: string; name_ar: string; slug: strin
         <input className="input" name="name_ar" defaultValue={z?.name_ar} required dir="rtl" placeholder="وسط" />
       </label>
       <label className="field">
-        <span className="label">Bowl on the store</span>
+        <span className="label">Plate on the store</span>
         <select className="input" name="tier" defaultValue={z?.tier ?? 2}>
           {TIERS.map((t) => (
             <option key={t.value} value={t.value}>

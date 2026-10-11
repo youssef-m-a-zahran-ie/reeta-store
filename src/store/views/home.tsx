@@ -1,13 +1,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { mediaUrl } from "@/lib/supabase/env";
-import { getBundles, getCatalog, getContent, getSettings, getTestimonials, type StoreProduct } from "../data";
-import { AtelierTeaser } from "../customize/teaser";
+import { getBundles, getCatalog, getContent, getMenu, getTestimonials } from "../data";
 import { dict, href, loc, type Lang } from "../i18n";
 import { OrbitStage } from "../components/orbit-stage";
-import { ProductCard } from "../components/product-card";
 import { BundleCard } from "../components/bundle-card";
-import { EmptyOrbit } from "../components/orbit-decor";
+import { MenuSection } from "../menu/section";
 
 type Data = Record<string, unknown>;
 const txt = (d: Data | undefined, key: string, lang: Lang) => (d ? loc(d, key, lang) : "");
@@ -31,13 +29,9 @@ export function SectionHead({ eyebrow, title, text, action, id }: { eyebrow?: st
 
 export async function HomeView({ lang }: { lang: Lang }) {
   const t = dict[lang];
-  const [catalog, bundles, content, testimonials, settings] = await Promise.all([getCatalog(), getBundles(), getContent("home"), getTestimonials(), getSettings()]);
+  const [catalog, bundles, content, testimonials, menu] = await Promise.all([getCatalog(), getBundles(), getContent("home"), getTestimonials(), getMenu()]);
   const block = (k: string) => content[k];
   const hero = block("home.hero")?.data;
-
-  const featured = catalog.products.filter((p) => p.is_featured);
-  const best: StoreProduct[] = (featured.length ? featured : catalog.products).slice(0, 4);
-  const catName = (p: StoreProduct) => loc(catalog.categories.find((c) => c.id === p.category_id), "name", lang);
 
   const sections: { key: string; sort: number; node: ReactNode }[] = [];
 
@@ -173,7 +167,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
             <span className="float mark mark-full size-16" aria-hidden="true" />
             <h2 className="text-[32px] leading-tight font-semibold text-blush md:text-[44px]">{txt(cta.data, "title", lang)}</h2>
             <p className="text-blush/80">{txt(cta.data, "text", lang)}</p>
-            <Link href={href(lang, "/shop")} className="lift mt-2 rounded-full bg-blush px-7 py-3 text-lg font-medium text-plum hover:bg-cream">
+            <Link href={`${href(lang, "/")}#menu`} className="lift mt-2 rounded-full bg-blush px-7 py-3 text-lg font-medium text-plum hover:bg-cream">
               {txt(cta.data, "button", lang)}
             </Link>
           </div>
@@ -181,8 +175,6 @@ export async function HomeView({ lang }: { lang: Lang }) {
       ),
     });
   }
-
-  const bestBlock = block("home.bestsellers");
 
   return (
     <main>
@@ -218,7 +210,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
               </p>
             )}
             <div className="rise mt-1 flex flex-wrap justify-center gap-3" style={{ "--d": "1.05s" } as React.CSSProperties}>
-              <Link href={href(lang, "/shop")} className="lift rounded-full bg-plum px-6 py-3 text-[17px] font-medium text-blush hover:bg-plum-hover">
+              <Link href="#menu" className="lift rounded-full bg-plum px-6 py-3 text-[17px] font-medium text-blush hover:bg-plum-hover">
                 {txt(hero, "primary", lang) || t.nav.shop}
               </Link>
               <Link
@@ -231,34 +223,8 @@ export async function HomeView({ lang }: { lang: Lang }) {
           </div>
         </section>
 
-        <section className="px-4 pt-20 pb-6 md:px-6 md:pt-28" aria-labelledby="h-best" id="shop">
-          <div className="mx-auto max-w-[1200px]">
-            <SectionHead
-              id="h-best"
-              eyebrow={txt(bestBlock?.data, "eyebrow", lang)}
-              title={txt(bestBlock?.data, "title", lang) || t.shop.title}
-              action={
-                catalog.products.length > best.length ? (
-                  <Link href={href(lang, "/shop")} className="rounded-full border-2 border-plum px-5 py-2 font-medium text-plum hover:bg-blush">
-                    {t.shop.title}
-                  </Link>
-                ) : undefined
-              }
-            />
-            {best.length ? (
-              <div className="reveal-group grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {best.map((p) => (
-                  <ProductCard key={p.id} product={p} lang={lang} categoryName={catName(p)} />
-                ))}
-              </div>
-            ) : (
-              <EmptyOrbit text={t.shop.empty} />
-            )}
-          </div>
-        </section>
+        <MenuSection data={menu} lang={lang} copy={block("home.bestsellers")?.data} />
       </OrbitStage>
-
-      {settings.custom_ready && <AtelierTeaser lang={lang} />}
 
       {sections
         .sort((a, b) => a.sort - b.sort)

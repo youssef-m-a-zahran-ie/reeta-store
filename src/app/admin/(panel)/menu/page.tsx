@@ -3,13 +3,13 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/guard";
 import { EmptyState, PageHeader, Section, Tabs } from "@/components/admin/ui";
 import { ActionForm, SubmitButton, Toggle } from "@/components/admin/form-bits";
-import { saveAtelierSwitch } from "./actions";
-import { AtelierPriceGrid, type GridBase, type GridCoating } from "./price-grid";
-import { ATELIER_TABS } from "./tabs";
+import { saveMenuSwitch } from "./actions";
+import { MenuPriceGrid, type GridBase, type GridCoating } from "./price-grid";
+import { MENU_TABS } from "./tabs";
 
-export const metadata: Metadata = { title: "Atelier prices" };
+export const metadata: Metadata = { title: "Menu prices" };
 
-export default async function AtelierPricesPage() {
+export default async function MenuPricesPage() {
   const { supabase } = await requireAdmin();
   const [{ data: settings }, { data: sizes }, { data: bases }, { data: coatings }, { data: bp }, { data: cp }] = await Promise.all([
     supabase.from("settings").select("custom_enabled").eq("id", 1).single(),
@@ -45,35 +45,35 @@ export default async function AtelierPricesPage() {
     <>
       <PageHeader
         eyebrow="Products"
-        title="Atelier"
+        title="Menu"
         description={
           <>
-            Shoppers compose their own pouch: a nut, a coating and a size. The price is the nut&apos;s price at that size plus the coating&apos;s. Stock for nuts and
-            coatings is on the{" "}
-            <Link href="/admin/inventory#atelier" className="underline">
+            The home page sells four plates: shoppers tap a nut, pick a sauce, a size and how many. The price is the nut&apos;s price at that size plus the
+            sauce&apos;s. Stock for nuts and sauces is on the{" "}
+            <Link href="/admin/inventory#menu" className="underline">
               Inventory
             </Link>{" "}
             page.
           </>
         }
         actions={
-          <Link href="/customize" target="_blank" className="btn btn-secondary btn-sm">
+          <Link href="/#menu" target="_blank" className="btn btn-secondary btn-sm">
             Open on the store
           </Link>
         }
       />
-      <Tabs items={ATELIER_TABS} current="/admin/atelier" />
+      <Tabs items={MENU_TABS} current="/admin/menu" />
 
       <div className="grid gap-4">
         <Section>
-          <ActionForm action={saveAtelierSwitch} className="flex flex-wrap items-center justify-between gap-3">
+          <ActionForm action={saveMenuSwitch} className="flex flex-wrap items-center justify-between gap-3">
             <div className="grid gap-1">
-              <Toggle name="custom_enabled" defaultChecked={settings?.custom_enabled ?? true} label="Atelier is on" />
+              <Toggle name="custom_enabled" defaultChecked={settings?.custom_enabled ?? true} label="Selling is on" />
               <span className="text-sm text-muted">
                 {live
-                  ? `Live on the store: ${liveBases.length} nut${liveBases.length === 1 ? "" : "s"}, ${liveCoatings.length} coating${liveCoatings.length === 1 ? "" : "s"}.`
+                  ? `Live on the store: ${liveBases.length} nut${liveBases.length === 1 ? "" : "s"}, ${liveCoatings.length} sauce${liveCoatings.length === 1 ? "" : "s"}.`
                   : settings?.custom_enabled
-                    ? "Hidden from the store until at least one nut and one coating have a price in the same size."
+                    ? "The menu stays hidden until at least one nut and one sauce have a price in the same size."
                     : "Hidden from the store."}
               </span>
             </div>
@@ -82,15 +82,15 @@ export default async function AtelierPricesPage() {
         </Section>
 
         {!sizes?.length || !gridBases.length || !gridCoatings.length ? (
-          <EmptyState title="Add nuts, coatings and sizes first">
-            <Link href="/admin/atelier/options" className="underline">
+          <EmptyState title="Add nuts, sauces and sizes first">
+            <Link href="/admin/menu/options" className="underline">
               Set them up here
             </Link>
             , then come back to price them.
           </EmptyState>
         ) : (
           <Section title="Prices and weights" description="Price is what the shopper pays. Cost is what it costs you. Margins update as you type.">
-            <AtelierPriceGrid sizes={sizes.map((z) => ({ id: z.id, name_en: z.name_en, is_active: z.is_active }))} bases={gridBases} coatings={gridCoatings} />
+            <MenuPriceGrid sizes={sizes.map((z) => ({ id: z.id, name_en: z.name_en, is_active: z.is_active }))} bases={gridBases} coatings={gridCoatings} />
           </Section>
         )}
       </div>

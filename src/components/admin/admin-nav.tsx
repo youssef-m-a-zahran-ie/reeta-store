@@ -22,7 +22,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
     title: "Products",
     items: [
       { href: "/admin/catalog/products", label: "Catalog", match: "/admin/catalog" },
-      { href: "/admin/atelier", label: "Atelier" },
+      { href: "/admin/menu", label: "Menu" },
       { href: "/admin/inventory", label: "Inventory" },
       { href: "/admin/bundles", label: "Bundles" },
       { href: "/admin/discounts", label: "Discounts" },

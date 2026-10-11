@@ -509,6 +509,7 @@ export type Database = {
           coating_share: number
           created_at: string
           display: string
+          image_path: string | null
           is_active: boolean
           low_stock_threshold: number
           note_ar: string | null
@@ -524,6 +525,7 @@ export type Database = {
           coating_share?: number
           created_at?: string
           display?: string
+          image_path?: string | null
           is_active?: boolean
           low_stock_threshold?: number
           note_ar?: string | null
@@ -539,6 +541,7 @@ export type Database = {
           coating_share?: number
           created_at?: string
           display?: string
+          image_path?: string | null
           is_active?: boolean
           low_stock_threshold?: number
           note_ar?: string | null
@@ -600,6 +603,8 @@ export type Database = {
           coating_id: string
           created_at: string
           is_active: boolean
+          label_ar: string | null
+          label_en: string | null
           low_stock_threshold: number
           note_ar: string | null
           note_en: string | null
@@ -613,6 +618,8 @@ export type Database = {
           coating_id: string
           created_at?: string
           is_active?: boolean
+          label_ar?: string | null
+          label_en?: string | null
           low_stock_threshold?: number
           note_ar?: string | null
           note_en?: string | null
@@ -626,6 +633,8 @@ export type Database = {
           coating_id?: string
           created_at?: string
           is_active?: boolean
+          label_ar?: string | null
+          label_en?: string | null
           low_stock_threshold?: number
           note_ar?: string | null
           note_en?: string | null
@@ -642,6 +651,42 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "coatings"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_plate_photos: {
+        Row: {
+          base_id: string
+          coating_id: string
+          image_path: string
+          updated_at: string
+        }
+        Insert: {
+          base_id: string
+          coating_id: string
+          image_path: string
+          updated_at?: string
+        }
+        Update: {
+          base_id?: string
+          coating_id?: string
+          image_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_plate_photos_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "custom_bases"
+            referencedColumns: ["base_id"]
+          },
+          {
+            foreignKeyName: "custom_plate_photos_coating_id_fkey"
+            columns: ["coating_id"]
+            isOneToOne: false
+            referencedRelation: "custom_coatings"
+            referencedColumns: ["coating_id"]
           },
         ]
       }
