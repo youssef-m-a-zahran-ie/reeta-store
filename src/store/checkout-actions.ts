@@ -8,10 +8,10 @@ function db() {
   return createSupabase<Database>(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
-export type CartRef = { kind: "variant" | "bundle"; id: string; qty: number };
+export type CartRef = { kind: "variant" | "bundle" | "custom"; id: string; qty: number };
 
 export type QuoteLine = {
-  kind: "variant" | "bundle";
+  kind: "variant" | "bundle" | "custom";
   id: string;
   name_en: string;
   name_ar: string;
@@ -38,9 +38,14 @@ export type Quote = {
   orders_paused: boolean;
 };
 
+const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+const ID_RE = new RegExp(`^${UUID}$`);
+// Made-to-order: "<base>.<coating>.<size>"
+const CUSTOM_RE = new RegExp(`^${UUID}\\.${UUID}\\.${UUID}$`);
+
 function cleanItems(items: CartRef[]) {
   return items
-    .filter((i) => /^[0-9a-f-]{36}$/.test(i.id) && (i.kind === "variant" || i.kind === "bundle"))
+    .filter((i) => (i.kind === "custom" ? CUSTOM_RE.test(i.id) : ID_RE.test(i.id) && (i.kind === "variant" || i.kind === "bundle")))
     .slice(0, 50)
     .map((i) => ({ kind: i.kind, id: i.id, qty: Math.max(1, Math.min(20, Math.round(i.qty) || 1)) }));
 }

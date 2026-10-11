@@ -72,7 +72,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
       if (!alive || !q) return;
       setQuote(q);
       const prices: Record<string, number> = {};
-      q.lines.forEach((l) => (prices[`${l.kind === "bundle" ? "b" : "v"}:${l.id}`] = l.unit_price));
+      q.lines.forEach((l) => (prices[`${l.kind === "bundle" ? "b" : l.kind === "custom" ? "c" : "v"}:${l.id}`] = l.unit_price));
       syncPrices(prices);
       if (code) {
         const bad = q.errors.find((e) => e.code === "invalid_code" || e.code === "code_min");

@@ -99,7 +99,7 @@ export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: La
                   <div className="grid h-[60px] w-12 items-end overflow-hidden rounded-xl bg-page p-[3px]">
                     {it.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={mediaUrl(it.image)!} alt="" className="h-full w-full rounded-lg object-cover" />
+                      <img src={mediaUrl(it.image)!} alt="" className={`h-full w-full rounded-lg ${it.kind === "custom" ? "bg-cream object-contain p-0.5" : "object-cover"}`} />
                     ) : (
                       <i className="block h-[18px] rounded-md" style={{ background: it.color ?? "#5b4659" }} />
                     )}

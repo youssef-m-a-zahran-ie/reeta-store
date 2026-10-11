@@ -9,7 +9,7 @@ import { dict, href, switchLangPath, type Lang } from "../i18n";
 const R = 23;
 const C = 2 * Math.PI * R;
 
-export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null }) {
+export function Header({ lang, freeOver, atelier = false }: { lang: Lang; freeOver: number | null; atelier?: boolean }) {
   const t = dict[lang];
   const pathname = usePathname();
   const { count, subtotal, setOpen, cartButton, bump } = useCart();
@@ -24,6 +24,7 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
   const full = freeOver !== null && subtotal >= freeOver && count > 0;
   const links = [
     { href: href(lang, "/shop"), label: t.nav.shop },
+    ...(atelier ? [{ href: href(lang, "/customize"), label: t.nav.atelier }] : []),
     { href: href(lang, "/bundles"), label: t.nav.bundles },
     { href: href(lang, "/about"), label: t.nav.about },
     { href: href(lang, "/contact"), label: t.nav.contact },

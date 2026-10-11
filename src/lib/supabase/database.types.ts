@@ -464,6 +464,223 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_base_prices: {
+        Row: {
+          base_id: string
+          cost: number | null
+          grams: number | null
+          price: number | null
+          size_id: string
+        }
+        Insert: {
+          base_id: string
+          cost?: number | null
+          grams?: number | null
+          price?: number | null
+          size_id: string
+        }
+        Update: {
+          base_id?: string
+          cost?: number | null
+          grams?: number | null
+          price?: number | null
+          size_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_base_prices_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "custom_bases"
+            referencedColumns: ["base_id"]
+          },
+          {
+            foreignKeyName: "custom_base_prices_size_id_fkey"
+            columns: ["size_id"]
+            isOneToOne: false
+            referencedRelation: "custom_sizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_bases: {
+        Row: {
+          base_id: string
+          coating_share: number
+          created_at: string
+          display: string
+          is_active: boolean
+          low_stock_threshold: number
+          note_ar: string | null
+          note_en: string | null
+          sort: number
+          stock_grams: number
+          track_stock: boolean
+          updated_at: string
+          visual: string | null
+        }
+        Insert: {
+          base_id: string
+          coating_share?: number
+          created_at?: string
+          display?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          note_ar?: string | null
+          note_en?: string | null
+          sort?: number
+          stock_grams?: number
+          track_stock?: boolean
+          updated_at?: string
+          visual?: string | null
+        }
+        Update: {
+          base_id?: string
+          coating_share?: number
+          created_at?: string
+          display?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          note_ar?: string | null
+          note_en?: string | null
+          sort?: number
+          stock_grams?: number
+          track_stock?: boolean
+          updated_at?: string
+          visual?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_bases_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: true
+            referencedRelation: "bases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_coating_prices: {
+        Row: {
+          coating_id: string
+          cost: number | null
+          price: number | null
+          size_id: string
+        }
+        Insert: {
+          coating_id: string
+          cost?: number | null
+          price?: number | null
+          size_id: string
+        }
+        Update: {
+          coating_id?: string
+          cost?: number | null
+          price?: number | null
+          size_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_coating_prices_coating_id_fkey"
+            columns: ["coating_id"]
+            isOneToOne: false
+            referencedRelation: "custom_coatings"
+            referencedColumns: ["coating_id"]
+          },
+          {
+            foreignKeyName: "custom_coating_prices_size_id_fkey"
+            columns: ["size_id"]
+            isOneToOne: false
+            referencedRelation: "custom_sizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_coatings: {
+        Row: {
+          coating_id: string
+          created_at: string
+          is_active: boolean
+          low_stock_threshold: number
+          note_ar: string | null
+          note_en: string | null
+          sort: number
+          stock_grams: number
+          track_stock: boolean
+          updated_at: string
+          visual: string | null
+        }
+        Insert: {
+          coating_id: string
+          created_at?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          note_ar?: string | null
+          note_en?: string | null
+          sort?: number
+          stock_grams?: number
+          track_stock?: boolean
+          updated_at?: string
+          visual?: string | null
+        }
+        Update: {
+          coating_id?: string
+          created_at?: string
+          is_active?: boolean
+          low_stock_threshold?: number
+          note_ar?: string | null
+          note_en?: string | null
+          sort?: number
+          stock_grams?: number
+          track_stock?: boolean
+          updated_at?: string
+          visual?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_coatings_coating_id_fkey"
+            columns: ["coating_id"]
+            isOneToOne: true
+            referencedRelation: "coatings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_sizes: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string
+          slug: string
+          sort: number
+          tier: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en: string
+          slug: string
+          sort?: number
+          tier?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string
+          slug?: string
+          sort?: number
+          tier?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string
@@ -728,13 +945,17 @@ export type Database = {
       }
       order_items: {
         Row: {
+          base_id: string | null
           bundle_id: string | null
+          coating_id: string | null
+          custom_size_id: string | null
           grams: number | null
           id: string
           line_total: number
           name_ar: string
           name_en: string
           option_label: string | null
+          option_label_ar: string | null
           order_id: string
           product_id: string | null
           qty: number
@@ -743,13 +964,17 @@ export type Database = {
           variant_id: string | null
         }
         Insert: {
+          base_id?: string | null
           bundle_id?: string | null
+          coating_id?: string | null
+          custom_size_id?: string | null
           grams?: number | null
           id?: string
           line_total: number
           name_ar: string
           name_en: string
           option_label?: string | null
+          option_label_ar?: string | null
           order_id: string
           product_id?: string | null
           qty: number
@@ -758,13 +983,17 @@ export type Database = {
           variant_id?: string | null
         }
         Update: {
+          base_id?: string | null
           bundle_id?: string | null
+          coating_id?: string | null
+          custom_size_id?: string | null
           grams?: number | null
           id?: string
           line_total?: number
           name_ar?: string
           name_en?: string
           option_label?: string | null
+          option_label_ar?: string | null
           order_id?: string
           product_id?: string | null
           qty?: number
@@ -774,10 +1003,31 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "order_items_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "bases"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "order_items_bundle_id_fkey"
             columns: ["bundle_id"]
             isOneToOne: false
             referencedRelation: "bundles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_coating_id_fkey"
+            columns: ["coating_id"]
+            isOneToOne: false
+            referencedRelation: "coatings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_custom_size_id_fkey"
+            columns: ["custom_size_id"]
+            isOneToOne: false
+            referencedRelation: "custom_sizes"
             referencedColumns: ["id"]
           },
           {
@@ -1232,6 +1482,7 @@ export type Database = {
           announcement_en: string | null
           announcement_visible: boolean
           build_box_enabled: boolean
+          custom_enabled: boolean
           distance_factor: number
           facebook_url: string | null
           fee_per_km: number | null
@@ -1267,6 +1518,7 @@ export type Database = {
           announcement_en?: string | null
           announcement_visible?: boolean
           build_box_enabled?: boolean
+          custom_enabled?: boolean
           distance_factor?: number
           facebook_url?: string | null
           fee_per_km?: number | null
@@ -1302,6 +1554,7 @@ export type Database = {
           announcement_en?: string | null
           announcement_visible?: boolean
           build_box_enabled?: boolean
+          custom_enabled?: boolean
           distance_factor?: number
           facebook_url?: string | null
           fee_per_km?: number | null
@@ -1336,39 +1589,59 @@ export type Database = {
       }
       stock_movements: {
         Row: {
+          base_id: string | null
+          coating_id: string | null
           created_at: string
           created_by: string | null
           delta: number
           id: string
           note: string | null
           order_id: string | null
-          product_id: string
+          product_id: string | null
           reason: Database["public"]["Enums"]["movement_reason"]
           variant_id: string | null
         }
         Insert: {
+          base_id?: string | null
+          coating_id?: string | null
           created_at?: string
           created_by?: string | null
           delta: number
           id?: string
           note?: string | null
           order_id?: string | null
-          product_id: string
+          product_id?: string | null
           reason: Database["public"]["Enums"]["movement_reason"]
           variant_id?: string | null
         }
         Update: {
+          base_id?: string | null
+          coating_id?: string | null
           created_at?: string
           created_by?: string | null
           delta?: number
           id?: string
           note?: string | null
           order_id?: string | null
-          product_id?: string
+          product_id?: string | null
           reason?: Database["public"]["Enums"]["movement_reason"]
           variant_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "stock_movements_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "bases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_coating_id_fkey"
+            columns: ["coating_id"]
+            isOneToOne: false
+            referencedRelation: "coatings"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "stock_movements_order_id_fkey"
             columns: ["order_id"]
@@ -1526,6 +1799,17 @@ export type Database = {
     Functions: {
       _admin_compute: { Args: { p: Json }; Returns: Json }
       _compute_order: { Args: { p: Json }; Returns: Json }
+      _custom_combos: {
+        Args: never
+        Returns: {
+          available: boolean
+          base_id: string
+          coating_id: string
+          price: number
+          size_id: string
+        }[]
+      }
+      _custom_ready: { Args: never; Returns: boolean }
       _delivery: { Args: { p_lat: number; p_lng: number }; Returns: Json }
       _delivery_fee: {
         Args: {
@@ -1586,6 +1870,7 @@ export type Database = {
       store_bundles: { Args: never; Returns: Json }
       store_catalog: { Args: never; Returns: Json }
       store_contact: { Args: { p: Json }; Returns: undefined }
+      store_customizer: { Args: never; Returns: Json }
       store_order: { Args: { p_id: string }; Returns: Json }
       store_product: { Args: { p_slug: string }; Returns: Json }
       store_quote: { Args: { p: Json }; Returns: Json }

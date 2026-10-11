@@ -91,6 +91,7 @@ export type StoreSettings = {
   announcement_ar: string | null;
   announcement_visible: boolean;
   build_box_enabled: boolean;
+  custom_ready: boolean;
   seo_title: string | null;
   seo_description: string | null;
   free_shipping_over: number | null;
@@ -120,6 +121,7 @@ const EMPTY_SETTINGS: StoreSettings = {
   announcement_ar: null,
   announcement_visible: false,
   build_box_enabled: false,
+  custom_ready: false,
   seo_title: null,
   seo_description: null,
   free_shipping_over: null,
@@ -150,6 +152,44 @@ export const getSettings = cache(async (): Promise<StoreSettings> => {
   await connection();
   const { data } = await db().rpc("store_settings");
   return { ...EMPTY_SETTINGS, ...((data as unknown as Partial<StoreSettings>) ?? {}) };
+});
+
+/* ---------- The Atelier (made-to-order pouches) ---------- */
+export type AtelierSize = { id: string; slug: string; name_en: string; name_ar: string; tier: 1 | 2 | 3 };
+export type AtelierBase = {
+  id: string;
+  slug: string;
+  name_en: string;
+  name_ar: string;
+  visual: string;
+  display: "weight" | "size";
+  note_en: string | null;
+  note_ar: string | null;
+  sizes: { size_id: string; grams: number; price: number }[];
+};
+export type AtelierCoating = {
+  id: string;
+  slug: string;
+  name_en: string;
+  name_ar: string;
+  color: string;
+  visual: string;
+  note_en: string | null;
+  note_ar: string | null;
+  prices: { size_id: string; price: number }[];
+};
+/** sold_out: combinations that exist but are out of stock, as "<base>.<coating>.<size>". */
+export type Atelier = { sizes: AtelierSize[]; bases: AtelierBase[]; coatings: AtelierCoating[]; sold_out: string[] };
+
+/** Null when the Atelier is switched off or nothing is priced yet. */
+export const getAtelier = cache(async (): Promise<Atelier | null> => {
+  await connection();
+  const { data, error } = await db().rpc("store_customizer");
+  if (error || !data) return null;
+  const a = data as unknown as Atelier;
+  a.bases.forEach((b) => (b.sizes = (b.sizes ?? []).map((z) => ({ ...z, grams: Number(z.grams), price: Number(z.price) }))));
+  a.coatings.forEach((c) => (c.prices = (c.prices ?? []).map((z) => ({ ...z, price: Number(z.price) }))));
+  return a;
 });
 
 export const getContent = cache(async (page: string): Promise<Record<string, ContentBlock>> => {

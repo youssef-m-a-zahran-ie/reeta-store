@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { mediaUrl } from "@/lib/supabase/env";
-import { getBundles, getCatalog, getContent, getTestimonials, type StoreProduct } from "../data";
+import { getBundles, getCatalog, getContent, getSettings, getTestimonials, type StoreProduct } from "../data";
+import { AtelierTeaser } from "../customize/teaser";
 import { dict, href, loc, type Lang } from "../i18n";
 import { OrbitStage } from "../components/orbit-stage";
 import { ProductCard } from "../components/product-card";
@@ -30,7 +31,7 @@ export function SectionHead({ eyebrow, title, text, action, id }: { eyebrow?: st
 
 export async function HomeView({ lang }: { lang: Lang }) {
   const t = dict[lang];
-  const [catalog, bundles, content, testimonials] = await Promise.all([getCatalog(), getBundles(), getContent("home"), getTestimonials()]);
+  const [catalog, bundles, content, testimonials, settings] = await Promise.all([getCatalog(), getBundles(), getContent("home"), getTestimonials(), getSettings()]);
   const block = (k: string) => content[k];
   const hero = block("home.hero")?.data;
 
@@ -256,6 +257,8 @@ export async function HomeView({ lang }: { lang: Lang }) {
           </div>
         </section>
       </OrbitStage>
+
+      {settings.custom_ready && <AtelierTeaser lang={lang} />}
 
       {sections
         .sort((a, b) => a.sort - b.sort)

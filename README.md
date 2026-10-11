@@ -56,6 +56,16 @@ To add another admin: `insert into public.admins (email) values ('name@example.c
 2. Build command: `npx opennextjs-cloudflare build` · Deploy command: `npx opennextjs-cloudflare deploy`.
 3. In Supabase → **Authentication → URL Configuration**, set the Site URL to the live address and add `https://<your-domain>/**` to the redirect URLs, so email links open the site.
 
+## The Atelier (make your own)
+
+Shoppers compose a pouch at `/customize` (`/ar/customize`): a nut, a coating and a size. A live stage shows the coating pouring onto the nut, then the bowl filling up for the size picked.
+
+- **Admin → Atelier:** weights, prices and costs per nut and size; what each coating adds per size; which nuts, coatings and sizes are offered; on/off switch. Price = nut at that size + coating at that size (same for cost).
+- **Stock:** Admin → Inventory → Atelier. Nuts and coatings are tracked in grams; each nut's coating share splits a pouch's weight between them. "Sell out when it runs out" is off until real stock is entered.
+- **Orders:** `place_order` prices made-to-order lines itself (cart id `<base>.<coating>.<size>`), snapshots name, price and cost, and takes stock through `stock_movements` like any product.
+- **Photos:** `public/atelier/`, listed in `src/store/customize/visuals.ts`. A new nut or coating needs its photo set there before it can be offered. The bowl's logo is drawn from `public/brand/mark-full.png`, so a new logo shows on the bowl too.
+- The page and the nav link appear only when the Atelier is on and at least one nut and one coating are priced in the same size.
+
 ## Ads and tracking
 
 - Ad links carry `?utm_source=meta|tiktok|google&utm_medium=paid&utm_campaign=<name>`. Instagram and Facebook links can use `instagram` or `facebook` too; they count as Meta.

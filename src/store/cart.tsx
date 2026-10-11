@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState, useS
 
 export type CartItem = {
   key: string;
-  kind: "variant" | "bundle";
+  kind: "variant" | "bundle" | "custom";
   id: string;
   slug: string;
   name_en: string;
