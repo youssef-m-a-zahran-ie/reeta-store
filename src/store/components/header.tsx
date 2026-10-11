@@ -33,10 +33,10 @@ export function Header({ lang, freeOver, atelier = false }: { lang: Lang; freeOv
 
   return (
     <header className="sticky top-[env(safe-area-inset-top,0px)] z-40 border-b border-plum/10 bg-page/85 backdrop-blur-md">
-      <div className="mx-auto flex h-[68px] max-w-[1200px] items-center gap-4 px-4 md:gap-6 md:px-6">
-        <Link href={href(lang, "/")} className="flex items-center gap-2.5 text-plum" aria-label="Reeta">
-          <span className="mark mark-full size-[38px]" aria-hidden="true" />
-          <span className="font-wordmark text-[22px] leading-none font-semibold tracking-[0.07em]" dir="ltr">
+      <div className="mx-auto flex h-[68px] max-w-[1200px] items-center gap-2 px-4 min-[380px]:gap-4 md:gap-6 md:px-6">
+        <Link href={href(lang, "/")} className="flex shrink-0 items-center gap-2 text-plum min-[380px]:gap-2.5" aria-label="Reeta">
+          <span className="mark mark-full size-[34px] min-[380px]:size-[38px]" aria-hidden="true" />
+          <span className="font-wordmark text-[19px] leading-none font-semibold tracking-[0.07em] max-[349px]:sr-only min-[380px]:text-[22px]" dir="ltr">
             REETA
           </span>
         </Link>
@@ -58,7 +58,7 @@ export function Header({ lang, freeOver, atelier = false }: { lang: Lang; freeOv
           href={switchLangPath(lang, pathname)}
           hrefLang={lang === "en" ? "ar" : "en"}
           aria-label={t.langSwitchLabel}
-          className="ms-auto rounded-full border border-plum/20 px-3 py-1.5 text-sm font-semibold text-plum transition-colors hover:bg-blush md:ms-0"
+          className="ms-auto shrink-0 rounded-full border border-plum/20 px-2.5 py-1.5 text-sm font-semibold text-plum transition-colors hover:bg-blush min-[380px]:px-3 md:ms-0"
         >
           {t.langSwitch}
         </a>
@@ -96,7 +96,7 @@ export function Header({ lang, freeOver, atelier = false }: { lang: Lang; freeOv
 
         <button
           type="button"
-          className="rounded-full border-2 border-plum px-3.5 py-1.5 text-sm font-medium text-plum transition-colors hover:bg-blush md:hidden"
+          className="shrink-0 rounded-full border-2 border-plum px-3 py-1.5 text-sm font-medium text-plum transition-colors hover:bg-blush min-[380px]:px-3.5 md:hidden"
           aria-expanded={menu}
           aria-controls="store-menu"
           onClick={() => setMenu((m) => !m)}

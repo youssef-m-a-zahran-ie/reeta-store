@@ -6,13 +6,14 @@ import { track } from "../analytics";
 import { dict, loc, money, number, type Lang } from "../i18n";
 import type { Atelier as AtelierData, AtelierBase, AtelierCoating, AtelierSize } from "../data";
 import { useCountUp } from "../components/count-up";
+import { waLink, WhatsAppIcon } from "../components/whatsapp";
 import { AtelierEngine, type Tier } from "./engine";
 import { atelierImg, BASE_VISUALS, COATING_VISUALS, isBaseVisual, isCoatingVisual } from "./visuals";
 
 const comboId = (b: string, c: string, z: string) => `${b}.${c}.${z}`;
 
 /** The Atelier: a live stage on top, the three choices under it, and the price with "Add to pouch" at the end. */
-export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
+export function Atelier({ data, lang, whatsapp = null }: { data: AtelierData; lang: Lang; whatsapp?: string | null }) {
   const t = dict[lang];
   const a = t.atelier;
   const { add, toast } = useCart();
@@ -88,8 +89,27 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
   }, []);
 
   /* ---------- choices ---------- */
+  // On phones, after a first pick the next step slides into view under the stage.
+  function reveal(step: number) {
+    window.setTimeout(() => {
+      if (window.matchMedia("(min-width: 1024px)").matches) return;
+      const el = document.getElementById(`atelier-step-${step}`);
+      const stage = stageRef.current;
+      if (!el || !stage) return;
+      const top = stage.getBoundingClientRect().bottom + 12;
+      const bottom = window.innerHeight - 120;
+      const r = el.getBoundingClientRect();
+      if (r.top >= top && r.bottom <= bottom) return;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollBy({ top: r.top - top, behavior: reduce ? "auto" : "smooth" });
+    }, 380);
+  }
   function pickBase(b: AtelierBase) {
-    if (b.id === baseId) return;
+    if (b.id === baseId) {
+      if (!coatId) reveal(2);
+      return;
+    }
+    if (!coatId) reveal(2);
     const keep = size && sizesFor(b, coat).some((z) => z.id === size.id);
     if (!keep && size) {
       setSizeId(null);
@@ -105,6 +125,7 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
       setSizeId(null);
       engine.current?.backToHero();
     }
+    if (!coatId || !size) reveal(3);
     setCoatId(c.id);
     engine.current?.setCoating(c.visual, pourOf(c));
   }
@@ -214,7 +235,7 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
 
       {/* ---------- Choices ---------- */}
       <div className="grid gap-9 pb-4 lg:gap-10">
-        <Step n={1} title={a.steps[0]} value={loc(base, "name", lang)}>
+        <Step id="atelier-step-1" n={1} title={a.steps[0]} value={loc(base, "name", lang)}>
           <div className="grid grid-cols-2 gap-2.5" role="radiogroup" aria-label={a.steps[0]}>
             {bases.map((b) => {
               const from = baseFrom(b);
@@ -235,7 +256,7 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
           </div>
         </Step>
 
-        <Step n={2} title={a.steps[1]} value={coat ? loc(coat, "name", lang) : ""}>
+        <Step id="atelier-step-2" n={2} title={a.steps[1]} value={coat ? loc(coat, "name", lang) : ""}>
           <div className="grid grid-cols-2 gap-2.5" role="radiogroup" aria-label={a.steps[1]}>
             {coatings.map((c) => {
               const v = pourOf(c);
@@ -270,7 +291,7 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
           </div>
         </Step>
 
-        <Step n={3} title={a.steps[2]} value={size ? loc(size, "name", lang) : ""} hint={coat ? undefined : a.pickCoatingFirst} disabled={!coat}>
+        <Step id="atelier-step-3" n={3} title={a.steps[2]} value={size ? loc(size, "name", lang) : ""} hint={coat ? undefined : a.pickCoatingFirst} disabled={!coat}>
           <div className={`grid gap-2.5 ${sizes.length >= 3 ? "grid-cols-3" : "grid-cols-2"}`} role="radiogroup" aria-label={a.steps[2]}>
             {sizes.map((z) => {
               const bp = basePrice(base, z.id)!;
@@ -311,10 +332,10 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
               </span>
               <span className="min-h-[1.5em] text-[15px] text-blush/85">{summary && size ? summary : a.empty}</span>
             </div>
-            <div className="flex items-center justify-between gap-3">
-              <div className="grid min-w-0">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="grid min-w-0 flex-1">
                 <span className="truncate text-[13px] text-blush/70 lg:hidden">{size ? summary : a.yours}</span>
-                <span className="text-[26px] leading-none font-medium tabular-nums md:text-[32px]" aria-live="polite">
+                <span className="text-[22px] leading-none font-medium whitespace-nowrap tabular-nums min-[380px]:text-[24px] sm:text-[26px] md:text-[32px]" aria-live="polite">
                   {total !== null ? money(shown, lang) : "—"}
                 </span>
                 {total !== null && size && base.display === "weight" && (
@@ -323,12 +344,24 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
                   </span>
                 )}
               </div>
+              {whatsapp && (
+                <a
+                  href={waLink(whatsapp, a.waText(size ? summary : ""))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={a.ask}
+                  title={a.ask}
+                  className="grid size-12 shrink-0 place-items-center rounded-full bg-sage text-white transition-transform active:scale-95 lg:hidden"
+                >
+                  <WhatsAppIcon className="size-6" />
+                </a>
+              )}
               <button
                 ref={addBtn}
                 type="button"
                 onClick={onAdd}
                 disabled={!canAdd}
-                className="shrink-0 rounded-full bg-blush px-6 py-3.5 text-[17px] font-medium text-plum transition-[background,transform,opacity] hover:bg-cream active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-45 md:px-8"
+                className="shrink-0 rounded-full bg-blush px-4 py-3.5 text-[15px] font-medium whitespace-nowrap text-plum min-[380px]:px-5 min-[380px]:text-[16px] sm:px-6 sm:text-[17px] transition-[background,transform,opacity] hover:bg-cream active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-45 md:px-8"
               >
                 {canAdd ? a.add : coat ? a.chooseSize : a.add}
               </button>
@@ -346,6 +379,7 @@ export function Atelier({ data, lang }: { data: AtelierData; lang: Lang }) {
 }
 
 function Step({
+  id,
   n,
   title,
   value,
@@ -353,6 +387,7 @@ function Step({
   disabled,
   children,
 }: {
+  id: string;
   n: number;
   title: string;
   value?: string;
@@ -361,7 +396,7 @@ function Step({
   children: React.ReactNode;
 }) {
   return (
-    <section className={`grid gap-3.5 transition-opacity duration-300 ${disabled ? "opacity-45" : ""}`} aria-label={title}>
+    <section id={id} className={`grid gap-3.5 transition-opacity duration-300 ${disabled ? "opacity-45" : ""}`} aria-label={title}>
       <div className="flex items-baseline justify-between gap-3 border-b border-plum/12 pb-2.5">
         <span className="eyebrow">
           <span className="tabular-nums">{String(n).padStart(2, "0")}</span>

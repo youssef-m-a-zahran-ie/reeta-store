@@ -340,7 +340,11 @@ body [dir="rtl"] {
 }
 @keyframes teaser-flow { to { background-position: 0 60px; } }
 
-/* On phones the Atelier's price bar owns the bottom of the screen; the WhatsApp button would cover the choices. */
+/* On phones the Atelier's price bar owns the bottom of the screen and carries its own WhatsApp button. */
 @media (max-width: 1023px) {
   body:has(.atelier-stage) .wa-float { display: none; }
+}
+/* Phones: anything scrolled into view (keyboard focus) lands below the sticky stage and above the price bar. */
+@media (max-width: 1023px) {
+  .atelier-opt { scroll-margin-top: calc(68px + min(40svh, 75vw) + 24px); scroll-margin-bottom: 130px; }
 }

@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { getAtelier } from "../data";
+import { getAtelier, getSettings } from "../data";
 import { dict, type Lang } from "../i18n";
 import { Atelier } from "../customize/atelier";
 
 export async function AtelierView({ lang }: { lang: Lang }) {
   const t = dict[lang];
-  const data = await getAtelier();
+  const [data, settings] = await Promise.all([getAtelier(), getSettings()]);
   if (!data) notFound();
 
   return (
@@ -16,7 +16,7 @@ export async function AtelierView({ lang }: { lang: Lang }) {
           <h1 className="text-[38px] leading-[1.04] font-semibold md:text-[60px]">{t.atelier.title}</h1>
           <p className="text-[16px] text-pretty text-cocoa/80 md:text-lg">{t.atelier.lede}</p>
         </header>
-        <Atelier data={data} lang={lang} />
+        <Atelier data={data} lang={lang} whatsapp={settings.whatsapp_button ? settings.whatsapp_number : null} />
       </div>
     </main>
   );
