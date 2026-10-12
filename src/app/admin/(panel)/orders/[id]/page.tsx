@@ -7,6 +7,7 @@ import { ActionForm, SubmitButton } from "@/components/admin/form-bits";
 import { NEXT_LABEL, NEXT_STEP, STATUS_META, type OrderStatus } from "@/lib/admin/orders";
 import { dateTime, egp, margin } from "@/lib/format";
 import { saveInternalNote, setOrderStatus, setPaymentStatus } from "../actions";
+import { CancelOrder } from "../cancel-order";
 
 export const metadata: Metadata = { title: "Order" };
 
@@ -38,6 +39,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/ad
   const status = o.status as OrderStatus;
   const meta = STATUS_META[status];
   const next = NEXT_STEP[status];
+  const canCancel = status !== "cancelled" && status !== "refused" && status !== "delivered";
   const cost = (items ?? []).reduce((s, i) => s + (i.unit_cost ?? 0) * i.qty, 0);
   const hasCost = (items ?? []).every((i) => i.unit_cost !== null);
   const profit = o.subtotal - o.discount_total - cost;
@@ -100,6 +102,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/ad
                 <a href={`tel:${o.phone}`} className="btn btn-ghost border-2 border-plum/20">
                   Call {o.phone}
                 </a>
+                {canCancel && <CancelOrder id={o.id} number={o.number} />}
               </div>
               <details className="rounded-2xl border border-line p-4">
                 <summary className="cursor-pointer text-sm font-semibold text-plum">Set another status</summary>

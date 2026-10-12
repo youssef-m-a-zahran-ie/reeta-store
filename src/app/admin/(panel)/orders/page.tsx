@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/admin/guard";
 import { EmptyState, PageHeader } from "@/components/admin/ui";
 import { STATUS_META, type OrderStatus } from "@/lib/admin/orders";
 import { dateTime, egp } from "@/lib/format";
+import { CancelOrder } from "./cancel-order";
 
 export const metadata: Metadata = { title: "Orders" };
 
@@ -83,8 +84,8 @@ export default async function OrdersPage({ searchParams }: PageProps<"/admin/ord
           <table className="w-full min-w-[820px] border-collapse text-[15px]">
             <thead>
               <tr className="bg-page text-sm">
-                {["Order", "Customer", "Items", "Total", "Payment", "Status", "From"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-start font-medium text-plum">
+                {["Order", "Customer", "Items", "Total", "Payment", "Status", "From", ""].map((h, i) => (
+                  <th key={i} className="px-4 py-3 text-start font-medium text-plum">
                     {h}
                   </th>
                 ))}
@@ -124,6 +125,9 @@ export default async function OrdersPage({ searchParams }: PageProps<"/admin/ord
                       <span className={`chip ${s.className}`}>{s.label}</span>
                     </td>
                     <td className="px-4 py-3 text-sm text-muted">{o.utm_source ?? (o.source === "web" ? "Direct" : o.source)}</td>
+                    <td className="px-2 py-3 text-end">
+                      {["new", "confirmed", "preparing", "out_for_delivery"].includes(o.status) && <CancelOrder id={o.id} number={o.number} compact />}
+                    </td>
                   </tr>
                 );
               })}
