@@ -19,6 +19,21 @@ const NUTS: NutDef[] = [
   { k: "hazelnut", s: 44, d: [0.73, 0.86], m: [0.7, 0.04], z: 0.5, r: 18 },
 ];
 
+/** Photos of the real nuts (public/menu). A nut kind with photos shows them, one angle per floating nut; others stay cartoon. */
+const HERO_PHOTOS: Partial<Record<NutKind, string[]>> = {
+  hazelnut: ["/menu/hero-hazelnut-1.webp", "/menu/hero-hazelnut-2.webp"],
+  almond: ["/menu/hero-almond-1.webp", "/menu/hero-almond-2.webp"],
+  cashew: ["/menu/hero-cashew-1.webp", "/menu/hero-cashew-2.webp"],
+  macadamia: ["/menu/hero-macadamia-1.webp", "/menu/hero-macadamia-2.webp"],
+};
+const photoFor = (i: number) => {
+  const k = NUTS[i].k;
+  const list = HERO_PHOTOS[k];
+  if (!list?.length) return null;
+  const nth = NUTS.slice(0, i).filter((n) => n.k === k).length;
+  return list[nth % list.length];
+};
+
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const inOut = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 
@@ -154,7 +169,12 @@ export function OrbitStage({ children }: { children: ReactNode }) {
             }}
             className="hero-nut absolute top-0 left-0 opacity-0 will-change-transform"
           >
-            <NutArt kind={n.k} className="size-full" />
+            {photoFor(i) ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={photoFor(i)!} alt="" draggable={false} className="size-full object-contain drop-shadow-[0_6px_10px_rgba(90,51,34,.25)]" />
+            ) : (
+              <NutArt kind={n.k} className="size-full" />
+            )}
           </div>
         ))}
       </div>
