@@ -95,17 +95,21 @@ body [dir="rtl"] {
 }
 
 /* Logo layers, recolored with currentColor */
+/* The shape takes the text color; the -gloss layer adds the glossy chocolate highlights on top. */
 .mark {
   display: block;
-  background: currentColor;
+  background-color: currentColor;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
 }
-.mark-full { mask-image: url("/brand/mark-full.png"); }
-.mark-inner { mask-image: url("/brand/mark-inner.png"); }
-.mark-arcA { mask-image: url("/brand/mark-arcA.png"); }
-.mark-arcB { mask-image: url("/brand/mark-arcB.png"); }
+.mark-full { mask-image: url("/brand/mark-full.png"); background-image: url("/brand/mark-full-gloss.webp"); }
+.mark-inner { mask-image: url("/brand/mark-inner.png"); background-image: url("/brand/mark-inner-gloss.webp"); }
+.mark-arcA { mask-image: url("/brand/mark-arcA.png"); background-image: url("/brand/mark-arcA-gloss.webp"); }
+.mark-arcB { mask-image: url("/brand/mark-arcB.png"); background-image: url("/brand/mark-arcB-gloss.webp"); }
 
 /* Shared admin controls */
 @layer components {
