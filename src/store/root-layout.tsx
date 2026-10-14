@@ -9,11 +9,11 @@ export const storeViewport: Viewport = { themeColor: "#f2d0e3", viewportFit: "co
 export function storeMetadata(lang: Lang): Metadata {
   return {
     metadataBase: new URL(SITE_URL),
-    title: { default: lang === "ar" ? "ريتا · مكسرات متغطية شوكولاتة" : "Reeta · Nuts, coated in chocolate", template: "%s · Reeta" },
+    title: { default: lang === "ar" ? "ريتا · مكسرات متغطية بالحب" : "Reeta · Nuts, coated in love", template: "%s · Reeta" },
     description:
       lang === "ar"
-        ? "كاجو ولوز وسوداني متغطيين شوكولاتة دارك ووايت. اطلب أونلاين والتوصيل في القاهرة والجيزة."
-        : "Cashews, almonds and peanuts coated in dark and white chocolate. Order online, delivered across Cairo and Giza.",
+        ? "كاجو ولوز وبندق ومكاداميا بصوصات الشوكولاتة والبستاشيو. اطلب أونلاين والتوصيل في القاهرة والجيزة."
+        : "Cashews, almonds, hazelnuts and macadamia coated in chocolate and pistachio sauces. Order online, delivered across Cairo and Giza.",
     icons: { icon: "/brand/favicon.png", apple: "/brand/apple-touch-icon.png" },
   };
 }

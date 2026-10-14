@@ -33,7 +33,7 @@ export function number(n: number, lang: Lang) {
 }
 
 const en = {
-  brandLine: "Nuts, coated in chocolate.",
+  brandLine: "Nuts, coated in love.",
   nav: { shop: "Shop", bundles: "Bundles", about: "About", contact: "Contact", home: "Home", menu: "Menu", close: "Close" },
   langSwitch: "عربي",
   langSwitchLabel: "Switch to Arabic",
@@ -239,7 +239,7 @@ const en = {
 type Dict = typeof en;
 
 const ar: Dict = {
-  brandLine: "مكسرات متغطية شوكولاتة.",
+  brandLine: "مكسرات متغطية بالحب.",
   nav: { shop: "المنتجات", bundles: "البوكسات", about: "عن ريتا", contact: "تواصل معنا", home: "الرئيسية", menu: "القائمة", close: "إغلاق" },
   langSwitch: "English",
   langSwitchLabel: "Switch to English",
