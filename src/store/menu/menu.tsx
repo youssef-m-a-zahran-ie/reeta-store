@@ -383,7 +383,7 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
 function PlateVisual({ base, img, fade = false }: { base: MenuBase; img: ReturnType<typeof plateImage>; fade?: boolean }) {
   if (img) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={img.src} alt="" className={`plate-img ${img.kind === "piece" ? "is-piece" : ""} ${fade ? "fade-in" : ""}`} draggable={false} />;
+    return <img src={img.src} alt="" width={800} height={800} decoding="async" className={`plate-img ${img.kind === "piece" ? "is-piece" : ""} ${fade ? "fade-in" : ""}`} draggable={false} />;
   }
   return isNutKind(base.visual) ? <NutArt kind={base.visual} className={`plate-img is-piece ${fade ? "fade-in" : ""}`} /> : null;
 }
