@@ -95,11 +95,20 @@ export function CartDrawer({ lang, freeOver, paused, pausedMessage }: { lang: La
             items.map((it) => {
               const name = loc(it, "name", lang);
               return (
-                <div key={it.key} className="grid grid-cols-[48px_1fr_auto] items-center gap-3 rounded-[18px] bg-white/55 p-2.5">
-                  <div className="grid h-[60px] w-12 items-end overflow-hidden rounded-xl bg-page p-[3px]">
+                <div key={it.key} className="grid grid-cols-[68px_1fr_auto] items-center gap-3 rounded-[18px] bg-white/55 p-2.5">
+                  <div className="grid h-[60px] w-[68px] place-items-center overflow-hidden rounded-xl bg-page p-[3px]">
                     {it.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={mediaUrl(it.image)!} alt="" className={`h-full w-full rounded-lg ${it.kind === "custom" ? "bg-cream object-contain p-0.5" : "object-cover"}`} />
+                      <img
+                        src={mediaUrl(it.image)!}
+                        alt=""
+                        className={`h-full w-full rounded-lg ${it.kind === "custom" ? "object-contain" : "object-cover"}`}
+                        onError={(e) => {
+                          // A plate photo without a cutout: show the full picture instead.
+                          const el = e.currentTarget;
+                          if (el.src.includes("-cut.webp")) el.src = el.src.replace("-cut.webp", ".webp");
+                        }}
+                      />
                     ) : (
                       <i className="block h-[18px] rounded-md" style={{ background: it.color ?? "#5b4659" }} />
                     )}

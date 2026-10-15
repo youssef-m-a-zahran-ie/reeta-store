@@ -7,7 +7,7 @@ import { track } from "../analytics";
 import { dict, href, loc, money, number, type Lang } from "../i18n";
 import type { Menu as MenuData, MenuBase, MenuCoating, MenuSize } from "../data";
 import { isNutKind, NutArt } from "./nut-art";
-import { plateImage } from "./visuals";
+import { cutoutOf, plateImage } from "./visuals";
 
 const comboId = (b: string, c: string, z: string) => `${b}.${c}.${z}`;
 // How big the plate looks for each size (custom_sizes.tier). Before a size is picked: medium.
@@ -155,7 +155,7 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
         label_ar: sizeLabel(base, size, "ar"),
         price: unit,
         color: coat.color,
-        image: img?.src ?? null,
+        image: img ? cutoutOf(img.src) : null,
       },
       qty,
       addBtn.current,
