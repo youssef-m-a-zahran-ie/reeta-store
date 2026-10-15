@@ -205,7 +205,7 @@ const en = {
     notFound: "We couldn't find this order.",
   },
   menu: {
-    eyebrow: "Coated by hand in Cairo",
+    eyebrow: "Coated by hand",
     title: "Choose your nut",
     sub: "Then a sauce and a size.",
     from: (p: string) => `from ${p}`,
@@ -411,7 +411,7 @@ const ar: Dict = {
     notFound: "ملقيناش الطلب ده.",
   },
   menu: {
-    eyebrow: "متغطية بالإيد في القاهرة",
+    eyebrow: "متغطية بالإيد",
     title: "اختار المكسرات",
     sub: "وبعدين الصوص والحجم.",
     from: (p: string) => `يبدأ من ${p}`,
