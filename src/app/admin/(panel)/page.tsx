@@ -11,7 +11,13 @@ import { BarList, KpiTile, PeriodPicker } from "@/components/admin/stats";
 export const metadata: Metadata = { title: "Overview" };
 
 function greeting() {
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", {
+      hour: "numeric",
+      hour12: false,
+      timeZone: "Africa/Cairo",
+    }).format(new Date()),
+  );
   return hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 }
 
@@ -19,15 +25,13 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
   const period = resolvePeriod(await searchParams, "7d");
   const { supabase } = await requireAdmin();
   const report = await loadReport(supabase, period.from, period.to);
-  const [{ data: products }, { data: prices }, { data: templateItems }, { data: settings }, { data: openOrders }, { data: abandoned }] = await Promise.all([
-    supabase
-      .from("products")
-      .select("id, name_en, status, color, stock_unit, stock_grams, low_stock_threshold, ingredients_en, coatings(color), product_images(id), variants(stock_qty, is_active)")
-      .neq("status", "archived")
-      .order("sort"),
-    supabase.from("variant_prices").select("product_id, price, is_active"),
-    supabase.from("price_template_items").select("price"),
-    supabase.from("settings").select("store_lat, fee_per_km, instapay_handle").eq("id", 1).maybeSingle(),
+  const [{ data: nuts }, { data: sauces }, { data: sizes }, { data: nutPrices }, { data: saucePrices }, { data: settings }, { data: openOrders }, { data: abandoned }] = await Promise.all([
+    supabase.from("custom_bases").select("base_id, image_path, is_active, stock_grams, low_stock_threshold, track_stock, bases(name_en)").order("sort"),
+    supabase.from("custom_coatings").select("coating_id, is_active, stock_grams, low_stock_threshold, track_stock, coatings(name_en, color)").order("sort"),
+    supabase.from("custom_sizes").select("id, is_active"),
+    supabase.from("custom_base_prices").select("base_id, size_id, price, grams"),
+    supabase.from("custom_coating_prices").select("coating_id, size_id, price"),
+    supabase.from("settings").select("store_lat, fee_per_km, instapay_handle, custom_enabled").eq("id", 1).maybeSingle(),
     supabase
       .from("orders")
       .select("id, number, customer_name, total, status, payment_method, payment_status, created_at")
@@ -46,54 +50,77 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
   const newOrders = (openOrders ?? []).filter((o) => o.status === "new");
   const awaitingTransfer = (openOrders ?? []).filter((o) => o.payment_method === "instapay" && o.payment_status === "unpaid");
 
-  const list = (products ?? []).map((p) => {
-    const stock =
-      p.stock_unit === "grams" ? p.stock_grams : (p.variants ?? []).filter((v) => v.is_active).reduce((s, v) => s + v.stock_qty, 0);
-    const missingPrice = (prices ?? []).some((x) => x.product_id === p.id && x.is_active && x.price === null);
-    return {
-      ...p,
-      stock,
-      level: stock <= 0 ? "out" : stock <= p.low_stock_threshold ? "low" : "ok",
-      missingPrice,
-      noPhoto: !(p.product_images ?? []).length,
-    };
-  });
+  // Raw ingredients: nuts and sauces, tracked in grams.
+  const ingredients = [
+    ...(nuts ?? []).map((n) => ({
+      key: `b-${n.base_id}`,
+      name: n.bases?.name_en ?? "",
+      color: null as string | null,
+      ...n,
+    })),
+    ...(sauces ?? []).map((c) => ({
+      key: `c-${c.coating_id}`,
+      name: c.coatings?.name_en ?? "",
+      color: c.coatings?.color ?? null,
+      ...c,
+    })),
+  ]
+    .filter((i) => i.is_active)
+    .map((i) => ({
+      ...i,
+      level: (!i.track_stock ? "ok" : i.stock_grams <= 0 ? "out" : i.stock_grams <= i.low_stock_threshold ? "low" : "ok") as "out" | "low" | "ok",
+    }));
+  const lowStock = ingredients.filter((i) => i.level !== "ok");
 
-  const active = list.filter((p) => p.status === "active").length;
-  const drafts = list.filter((p) => p.status === "draft").length;
-  const lowStock = list.filter((p) => p.status === "active" && p.level !== "ok");
-  const emptyTemplateCells = (templateItems ?? []).filter((t) => t.price === null).length;
+  const liveNuts = (nuts ?? []).filter((n) => n.is_active);
+  const liveSauces = (sauces ?? []).filter((c) => c.is_active);
+  const liveSizes = (sizes ?? []).filter((z) => z.is_active);
+  const missingPrices =
+    liveNuts.reduce(
+      (n, b) =>
+        n +
+        liveSizes.filter((z) => {
+          const r = (nutPrices ?? []).find((x) => x.base_id === b.base_id && x.size_id === z.id);
+          return !r || r.price === null || r.grams === null;
+        }).length,
+      0,
+    ) +
+    liveSauces.reduce(
+      (n, c) =>
+        n +
+        liveSizes.filter((z) => {
+          const r = (saucePrices ?? []).find((x) => x.coating_id === c.coating_id && x.size_id === z.id);
+          return !r || r.price === null;
+        }).length,
+      0,
+    );
+  const noPhoto = liveNuts.filter((n) => !n.image_path).length;
+  const unstocked = ingredients.filter((i) => i.track_stock && i.stock_grams <= 0).length;
 
   const launch = [
     {
-      done: emptyTemplateCells === 0 && (templateItems?.length ?? 0) > 0,
-      title: "Fill in prices",
-      detail: emptyTemplateCells ? `${emptyTemplateCells} sizes in price templates have no price.` : "All template prices are set.",
-      href: "/admin/catalog/prices",
+      done: missingPrices === 0 && liveNuts.length > 0,
+      title: "Fill in the menu prices",
+      detail: missingPrices ? `${missingPrices} price or weight boxes are empty.` : "All menu prices and weights are set.",
+      href: "/admin/menu",
     },
     {
-      done: list.length > 0 && list.every((p) => !p.noPhoto),
-      title: "Upload product photos",
-      detail: `${list.filter((p) => p.noPhoto).length} products have no photo.`,
-      href: "/admin/catalog/products",
+      done: liveNuts.length > 0 && noPhoto === 0,
+      title: "Upload the plate photos",
+      detail: noPhoto ? `${noPhoto} nuts have no plain plate photo yet.` : "Every nut has its plate photo.",
+      href: "/admin/menu/photos",
     },
     {
-      done: list.length > 0 && list.every((p) => p.ingredients_en),
-      title: "Add ingredients and allergens",
-      detail: `${list.filter((p) => !p.ingredients_en).length} products are missing them.`,
-      href: "/admin/catalog/products",
-    },
-    {
-      done: list.some((p) => p.stock > 0),
-      title: "Add your first batch",
-      detail: "Record what's ready so the store knows what it can sell.",
+      done: ingredients.length > 0 && unstocked === 0,
+      title: "Add your nut and sauce stock",
+      detail: unstocked ? `${unstocked} nuts or sauces are at 0 g.` : "Everything on the menu has stock.",
       href: "/admin/inventory",
     },
     {
-      done: active > 0,
-      title: "Make products active",
-      detail: `${active} of ${list.length} products are live.`,
-      href: "/admin/catalog/products?status=draft",
+      done: Boolean(settings?.custom_enabled),
+      title: "Turn selling on",
+      detail: settings?.custom_enabled ? "The menu is open for orders." : "The menu switch is off.",
+      href: "/admin/menu",
     },
     {
       done: Boolean(settings?.store_lat && settings?.fee_per_km && settings?.instapay_handle),
@@ -134,11 +161,7 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
           </div>
           <div className="mb-5 grid items-start gap-5 lg:grid-cols-[1.6fr_1fr]">
             <Section title="Sales per day" description={`${period.label} · cancelled and refused orders left out`}>
-              {report.kpi.all_orders === 0 ? (
-                <p className="text-sm text-muted">No orders in this period yet.</p>
-              ) : (
-                <DailySalesChart data={report.daily} />
-              )}
+              {report.kpi.all_orders === 0 ? <p className="text-sm text-muted">No orders in this period yet.</p> : <DailySalesChart data={report.daily} />}
             </Section>
             <Section title="Best sellers" description={period.label}>
               <BarList
@@ -162,10 +185,16 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
 
       <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
         {[
-          { label: "Live products", value: active },
-          { label: "Drafts", value: drafts },
-          { label: "Running low", value: lowStock.filter((p) => p.level === "low").length },
-          { label: "Out of stock", value: lowStock.filter((p) => p.level === "out").length },
+          { label: "Nuts on the menu", value: liveNuts.length },
+          { label: "Sauces on the menu", value: liveSauces.length },
+          {
+            label: "Running low",
+            value: lowStock.filter((i) => i.level === "low").length,
+          },
+          {
+            label: "Out of stock",
+            value: lowStock.filter((i) => i.level === "out").length,
+          },
         ].map((s) => (
           <div key={s.label} className="card grid gap-1 p-4">
             <span className="text-sm text-muted">{s.label}</span>
@@ -245,13 +274,7 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
                 {(abandoned ?? []).length > 0 && (
                   <NeedList title="Started checkout but didn't order">
                     {(abandoned ?? []).slice(0, 5).map((a) => (
-                      <NeedRow
-                        key={a.id}
-                        href={`https://wa.me/${a.phone.replace(/\D/g, "")}`}
-                        external
-                        left={`${a.name || "Someone"} · ${a.phone}`}
-                        right={a.subtotal ? egp(a.subtotal) : ""}
-                      />
+                      <NeedRow key={a.id} href={`https://wa.me/${a.phone.replace(/\D/g, "")}`} external left={`${a.name || "Someone"} · ${a.phone}`} right={a.subtotal ? egp(a.subtotal) : ""} />
                     ))}
                   </NeedList>
                 )}
@@ -268,16 +291,16 @@ export default async function OverviewPage({ searchParams }: PageProps<"/admin">
             }
           >
             {!lowStock.length ? (
-              <p className="text-sm text-muted">Nothing live is low on stock.</p>
+              <p className="text-sm text-muted">No nut or sauce is running low.</p>
             ) : (
               <ul className="grid gap-2">
-                {lowStock.map((p) => (
-                  <li key={p.id}>
-                    <Link href={`/admin/inventory?product=${p.id}`} className="flex items-center gap-3 rounded-xl p-2 hover:bg-blush/60">
-                      <Swatch color={p.color ?? p.coatings?.color} size={16} />
-                      <span className="flex-1 font-medium text-plum">{p.name_en}</span>
-                      <span className="num text-sm">{stockLabel(p.stock_unit, p.stock)}</span>
-                      <StatusChip status={p.level} />
+                {lowStock.map((i) => (
+                  <li key={i.key}>
+                    <Link href="/admin/inventory#menu" className="flex items-center gap-3 rounded-xl p-2 hover:bg-blush/60">
+                      <Swatch color={i.color} size={16} />
+                      <span className="flex-1 font-medium text-plum">{i.name}</span>
+                      <span className="num text-sm">{stockLabel("grams", i.stock_grams)}</span>
+                      <StatusChip status={i.level} />
                     </Link>
                   </li>
                 ))}
