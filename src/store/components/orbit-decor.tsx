@@ -1,13 +1,11 @@
-import { NutPhoto } from "./nut-photo";
-
-/** Orbit rings and floating nuts for page headers (pure CSS, no JavaScript). n = which nut photo, r = tilt. */
-const NUTS = [
-  { n: 4, s: 92, r: -18, top: "14%", end: "18%", d: "0s" },
-  { n: 6, s: 54, r: 24, top: "62%", end: "30%", d: "-2s" },
-  { n: 1, s: 74, r: 38, top: "32%", end: "5%", d: "-4s" },
-  { n: 7, s: 44, r: -12, top: "74%", end: "11%", d: "-1s" },
-  { n: 2, s: 48, r: 68, top: "8%", end: "3%", d: "-3s" },
-  { n: 5, s: 36, r: -34, top: "50%", end: "42%", d: "-5s" },
+/** Orbit rings and floating coated rounds for page headers (pure CSS, no JavaScript). */
+const ROUNDS = [
+  { c: "#3a2420", s: 58, top: "16%", end: "20%", d: "0s" },
+  { c: "#a0673f", s: 34, top: "64%", end: "30%", d: "-2s" },
+  { c: "#f5ead8", s: 46, top: "34%", end: "6%", d: "-4s" },
+  { c: "#d9607a", s: 24, top: "78%", end: "12%", d: "-1s" },
+  { c: "#8a9a62", s: 30, top: "10%", end: "4%", d: "-3s" },
+  { c: "#c9955f", s: 20, top: "52%", end: "40%", d: "-5s" },
 ];
 
 export function OrbitDecor() {
@@ -17,14 +15,22 @@ export function OrbitDecor() {
         <span className="spin-r absolute top-1/2 left-1/2 size-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-dashed border-plum/20 max-md:size-[320px]" />
         <span className="absolute top-1/2 left-1/2 size-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-plum/15 max-md:size-[220px]" />
       </div>
-      {NUTS.map((r, i) => (
+      {ROUNDS.map((r, i) => (
         <span
           key={i}
-          className={`float absolute max-md:scale-[.78] ${i % 2 ? "max-md:hidden" : ""}`}
-          style={{ top: r.top, insetInlineEnd: r.end, "--fd": r.d } as React.CSSProperties}
-        >
-          <NutPhoto n={r.n} size={r.s} rot={r.r} />
-        </span>
+          className={`float absolute rounded-full ${i % 2 ? "max-md:hidden" : ""}`}
+          style={
+            {
+              background: r.c,
+              width: r.s,
+              height: r.s,
+              top: r.top,
+              insetInlineEnd: r.end,
+              "--fd": r.d,
+              boxShadow: `inset -${r.s * 0.1}px -${r.s * 0.13}px 0 rgb(0 0 0 / .14), 0 ${r.s * 0.14}px ${r.s * 0.26}px rgb(58 36 32 / .18)`,
+            } as React.CSSProperties
+          }
+        />
       ))}
     </div>
   );
@@ -38,15 +44,9 @@ export function EmptyOrbit({ text, children }: { text: string; children?: React.
         <span className="absolute inset-0 rounded-full border-[1.5px] border-dashed border-plum/25" />
         <span className="mark mark-full absolute inset-[30%] text-plum" />
         <span className="orbit-spin absolute inset-0">
-          <span className="absolute -top-4 left-1/2 -translate-x-1/2">
-            <NutPhoto n={4} size={36} rot={-20} />
-          </span>
-          <span className="absolute top-1/2 -right-4 -translate-y-1/2">
-            <NutPhoto n={7} size={30} rot={25} />
-          </span>
-          <span className="absolute -bottom-4 left-[18%]">
-            <NutPhoto n={5} size={32} rot={-40} />
-          </span>
+          <span className="absolute -top-2.5 left-1/2 size-5 -translate-x-1/2 rounded-full bg-cocoa shadow-[inset_-2px_-3px_0_rgb(0_0_0/.15)]" />
+          <span className="absolute top-1/2 -right-2 size-4 -translate-y-1/2 rounded-full bg-cream shadow-[inset_-2px_-3px_0_rgb(0_0_0/.12)]" />
+          <span className="absolute -bottom-2 left-[22%] size-3.5 rounded-full bg-rose shadow-[inset_-2px_-2px_0_rgb(0_0_0/.15)]" />
         </span>
       </div>
       <p className="max-w-md font-display text-[22px] font-semibold text-plum md:text-[28px]">{text}</p>
