@@ -252,11 +252,12 @@ body [dir="rtl"] {
     .reveal-group > * {
       animation: reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 26%;
+      /* Done once about half of it has come into view (a range on "cover" scales with the element's height, so tall sections finished far too late). */
+      animation-range: entry 0% entry 50%;
     }
-    .reveal-group > :nth-child(4n + 2) { animation-range: entry 6% cover 32%; }
-    .reveal-group > :nth-child(4n + 3) { animation-range: entry 12% cover 38%; }
-    .reveal-group > :nth-child(4n + 4) { animation-range: entry 18% cover 44%; }
+    .reveal-group > :nth-child(4n + 2) { animation-range: entry 4% entry 54%; }
+    .reveal-group > :nth-child(4n + 3) { animation-range: entry 8% entry 58%; }
+    .reveal-group > :nth-child(4n + 4) { animation-range: entry 12% entry 62%; }
   }
 }
 @keyframes reveal { from { opacity: 0; translate: 0 40px; scale: 0.97; } }

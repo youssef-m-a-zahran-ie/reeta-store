@@ -107,7 +107,8 @@ export function OrbitStage({ children }: { children: ReactNode }) {
           const br = n.plate.getBoundingClientRect();
           const x1 = br.left - sr.left + br.width / 2;
           const y1 = br.top - sr.top + br.height * 0.5;
-          const end = Math.max(220, br.top + sy + br.height / 2 - vh * 0.6);
+          // Lands once its plate is a little above the bottom of the screen, so the plate is clear before you reach it.
+          const end = Math.max(220, br.top + sy + br.height / 2 - vh * 0.86);
           p = clamp(sy / end);
           x = x0 + (x1 - x0) * (1 - Math.pow(1 - p, 2.2));
           y = y0 + (y1 - y0) * inOut(p);
