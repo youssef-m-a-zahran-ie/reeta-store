@@ -12,6 +12,7 @@ import { ContactForm } from "../components/contact-form";
 import { RichText } from "../components/rich-text";
 import { TrackView } from "../components/track";
 import { EmptyOrbit, OrbitDecor } from "../components/orbit-decor";
+import { NutPhoto } from "../components/nut-photo";
 import { SectionHead } from "./home";
 
 function PageTop({ eyebrow, title, text }: { eyebrow: string; title: string; text?: string }) {
@@ -200,19 +201,24 @@ export async function AboutView({ lang }: { lang: Lang }) {
         </div>
         <div className="reveal dot-grid-dark relative grid aspect-square place-items-center overflow-hidden rounded-[36px] bg-plum text-blush" aria-hidden="true">
           <span className="sway mark mark-full size-2/5" />
-          {["#3a2420", "#f5ead8", "#8a9a62", "#d9607a", "#c9955f"].map((c, i) => (
+          {[
+            { n: 4, s: 104, r: -16 },
+            { n: 7, s: 112, r: 12 },
+            { n: 1, s: 72, r: 48 },
+            { n: 2, s: 60, r: -30 },
+            { n: 6, s: 80, r: 70 },
+          ].map((nut, i) => (
             <span
-              key={c}
-              className="float absolute rounded-full shadow-[inset_-6px_-8px_0_rgb(0_0_0/.14)]"
+              key={i}
+              className="float absolute"
               style={{
                 ["--fd" as string]: `${-i * 1.3}s`,
-                background: c,
-                width: [70, 90, 44, 30, 52][i],
-                height: [70, 90, 44, 30, 52][i],
-                top: ["12%", "64%", "18%", "76%", "40%"][i],
-                left: ["10%", "70%", "76%", "18%", "84%"][i],
+                top: ["10%", "62%", "16%", "74%", "40%"][i],
+                left: ["8%", "66%", "70%", "14%", "78%"][i],
               }}
-            />
+            >
+              <NutPhoto n={nut.n} size={nut.s} rot={nut.r} />
+            </span>
           ))}
         </div>
       </div>

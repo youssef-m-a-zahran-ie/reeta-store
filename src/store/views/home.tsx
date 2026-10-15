@@ -4,6 +4,7 @@ import { mediaUrl } from "@/lib/supabase/env";
 import { getBundles, getCatalog, getContent, getMenu, getTestimonials } from "../data";
 import { dict, href, loc, type Lang } from "../i18n";
 import { OrbitStage } from "../components/orbit-stage";
+import { NutPhoto } from "../components/nut-photo";
 import { BundleCard } from "../components/bundle-card";
 import { MenuSection } from "../menu/section";
 
@@ -113,11 +114,9 @@ export async function HomeView({ lang }: { lang: Lang }) {
             <div className="reveal-group grid gap-8 md:grid-cols-3">
               {points.map((pt, i) => (
                 <div key={i} className="grid content-start gap-3">
-                  <span
-                    className="size-12 rounded-full shadow-[inset_-5px_-6px_0_rgb(0_0_0/.13),0_8px_14px_rgb(58_36_32/.16)]"
-                    style={{ background: ["#3a2420", "#f5ead8", "#8a9a62"][i % 3] }}
-                    aria-hidden="true"
-                  />
+                  <span className="block size-16" aria-hidden="true">
+                    <NutPhoto n={[4, 5, 6][i % 3]} size={64} rot={[-14, 16, -8][i % 3]} />
+                  </span>
                   <h3 className="text-2xl font-semibold">{txt(pt, "title", lang)}</h3>
                   <p className="text-cocoa/80">{txt(pt, "text", lang)}</p>
                 </div>
