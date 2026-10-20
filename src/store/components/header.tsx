@@ -57,9 +57,14 @@ export function Header({ lang, freeOver }: { lang: Lang; freeOver: number | null
           href={switchLangPath(lang, pathname)}
           hrefLang={lang === "en" ? "ar" : "en"}
           aria-label={t.langSwitchLabel}
-          className="ms-auto shrink-0 rounded-full border border-plum/20 px-2.5 py-1.5 text-sm font-semibold text-plum transition-colors hover:bg-blush min-[380px]:px-3 md:ms-0"
+          title={t.langSwitchLabel}
+          className="ms-auto grid size-10 shrink-0 place-items-center rounded-full border border-plum/20 text-plum transition-colors hover:bg-blush md:ms-0"
         >
-          {t.langSwitch}
+          <svg viewBox="0 0 24 24" className="size-[22px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18" />
+            <path d="M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3Z" />
+          </svg>
         </a>
 
         <button
