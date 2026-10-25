@@ -8,10 +8,13 @@ import { dict, href, loc, money, number, type Lang } from "../i18n";
 import type { Menu as MenuData, MenuBase, MenuCoating, MenuSize } from "../data";
 import { isNutKind, NutArt } from "./nut-art";
 import { cutoutOf, plateImage } from "./visuals";
+import { cutoutFor } from "./cutouts";
 
 const comboId = (b: string, c: string, z: string) => `${b}.${c}.${z}`;
 // How big the plate looks for each size (custom_sizes.tier). Before a size is picked: medium.
 const SCALE: Record<number, number> = { 1: 0.8, 2: 0.9, 3: 1 };
+// With a cut-out plate the backdrop stays put (medium size) and only the bowl changes; the large one spills over.
+const BOWL: Record<number, number> = { 1: 0.76, 2: 1, 3: 1.2 };
 
 /**
  * The whole shop on one page: four plates in a 2 × 2 grid. Tapping a plate opens a bottom sheet
@@ -155,7 +158,7 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
         label_ar: sizeLabel(base, size, "ar"),
         price: unit,
         color: coat.color,
-        image: img ? cutoutOf(img.src) : null,
+        image: cutoutFor(base, coat, img?.src ?? null) ?? (img ? cutoutOf(img.src) : null),
       },
       qty,
       addBtn.current,
@@ -187,6 +190,7 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
 
   if (!bases.length) return null;
   const scale = SCALE[size?.tier ?? 2] ?? 0.9;
+  const bowl = BOWL[size?.tier ?? 2] ?? 1;
 
   return (
     <>
@@ -212,8 +216,14 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
                   </span>
                 )}
                 <span className="plate" data-plate={b.visual}>
-                  {img?.kind !== "photo" && <span className="plate-disc" aria-hidden="true" />}
-                  <PlateVisual base={b} img={img} />
+                  {cutoutFor(b, null, img?.src ?? null) ? (
+                    <PlateStage src={cutoutFor(b, null, img?.src ?? null)!} scale={1} />
+                  ) : (
+                    <>
+                      {img?.kind !== "photo" && <span className="plate-disc" aria-hidden="true" />}
+                      <PlateVisual base={b} img={img} />
+                    </>
+                  )}
                 </span>
                 <span className="eyebrow text-cocoa">{loc(b, "name", lang)}</span>
                 {from !== null && <span className="text-[14px] text-cocoa/70 tabular-nums">{t.from(money(from, lang))}</span>}
@@ -251,10 +261,14 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
                 {/* Head: the plate changes with the sauce and grows with the size */}
                 <div className="flex items-center gap-4 md:grid md:justify-items-center md:gap-2 md:text-center">
                   <div className="relative grid size-[124px] flex-none place-items-center md:size-[200px]">
-                    <span className="absolute inset-0 grid place-items-center transition-transform duration-500 ease-[cubic-bezier(.34,1.4,.5,1)]" style={{ transform: `scale(${scale})` }}>
-                      {plateImage(base, coat)?.kind !== "photo" && <span className="plate-disc" aria-hidden="true" />}
-                      <PlateVisual key={`${base.id}.${coat?.id ?? ""}`} base={base} img={plateImage(base, coat)} fade />
-                    </span>
+                    {cutoutFor(base, coat, plateImage(base, coat)?.src ?? null) ? (
+                      <PlateStage src={cutoutFor(base, coat, plateImage(base, coat)?.src ?? null)!} scale={bowl} fadeKey={`${base.id}.${coat?.id ?? ""}`} />
+                    ) : (
+                      <span className="absolute inset-0 grid place-items-center transition-transform duration-500 ease-[cubic-bezier(.34,1.4,.5,1)]" style={{ transform: `scale(${scale})` }}>
+                        {plateImage(base, coat)?.kind !== "photo" && <span className="plate-disc" aria-hidden="true" />}
+                        <PlateVisual key={`${base.id}.${coat?.id ?? ""}`} base={base} img={plateImage(base, coat)} fade />
+                      </span>
+                    )}
                   </div>
                   <div className="grid min-w-0 flex-1 gap-1">
                     <h3 id="menu-panel-title" ref={titleRef} tabIndex={-1} className="text-[30px] leading-tight font-semibold outline-none md:text-[34px]">
@@ -377,6 +391,23 @@ export function Menu({ data, lang }: { data: MenuData; lang: Lang }) {
         </Link>
       </div>
     </>
+  );
+}
+
+/**
+ * A cut-out plate on its own backdrop: the backdrop keeps the medium size, the bowl scales inside it
+ * (and spills over for the large size). A soft shadow under the bowl scales with it.
+ */
+function PlateStage({ src, scale, fadeKey }: { src: string; scale: number; fadeKey?: string }) {
+  return (
+    <span className="plate-stage" aria-hidden="true">
+      <span className="plate-back" />
+      <span className="plate-bowl" style={{ transform: `scale(${scale})` }}>
+        <span className="plate-shadow" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img key={fadeKey} src={src} alt="" width={800} height={800} decoding="async" draggable={false} className={`plate-cut ${fadeKey ? "fade-in" : ""}`} />
+      </span>
+    </span>
   );
 }
 

@@ -282,6 +282,21 @@ body [dir="rtl"] {
 .plate-img { position: relative; width: 100%; height: 100%; object-fit: contain; transition: opacity 0.35s, transform 0.55s cubic-bezier(.34,1.4,.5,1); }
 .plate-img:not(.is-piece) { border-radius: 18px; }
 .plate-img.is-piece { width: 54%; height: 54%; filter: drop-shadow(0 8px 8px rgb(58 36 32 / 0.25)); }
+/* Cut-out plates: a fixed pink backdrop (the photo's own background, redrawn) with the bowl scaling on top. */
+.plate-stage { position: absolute; inset: 0; display: block; }
+.plate-back {
+  position: absolute; inset: 7%; border-radius: 18px;
+  background:
+    radial-gradient(120% 90% at 18% 100%, #f6bad8 0%, transparent 60%),
+    linear-gradient(to bottom left, #d488b0 0%, #e3a0c4 42%, #ecadcd 70%, #f3b6d5 100%);
+}
+.plate-bowl { position: absolute; inset: 7%; transform-origin: 50% 78%; transition: transform 0.55s cubic-bezier(.34,1.4,.5,1); }
+.plate-shadow {
+  position: absolute; left: 14%; right: 14%; bottom: 6.5%; height: 9%; border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(110 40 75 / 0.42), rgb(110 40 75 / 0.18) 60%, transparent);
+  filter: blur(3px);
+}
+.plate-cut { position: relative; display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 8px rgb(110 40 75 / 0.18)); }
 .plate-catch { animation: plate-catch 0.55s cubic-bezier(.34,1.6,.5,1); }
 @keyframes plate-catch { 0% { transform: scale(1); } 35% { transform: scale(0.94, 0.9); } 70% { transform: scale(1.03); } 100% { transform: scale(1); } }
 .plate-badge { position: absolute; top: 10px; inset-inline-end: 10px; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 999px; background: var(--plum); color: var(--blush); font-size: 13px; font-weight: 600; display: grid; place-items: center; }
