@@ -30,6 +30,8 @@ const GROUPS: { title: string; items: Item[] }[] = [
   {
     title: "Grow",
     items: [
+      { href: "/admin/analytics", label: "Analytics", match: "/admin/analytics" },
+      { href: "/admin/analytics/live", label: "Live view" },
       { href: "/admin/reports", label: "Reports" },
       { href: "/admin/ad-spend", label: "Ad spend" },
     ],
@@ -56,7 +58,11 @@ export function AdminNav({ email, counts }: { email: string; counts: { orders: n
   }
 
   const isActive = (it: Item) =>
-    it.href === "/admin" ? pathname === "/admin" : pathname.startsWith(it.match ?? it.href);
+    it.href === "/admin"
+      ? pathname === "/admin"
+      : it.href === "/admin/analytics"
+        ? pathname.startsWith("/admin/analytics") && !pathname.startsWith("/admin/analytics/live")
+        : pathname.startsWith(it.match ?? it.href);
 
   return (
     <>

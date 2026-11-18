@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.18"
   }
   public: {
     Tables: {
@@ -112,6 +112,78 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+        }
+        Relationships: []
+      }
+      analytics_sessions: {
+        Row: {
+          carted_at: string | null
+          checkout_at: string | null
+          city: string | null
+          country: string | null
+          device: string
+          id: string
+          is_bot: boolean
+          landing_path: string
+          lang: string
+          last_seen_at: string
+          lat: number | null
+          lng: number | null
+          pageviews: number
+          purchased_at: string | null
+          referrer_host: string | null
+          region: string | null
+          started_at: string
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          visitor_id: string
+        }
+        Insert: {
+          carted_at?: string | null
+          checkout_at?: string | null
+          city?: string | null
+          country?: string | null
+          device?: string
+          id: string
+          is_bot?: boolean
+          landing_path?: string
+          lang?: string
+          last_seen_at?: string
+          lat?: number | null
+          lng?: number | null
+          pageviews?: number
+          purchased_at?: string | null
+          referrer_host?: string | null
+          region?: string | null
+          started_at?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          visitor_id: string
+        }
+        Update: {
+          carted_at?: string | null
+          checkout_at?: string | null
+          city?: string | null
+          country?: string | null
+          device?: string
+          id?: string
+          is_bot?: boolean
+          landing_path?: string
+          lang?: string
+          last_seen_at?: string
+          lat?: number | null
+          lng?: number | null
+          pageviews?: number
+          purchased_at?: string | null
+          referrer_host?: string | null
+          region?: string | null
+          started_at?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          visitor_id?: string
         }
         Relationships: []
       }
@@ -1843,6 +1915,75 @@ export type Database = {
     }
     Functions: {
       _admin_compute: { Args: { p: Json }; Returns: Json }
+      _an_items: {
+        Args: { p_from: string; p_to: string }
+        Returns: {
+          cost: number
+          d: string
+          disc: number
+          grams: number
+          gross: number
+          kept: boolean
+          kind: string
+          mo: string
+          option: string
+          order_id: string
+          product: string
+          qty: number
+          wk: string
+        }[]
+      }
+      _an_orders: {
+        Args: { p_from: string; p_to: string }
+        Returns: {
+          channel: string
+          code: string
+          cost: number
+          cust: string
+          customer_id: string
+          d: string
+          discounts: number
+          distance: string
+          dow: number
+          gross: number
+          has_cost: boolean
+          hr: number
+          id: string
+          items: number
+          kept: boolean
+          mo: string
+          order_name: string
+          payment: string
+          shipping: number
+          status: string
+          total: number
+          wk: string
+        }[]
+      }
+      _an_sessions: {
+        Args: { p_from: string; p_to: string }
+        Returns: {
+          carted: boolean
+          checkout: boolean
+          city: string
+          country: string
+          d: string
+          device: string
+          dow: number
+          hr: number
+          landing: string
+          lang: string
+          location: string
+          mo: string
+          purchased: boolean
+          pv: number
+          referrer: string
+          region: string
+          source: string
+          visitor_id: string
+          wk: string
+        }[]
+      }
       _compute_order: { Args: { p: Json }; Returns: Json }
       _custom_combos: {
         Args: never
@@ -1909,6 +2050,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      analytics_cohorts: { Args: { p_months?: number }; Returns: Json }
+      analytics_live: { Args: never; Returns: Json }
+      analytics_query: {
+        Args: {
+          p_dims: string[]
+          p_dir?: string
+          p_from: string
+          p_limit?: number
+          p_metrics: string[]
+          p_order?: string
+          p_schema: string
+          p_to: string
+        }
+        Returns: Json
+      }
       is_admin: { Args: never; Returns: boolean }
       is_admin_email: { Args: { p_email: string }; Returns: boolean }
       place_order: { Args: { p: Json }; Returns: Json }
@@ -1921,6 +2077,27 @@ export type Database = {
       store_quote: { Args: { p: Json }; Returns: Json }
       store_settings: { Args: never; Returns: Json }
       store_track_checkout: { Args: { p: Json }; Returns: undefined }
+      track_visit: {
+        Args: {
+          p_bot?: boolean
+          p_city?: string
+          p_country?: string
+          p_device?: string
+          p_event: string
+          p_lang?: string
+          p_lat?: number
+          p_lng?: number
+          p_path: string
+          p_referrer?: string
+          p_region?: string
+          p_session: string
+          p_utm_campaign?: string
+          p_utm_medium?: string
+          p_utm_source?: string
+          p_visitor: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       ad_platform: "meta" | "tiktok" | "google" | "snapchat" | "other"

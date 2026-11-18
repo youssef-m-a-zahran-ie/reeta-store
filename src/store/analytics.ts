@@ -2,6 +2,8 @@
  * Sends shopping events to whichever pixels are installed (Meta, TikTok, Google Analytics).
  * Safe to call anywhere on the client: missing pixels are skipped.
  */
+import { sendVisit } from "./visits";
+
 export type TrackItem = { id: string; name: string; price: number; qty: number; variant?: string | null };
 type Event = "view_item" | "add_to_cart" | "begin_checkout" | "purchase";
 
@@ -18,6 +20,10 @@ export function track(event: Event, data: { items: TrackItem[]; value?: number; 
   if (typeof window === "undefined") return;
   const w = window as W;
   const value = data.value ?? data.items.reduce((s, i) => s + i.price * i.qty, 0);
+  // The admin's own Analytics: cart, checkout and purchase steps of this visit.
+  if (event === "add_to_cart") sendVisit("cart");
+  else if (event === "begin_checkout") sendVisit("checkout");
+  else if (event === "purchase") sendVisit("purchase");
   const ids = data.items.map((i) => i.id);
   try {
     w.fbq?.(

@@ -128,7 +128,7 @@ export function HourHeatmap({ data }: { data: { dow: number; hour: number; order
   return (
     <div className="grid gap-2">
       <div className="overflow-x-auto">
-        <div className="grid min-w-[560px] grid-cols-[36px_repeat(24,minmax(0,1fr))] gap-[2px] text-[10px] text-cocoa/55">
+        <div className="grid min-w-[340px] grid-cols-[32px_repeat(24,minmax(0,1fr))] gap-[2px] text-[10px] text-cocoa/55">
           <span />
           {Array.from({ length: 24 }, (_, h) => (
             <span key={h} className="text-center">

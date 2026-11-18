@@ -73,3 +73,12 @@ The home page (and `/shop`) is the store: four plates in a 2 × 2 grid (cashew, 
 - Ad spend is entered by hand in Admin → Ad spend (one row per platform and period). Reports split a period's spend across its days and compare it with sales from that platform's links.
 - Pixel IDs (Meta, TikTok, GA4) live in Admin → Settings → Tracking. The store sends PageView, ViewContent, AddToCart, InitiateCheckout and Purchase (once per order, event id = order id).
 - All report numbers come from `admin_report(from, to)` in the database, in Cairo time.
+
+## Analytics (Admin → Analytics, Live view)
+
+- **Pages:** `/admin/analytics` (dashboard), `/admin/analytics/reports` (list) and `/reports/<slug>` (one report, CSV export), `/admin/analytics/live` (refreshes every 10 s). Ad spend and ROAS stay in Admin → Reports.
+- **One engine:** reports are definitions in `src/lib/analytics/registry.ts` (schema, metrics, dimensions, chart type). The database does the maths in `analytics_query(...)` with whitelisted fields; Cairo time throughout. Add a report by adding a definition, not a page.
+- **Visits:** the store sends `page / cart / checkout / purchase` events to `/api/t` → `track_visit()` → `analytics_sessions`. No IP is stored; visitor and session ids are random (`reeta-vid`, `reeta-sid`; a session ends after 30 idle minutes). Bots are flagged and left out of the numbers. Location comes from Cloudflare's headers.
+- **Leave your own visits out:** open the store once with `?notrack=1` on each device.
+- **Data starts at deploy:** earlier days show empty behaviour cards (sessions, conversion, device, location, landing page).
+- **Profit:** products have no `unit_cost` yet, so gross profit equals net sales and margin shows 100% until costs are filled in. The pages say so.

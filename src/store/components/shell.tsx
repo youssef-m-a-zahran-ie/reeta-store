@@ -9,6 +9,7 @@ import { Toast } from "./toast";
 import { UtmCapture } from "./utm-capture";
 import { Pixels } from "./pixels";
 import { PixelPageViews } from "./track";
+import { VisitTracker } from "./visit-tracker";
 import { WhatsAppFloat, waLink } from "./whatsapp";
 
 export async function StoreShell({ lang, children }: { lang: Lang; children: ReactNode }) {
@@ -39,6 +40,7 @@ export async function StoreShell({ lang, children }: { lang: Lang; children: Rea
       )}
       <Pixels meta={settings.meta_pixel_id} tiktok={settings.tiktok_pixel_id} ga4={settings.ga4_id} />
       <PixelPageViews />
+      <VisitTracker />
       <Header lang={lang} freeOver={settings.free_shipping_over} />
       <div id="content">{children}</div>
 
