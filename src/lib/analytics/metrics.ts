@@ -17,7 +17,9 @@ export const METRICS: Record<Schema, Record<string, M>> = {
     cost_of_goods: { label: "Cost of goods sold", unit: "money", upIsGood: false },
     gross_profit: { label: "Gross profit", unit: "money" },
     gross_margin: { label: "Gross margin", unit: "percent" },
+    customers: { label: "Customers", unit: "count" },
     new_customers: { label: "New customers", unit: "count" },
+    returning_customers: { label: "Returning customers", unit: "count" },
     returning_orders: { label: "Returning customer orders", unit: "count" },
     returning_customer_rate: { label: "Returning customer rate", unit: "percent" },
     cancelled_orders: { label: "Cancelled orders", unit: "count", upIsGood: false },
@@ -30,6 +32,7 @@ export const METRICS: Record<Schema, Record<string, M>> = {
     orders: { label: "Orders", unit: "count" },
     gross_sales: { label: "Gross sales", unit: "money" },
     discounts: { label: "Discounts", unit: "money", upIsGood: false },
+    sales_reversals: { label: "Sales reversals", unit: "money", upIsGood: false },
     net_sales: { label: "Net sales", unit: "money" },
     cost_of_goods: { label: "Cost of goods sold", unit: "money", upIsGood: false },
     gross_profit: { label: "Gross profit", unit: "money" },
@@ -61,13 +64,26 @@ export const DIMENSIONS: Record<string, string> = {
   referrer: "Referrer", traffic_source: "Traffic source", landing_page: "Landing page", language: "Language",
 };
 
-const WEEKDAYS = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+// Names the database gives a referring site (public._ref_source).
+const SITES: Record<string, string> = {
+  instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", whatsapp: "WhatsApp", email: "Email", google: "Google",
+  youtube: "YouTube", x: "X (Twitter)", snapchat: "Snapchat", bing: "Bing", duckduckgo: "DuckDuckGo", yahoo: "Yahoo",
+};
+
+const WEEKDAYS =["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const NAMES: Record<string, Record<string, string>> = {
   payment_method: { cod: "Cash on delivery", instapay: "InstaPay" },
   customer_type: { new: "New customers", returning: "Returning customers" },
-  marketing_channel: { meta: "Meta ads", tiktok: "TikTok ads", google: "Google ads", snapchat: "Snapchat ads", direct: "Direct (no link)", "added by team": "Added by the team" },
-  referrer_source: { direct: "Direct (no link)", meta: "Meta ads", facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok", google: "Google", whatsapp: "WhatsApp (added by team)", phone: "Phone (added by team)", other: "Other (added by team)" },
-  traffic_source: { direct: "Direct", meta: "Meta ads", facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok", google: "Google" },
+  marketing_channel: {
+    meta: "Meta ads", tiktok: "TikTok ads", google: "Google ads", snapchat: "Snapchat ads", campaign: "Other campaigns (tagged links)",
+    social: "Social (not ads)", search: "Search (not ads)", email: "Email", referral: "Other websites", direct: "Direct (no link)", team: "Added by the team",
+  },
+  referrer_source: {
+    ...SITES, direct: "Direct (no link)", meta: "Meta ads",
+    "team:whatsapp": "WhatsApp (added by team)", "team:instagram": "Instagram (added by team)", "team:phone": "Phone (added by team)", "team:other": "Other (added by team)",
+  },
+  traffic_source: { ...SITES, direct: "Direct", meta: "Meta ads" },
+  referrer: { ...SITES, direct: "Direct" },
   device_type: { mobile: "Mobile", desktop: "Desktop", tablet: "Tablet" },
   order_status: { new: "New", confirmed: "Confirmed", preparing: "Preparing", out_for_delivery: "Out for delivery", delivered: "Delivered", cancelled: "Cancelled", refused: "Refused" },
   product_kind: { product: "Products", bundle: "Bundles" },

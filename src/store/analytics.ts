@@ -23,7 +23,7 @@ export function track(event: Event, data: { items: TrackItem[]; value?: number; 
   // The admin's own Analytics: cart, checkout and purchase steps of this visit.
   if (event === "add_to_cart") sendVisit("cart");
   else if (event === "begin_checkout") sendVisit("checkout");
-  else if (event === "purchase") sendVisit("purchase");
+  else if (event === "purchase") sendVisit("purchase", { orderId: data.orderId });
   const ids = data.items.map((i) => i.id);
   try {
     w.fbq?.(

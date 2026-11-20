@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin/guard";
-import { buckets, loadCohorts, query, runReport } from "@/lib/analytics/engine";
+import { buckets, loadCohorts, runReport } from "@/lib/analytics/engine";
 import { reportBySlug } from "@/lib/analytics/registry";
 import { resolveRange } from "@/lib/analytics/range";
 import { Dashboard } from "@/components/analytics/dashboard";
@@ -18,10 +18,11 @@ export default async function AnalyticsPage({ searchParams }: PageProps<"/admin/
   const { supabase } = await requireAdmin();
   const run = (slug: string, limit?: number) => runReport(supabase, rep(slug), range, { limit });
 
-  // Delivered orders per day, for the "Orders fulfilled" card.
+  // Orders delivered per day, counted on the day they were delivered.
   const deliveredIn = async (from: string, to: string) => {
-    const out = await query(supabase, "sales", ["all_orders"], ["day", "order_status"], from, to, { order: "day", dir: "asc", limit: 1000 });
-    const byDay = new Map(out.rows.filter((r) => r.order_status === "delivered").map((r) => [String(r.day), Number(r.all_orders)]));
+    const { data } = await supabase.rpc("analytics_delivered", { p_from: from, p_to: to });
+    const rows = Array.isArray(data) ? (data as { d: string; n: number }[]) : [];
+    const byDay = new Map(rows.map((r) => [String(r.d), Number(r.n)]));
     const spark = buckets(from, to, "day").map((d) => byDay.get(d) ?? 0);
     return { spark, sum: spark.reduce((a, b) => a + b, 0) };
   };

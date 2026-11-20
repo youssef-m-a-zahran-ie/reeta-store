@@ -6,7 +6,7 @@ import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/env";
 // city-level location from the request itself. No IP address is stored. The database function validates everything again.
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const EVENTS = new Set(["page", "cart", "checkout", "purchase"]);
+const EVENTS = new Set(["page", "cart", "checkout", "purchase", "ping"]);
 const BOT = /bot|crawl|spider|slurp|facebookexternalhit|preview|headless|lighthouse|pagespeed|monitor|uptime|curl|wget|python|axios|node-fetch|go-http|java\//i;
 
 const text = (v: unknown, max: number) => (typeof v === "string" && v ? v.slice(0, max) : null);
@@ -39,6 +39,9 @@ export async function POST(req: Request) {
   const vid = typeof b.vid === "string" && UUID.test(b.vid) ? b.vid : null;
   const event = typeof b.event === "string" && EVENTS.has(b.event) ? b.event : null;
   if (!sid || !vid || !event) return new Response(null, { status: 400 });
+  // A purchase must name its order; the database checks it is real and recent.
+  const oid = typeof b.oid === "string" && UUID.test(b.oid) ? b.oid : undefined;
+  if (event === "purchase" && !oid) return new Response(null, { status: 400 });
 
   const ua = req.headers.get("user-agent") ?? "";
   let cf: Record<string, unknown> | undefined;
@@ -69,6 +72,7 @@ export async function POST(req: Request) {
     p_utm_medium: text(b.um, 80) ?? undefined,
     p_utm_campaign: text(b.uc, 120) ?? undefined,
     p_lang: b.lang === "ar" ? "ar" : "en",
+    p_order: oid,
   });
   return new Response(null, { status: error ? 502 : 204, headers: { "Cache-Control": "no-store" } });
 }

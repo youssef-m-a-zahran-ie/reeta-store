@@ -105,7 +105,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/admin/re
         </Section>
 
         <div className="grid items-start gap-5 xl:grid-cols-2">
-          <Section title="Where sales come from" description="From the ad link (utm_source), or how the team added the order.">
+          <Section title="Where sales come from" description="From the ad link (utm_source), the site the customer came from, or how the team added the order.">
             <BarList
               empty="No sales in this period yet."
               rows={r.sources.map((s) => ({

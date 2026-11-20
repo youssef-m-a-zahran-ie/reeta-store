@@ -130,6 +130,7 @@ export type Database = {
           lat: number | null
           lng: number | null
           pageviews: number
+          purchase_order_id: string | null
           purchased_at: string | null
           referrer_host: string | null
           region: string | null
@@ -153,6 +154,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           pageviews?: number
+          purchase_order_id?: string | null
           purchased_at?: string | null
           referrer_host?: string | null
           region?: string | null
@@ -176,6 +178,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           pageviews?: number
+          purchase_order_id?: string | null
           purchased_at?: string | null
           referrer_host?: string | null
           region?: string | null
@@ -1915,6 +1918,15 @@ export type Database = {
     }
     Functions: {
       _admin_compute: { Args: { p: Json }; Returns: Json }
+      _an_channel: {
+        Args: {
+          p_medium: string
+          p_ref: string
+          p_team: boolean
+          p_utm: string
+        }
+        Returns: string
+      }
       _an_items: {
         Args: { p_from: string; p_to: string }
         Returns: {
@@ -1951,6 +1963,7 @@ export type Database = {
           id: string
           items: number
           kept: boolean
+          mkt: string
           mo: string
           order_name: string
           payment: string
@@ -1974,6 +1987,7 @@ export type Database = {
           landing: string
           lang: string
           location: string
+          mkt: string
           mo: string
           purchased: boolean
           pv: number
@@ -2015,6 +2029,7 @@ export type Database = {
       _normalize_phone: { Args: { p: string }; Returns: string }
       _notify_new_message: { Args: { p_id: string }; Returns: undefined }
       _notify_new_order: { Args: { p_order: string }; Returns: undefined }
+      _ref_source: { Args: { p_ref: string }; Returns: string }
       _source_platform: { Args: { p_source: string }; Returns: string }
       _spend_between: {
         Args: { p_from: string; p_to: string }
@@ -2051,6 +2066,10 @@ export type Database = {
         Returns: undefined
       }
       analytics_cohorts: { Args: { p_months?: number }; Returns: Json }
+      analytics_delivered: {
+        Args: { p_from: string; p_to: string }
+        Returns: Json
+      }
       analytics_live: { Args: never; Returns: Json }
       analytics_query: {
         Args: {
@@ -2087,6 +2106,7 @@ export type Database = {
           p_lang?: string
           p_lat?: number
           p_lng?: number
+          p_order?: string
           p_path: string
           p_referrer?: string
           p_region?: string

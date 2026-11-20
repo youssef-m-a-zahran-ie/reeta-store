@@ -42,6 +42,8 @@ function LiveMap({ dots }: { dots: Live["dots"] }) {
   const layer = useRef<Leaflet.LayerGroup | null>(null);
   const L = useRef<typeof Leaflet | null>(null);
   const [ready, setReady] = useState(false);
+  // Zoom to the dots once; after that the map stays where the admin left it across refreshes.
+  const fitted = useRef(false);
 
   useEffect(() => {
     let off = false;
@@ -60,6 +62,7 @@ function LiveMap({ dots }: { dots: Live["dots"] }) {
       map.current?.remove();
       map.current = null;
       layer.current = null;
+      fitted.current = false;
       setReady(false);
     };
   }, []);
@@ -71,7 +74,10 @@ function LiveMap({ dots }: { dots: Live["dots"] }) {
     const pts: [number, number][] = [];
     for (const v of dots.visitors) { Lf.circleMarker([v.lat, v.lng], { radius: 8, color: "#fff", weight: 2, fillColor: VISITOR, fillOpacity: 0.95 }).bindTooltip(v.city ?? "Visitor").addTo(g); pts.push([v.lat, v.lng]); }
     for (const o of dots.orders) { Lf.circleMarker([o.lat, o.lng], { radius: 9, color: "#fff", weight: 2, fillColor: ORDER, fillOpacity: 0.95 }).bindTooltip(`Order ${o.name}`).addTo(g); pts.push([o.lat, o.lng]); }
-    if (pts.length) m.fitBounds(pts, { padding: [40, 40], maxZoom: 11 });
+    if (pts.length && !fitted.current) {
+      m.fitBounds(pts, { padding: [40, 40], maxZoom: 11 });
+      fitted.current = true;
+    }
   }, [dots, ready]);
 
   return (
