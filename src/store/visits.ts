@@ -1,7 +1,7 @@
 "use client";
 
 // Anonymous visit tracking for the admin's Analytics. Random ids in the browser, no personal data.
-// A visit ends after 30 minutes without activity. Add ?notrack=1 to any store link once, on a device, to leave it out for good
+// A visit counts once a person interacts with the page, and ends after 30 minutes without activity. Add ?notrack=1 to any store link once, on a device, to leave it out for good
 // (signing in to the admin does this automatically). Nothing is sent while the site runs on a developer's computer.
 
 const VID = "reeta-vid";
@@ -37,7 +37,55 @@ export function stopTracking() {
   } catch {}
 }
 
+// Crawlers (search engines, link previews, scanners) run the page like a browser and leave without touching it. A visit
+// is only counted once a person shows up: a real tap, click, key, wheel or mouse move, or a cart/checkout/purchase.
+// The answer is kept for the tab, so a page reload (like the order confirmation) counts straight away.
+const HUMAN = "reeta-human";
+const SIGNS = ["pointerdown", "touchstart", "keydown", "wheel", "mousemove"] as const;
+let human: boolean | null = null;
+let waiting: (() => void) | null = null;
+
+function isHuman() {
+  if (human === null) {
+    try {
+      human = window.sessionStorage.getItem(HUMAN) === "1";
+    } catch {
+      human = false;
+    }
+  }
+  return human;
+}
+
+function markHuman() {
+  if (isHuman()) return;
+  human = true;
+  try {
+    window.sessionStorage.setItem(HUMAN, "1");
+  } catch {}
+  for (const s of SIGNS) window.removeEventListener(s, onSign, true);
+  const w = waiting;
+  waiting = null;
+  w?.();
+}
+
+function onSign(e: globalThis.Event) {
+  if (e.isTrusted) markHuman();
+}
+
 export function sendVisit(event: Event, opts: { orderId?: string } = {}) {
+  if (typeof window === "undefined") return;
+  if (event === "page" && !isHuman()) {
+    // Hold the page view until a person shows up (only the latest page is kept).
+    if (!waiting) for (const s of SIGNS) window.addEventListener(s, onSign, { capture: true, passive: true });
+    waiting = () => record(event, opts);
+    return;
+  }
+  if (event === "ping" && !isHuman()) return;
+  if (event !== "page" && event !== "ping") markHuman();
+  record(event, opts);
+}
+
+function record(event: Event, opts: { orderId?: string }) {
   try {
     if (isLocal()) return;
     const url = new URL(window.location.href);
