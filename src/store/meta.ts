@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { Lang } from "./i18n";
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://reeta-store.youssef-m-a-zahran.workers.dev";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://reeta-eg.com";
 
 /** Title, description, canonical and hreflang links for a store page. `path` is the English path. */
 export function pageMeta({ lang, title, description, path, image }: { lang: Lang; title?: string; description?: string; path: string; image?: string | null }): Metadata {

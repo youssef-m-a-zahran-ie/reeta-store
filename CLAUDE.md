@@ -6,7 +6,7 @@ Custom e-commerce site + admin for Reeta (chocolate-coated nuts), Cairo & Giza. 
 
 ## Where things live
 - **Code:** this repo, `main` deploys to Cloudflare Workers (OpenNext) automatically.
-- **Live:** https://reeta-store.youssef-m-a-zahran.workers.dev · admin at `/admin` (admin email: reetadeserts@gmail.com).
+- **Live:** https://reeta-eg.com · admin at `/admin` (admin email: reetadeserts@gmail.com).
 - **Database:** Supabase project `reeta` (`bojrqzhsgzahskomgwki`, Frankfurt). Change it with migrations in `supabase/migrations`, apply them, then regenerate `src/lib/supabase/database.types.ts`.
 - **Plan:** phases 0–7 are listed in `README.md`.
 
