@@ -14,7 +14,7 @@ const comboId = (b: string, c: string, z: string) => `${b}.${c}.${z}`;
 // How big the plate looks for each size (custom_sizes.tier). Before a size is picked: medium.
 const SCALE: Record<number, number> = { 1: 0.8, 2: 0.9, 3: 1 };
 // With a cut-out plate the backdrop stays put (medium size) and only the bowl changes; the large one spills over.
-const BOWL: Record<number, number> = { 1: 0.76, 2: 1, 3: 1.2 };
+const BOWL: Record<number, number> = { 1: 0.76, 2: 1, 3: 1.45 };
 
 /**
  * The whole shop on one page: four plates in a 2 × 2 grid. Tapping a plate opens a bottom sheet
