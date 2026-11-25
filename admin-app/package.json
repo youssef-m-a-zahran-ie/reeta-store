@@ -1,0 +1,14 @@
+{
+  "name": "reeta-admin-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Reeta Admin Android app: a thin shell that opens https://admin.reeta-eg.com, so every site update reaches the app straight away.",
+  "dependencies": {
+    "@capacitor/android": "^8.6.3",
+    "@capacitor/cli": "^8.6.3",
+    "@capacitor/core": "^8.6.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

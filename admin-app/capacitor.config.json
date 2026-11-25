@@ -1,0 +1,15 @@
+{
+  "appId": "com.reetaeg.admin",
+  "appName": "Reeta Admin",
+  "webDir": "www",
+  "server": {
+    "url": "https://admin.reeta-eg.com/admin",
+    "cleartext": false,
+    "allowNavigation": ["admin.reeta-eg.com"],
+    "errorPath": "error.html"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#fdf2f8"
+  }
+}
