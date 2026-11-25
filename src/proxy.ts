@@ -12,6 +12,10 @@ export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const onAdminHost = Boolean(ADMIN_HOST) && host === ADMIN_HOST;
 
+  if (!onAdminHost && !path.startsWith("/admin")) {
+    // Not the admin: nothing to do (the host rule in `matcher` is not honoured by every runtime, so never rely on it).
+    return NextResponse.next();
+  }
   if (ADMIN_HOST && !onAdminHost && host !== "localhost" && host !== "127.0.0.1") {
     // The store's address (and any other) does not expose the admin at all.
     return NextResponse.rewrite(new URL("/not-found", request.url), { status: 404 });
