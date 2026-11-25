@@ -35,7 +35,7 @@ export function number(n: number, lang: Lang) {
 const en = {
   brandLine: "Nuts, coated in love.",
   nav: { shop: "Shop", bundles: "Bundles", about: "About", contact: "Contact", home: "Home", menu: "Menu", close: "Close" },
-  langSwitch: "عربي",
+  langSwitch: "العربية",
   langSwitchLabel: "Switch to Arabic",
   cart: {
     open: (n: number) => `Open your pouch, ${n} item${n === 1 ? "" : "s"}`,
