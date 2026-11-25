@@ -126,6 +126,10 @@ function record(event: Event, opts: { orderId?: string }) {
       body.um = url.searchParams.get("utm_medium") ?? undefined;
       body.uc = url.searchParams.get("utm_campaign") ?? undefined;
       body.ref = externalHost();
+      // The visit row is created by this request; detailed events (events.ts) wait for it.
+      ready = fetch("/api/t", { method: "POST", body: JSON.stringify(body), headers: { "Content-Type": "application/json" }, keepalive: true })
+        .then(() => undefined, () => undefined);
+      return;
     }
     post(body);
   } catch {
@@ -138,4 +142,37 @@ function post(body: Record<string, unknown>) {
   if (!(navigator.sendBeacon && navigator.sendBeacon("/api/t", new Blob([data], { type: "application/json" })))) {
     void fetch("/api/t", { method: "POST", body: data, headers: { "Content-Type": "application/json" }, keepalive: true });
   }
+}
+
+let ready: Promise<void> = Promise.resolve();
+
+/** Settles once the request that creates the current visit has been answered. */
+export function visitReady() {
+  return ready;
+}
+
+/** The visit this tab is in, if it's tracked and still running (a person, not local, not opted out, not idle). */
+export function currentVisit(): { sid: string; vid: string } | null {
+  try {
+    if (isLocal() || !isHuman() || window.localStorage.getItem(OFF)) return null;
+    const vid = window.localStorage.getItem(VID);
+    const sess = JSON.parse(window.localStorage.getItem(SID) ?? "null") as Sess | null;
+    if (!vid || !sess || Date.now() - sess.last > IDLE) return null;
+    return { sid: sess.id, vid };
+  } catch {
+    return null;
+  }
+}
+
+/** A person is still active on the page: keep the visit going. */
+export function touchVisit() {
+  try {
+    const sess = JSON.parse(window.localStorage.getItem(SID) ?? "null") as Sess | null;
+    if (sess && Date.now() - sess.last <= IDLE) window.localStorage.setItem(SID, JSON.stringify({ ...sess, last: Date.now() }));
+  } catch {}
+}
+
+/** True once this tab has shown a person (see markHuman). */
+export function isPerson() {
+  return typeof window !== "undefined" && isHuman();
 }

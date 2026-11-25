@@ -115,13 +115,66 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          at: string
+          id: number
+          meta: Json | null
+          option: string | null
+          path: string | null
+          product: string | null
+          qty: number | null
+          session_id: string
+          type: string
+          value: number | null
+        }
+        Insert: {
+          at?: string
+          id?: never
+          meta?: Json | null
+          option?: string | null
+          path?: string | null
+          product?: string | null
+          qty?: number | null
+          session_id: string
+          type: string
+          value?: number | null
+        }
+        Update: {
+          at?: string
+          id?: never
+          meta?: Json | null
+          option?: string | null
+          path?: string | null
+          product?: string | null
+          qty?: number | null
+          session_id?: string
+          type?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "analytics_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_sessions: {
         Row: {
+          area: string | null
+          cart_items: number | null
+          cart_value: number | null
           carted_at: string | null
           checkout_at: string | null
           city: string | null
           country: string | null
+          current_path: string | null
           device: string
+          engaged: boolean
+          event_count: number
           id: string
           is_bot: boolean
           landing_path: string
@@ -130,6 +183,8 @@ export type Database = {
           lat: number | null
           lng: number | null
           pageviews: number
+          pin_lat: number | null
+          pin_lng: number | null
           purchase_order_id: string | null
           purchased_at: string | null
           referrer_host: string | null
@@ -141,11 +196,17 @@ export type Database = {
           visitor_id: string
         }
         Insert: {
+          area?: string | null
+          cart_items?: number | null
+          cart_value?: number | null
           carted_at?: string | null
           checkout_at?: string | null
           city?: string | null
           country?: string | null
+          current_path?: string | null
           device?: string
+          engaged?: boolean
+          event_count?: number
           id: string
           is_bot?: boolean
           landing_path?: string
@@ -154,6 +215,8 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           pageviews?: number
+          pin_lat?: number | null
+          pin_lng?: number | null
           purchase_order_id?: string | null
           purchased_at?: string | null
           referrer_host?: string | null
@@ -165,11 +228,17 @@ export type Database = {
           visitor_id: string
         }
         Update: {
+          area?: string | null
+          cart_items?: number | null
+          cart_value?: number | null
           carted_at?: string | null
           checkout_at?: string | null
           city?: string | null
           country?: string | null
+          current_path?: string | null
           device?: string
+          engaged?: boolean
+          event_count?: number
           id?: string
           is_bot?: boolean
           landing_path?: string
@@ -178,6 +247,8 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           pageviews?: number
+          pin_lat?: number | null
+          pin_lng?: number | null
           purchase_order_id?: string | null
           purchased_at?: string | null
           referrer_host?: string | null
@@ -1598,6 +1669,7 @@ export type Database = {
       }
       settings: {
         Row: {
+          admin_url: string | null
           announcement_ar: string | null
           announcement_en: string | null
           announcement_visible: boolean
@@ -1623,7 +1695,6 @@ export type Database = {
           paused_message_en: string | null
           seo_description: string | null
           seo_title: string | null
-          admin_url: string | null
           site_url: string
           store_address: string | null
           store_lat: number | null
@@ -1635,6 +1706,7 @@ export type Database = {
           whatsapp_number: string | null
         }
         Insert: {
+          admin_url?: string | null
           announcement_ar?: string | null
           announcement_en?: string | null
           announcement_visible?: boolean
@@ -1660,7 +1732,6 @@ export type Database = {
           paused_message_en?: string | null
           seo_description?: string | null
           seo_title?: string | null
-          admin_url?: string | null
           site_url?: string
           store_address?: string | null
           store_lat?: number | null
@@ -1672,6 +1743,7 @@ export type Database = {
           whatsapp_number?: string | null
         }
         Update: {
+          admin_url?: string | null
           announcement_ar?: string | null
           announcement_en?: string | null
           announcement_visible?: boolean
@@ -1697,7 +1769,6 @@ export type Database = {
           paused_message_en?: string | null
           seo_description?: string | null
           seo_title?: string | null
-          admin_url?: string | null
           site_url?: string
           store_address?: string | null
           store_lat?: number | null
@@ -2099,6 +2170,15 @@ export type Database = {
       store_quote: { Args: { p: Json }; Returns: Json }
       store_settings: { Args: never; Returns: Json }
       store_track_checkout: { Args: { p: Json }; Returns: undefined }
+      track_events: {
+        Args: {
+          p_cart?: Json
+          p_events: Json
+          p_session: string
+          p_visitor: string
+        }
+        Returns: undefined
+      }
       track_visit: {
         Args: {
           p_bot?: boolean

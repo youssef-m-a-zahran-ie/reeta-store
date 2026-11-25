@@ -20,21 +20,24 @@ export function LocationPicker({
   value,
   onChange,
   onAddress,
+  onArea,
 }: {
   lang: Lang;
   value: LatLng | null;
   onChange: (v: LatLng) => void;
   onAddress?: (text: string) => void;
+  /** The neighbourhood and district of the pin (no street), once it's known; "" when the lookup failed. */
+  onArea?: (area: string, at: LatLng) => void;
 }) {
   const t = dict[lang].checkout;
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<Leaflet.Map | null>(null);
   const marker = useRef<Leaflet.Marker | null>(null);
   const L = useRef<typeof Leaflet | null>(null);
-  const cb = useRef({ onChange, onAddress });
+  const cb = useRef({ onChange, onAddress, onArea });
   useEffect(() => {
-    cb.current = { onChange, onAddress };
-  }, [onChange, onAddress]);
+    cb.current = { onChange, onAddress, onArea };
+  }, [onChange, onAddress, onArea]);
 
   const [q, setQ] = useState("");
   const [hits, setHits] = useState<SearchHit[] | null>(null);
@@ -43,18 +46,22 @@ export function LocationPicker({
 
   // Reverse geocode: suggest a street/area line for the pin.
   const reverse = async (p: LatLng) => {
+    let area = "";
     try {
       const r = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&accept-language=${lang}&lat=${p.lat}&lon=${p.lng}`,
       );
       const j = (await r.json()) as { address?: Record<string, string>; display_name?: string };
       const a = j.address ?? {};
+      const sep = lang === "ar" ? "، " : ", ";
       const parts = [a.road, a.neighbourhood ?? a.suburb ?? a.quarter, a.city_district ?? a.city ?? a.town ?? a.state].filter(Boolean);
-      const text = parts.length ? parts.join(lang === "ar" ? "، " : ", ") : (j.display_name ?? "");
+      const text = parts.length ? parts.join(sep) : (j.display_name ?? "");
+      area = [a.neighbourhood ?? a.suburb ?? a.quarter, a.city_district ?? a.city ?? a.town ?? a.state].filter(Boolean).join(sep);
       if (text) cb.current.onAddress?.(text);
     } catch {
       // Offline or rate-limited: the customer types the address.
     }
+    cb.current.onArea?.(area, p);
   };
 
   const place = (p: LatLng, zoom?: number) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { track } from "./analytics";
+import { logEvent } from "./events";
 import { createContext, useCallback, useContext, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
 export type CartItem = {
@@ -183,7 +184,20 @@ export function CartProvider({
 
   const setQty = useCallback((key: string, qty: number) => {
     const cur = snapshot();
+    const was = cur.find((i) => i.key === key);
     save(qty <= 0 ? cur.filter((i) => i.key !== key) : cur.map((i) => (i.key === key ? { ...i, qty: Math.min(99, qty) } : i)));
+    if (was && qty < was.qty) {
+      const less = was.qty - Math.max(0, qty);
+      logEvent("remove_from_cart", { n: was.name_en, o: was.label_en, q: less, v: was.price * less });
+    }
+  }, []);
+
+  // Opening the cart is a step worth seeing on the Live view.
+  const isOpen = useRef(false);
+  const openCart = useCallback((v: boolean) => {
+    if (v && !isOpen.current) logEvent("cart_open");
+    isOpen.current = v;
+    setOpen(v);
   }, []);
 
   const clear = useCallback(() => save([]), []);
@@ -197,8 +211,8 @@ export function CartProvider({
   const value = useMemo<CartCtx>(() => {
     const count = list.reduce((s, i) => s + i.qty, 0);
     const subtotal = list.reduce((s, i) => s + i.qty * i.price, 0);
-    return { items: list, count, subtotal, add, setQty, clear, syncPrices, open, setOpen, cartButton, toast, toastMsg, bump };
-  }, [list, add, setQty, clear, syncPrices, open, toast, toastMsg, bump]);
+    return { items: list, count, subtotal, add, setQty, clear, syncPrices, open, setOpen: openCart, cartButton, toast, toastMsg, bump };
+  }, [list, add, setQty, clear, syncPrices, open, openCart, toast, toastMsg, bump]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

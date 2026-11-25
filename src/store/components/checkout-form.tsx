@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { track } from "../analytics";
+import { logEvent } from "../events";
 import { useCart } from "../cart";
 import { dict, href, loc, money, number, type Lang } from "../i18n";
 import { readUtm } from "../utm";
@@ -53,6 +54,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
 
   // Tell the pixels a checkout started, once per visit to this page.
   const checkoutTracked = useRef(false);
+  const phoneLogged = useRef(false);
   useEffect(() => {
     if (checkoutTracked.current || !items.length) return;
     checkoutTracked.current = true;
@@ -211,6 +213,10 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
                   clearErr("phone");
                 }}
                 onBlur={() => {
+                  if (validPhone(phone) && !phoneLogged.current) {
+                    phoneLogged.current = true;
+                    logEvent("checkout_phone");
+                  }
                   if (validPhone(phone))
                     void trackCheckout({
                       phone,
@@ -255,6 +261,7 @@ export function CheckoutForm({ lang, paused }: { lang: Lang; paused: boolean }) 
                   clearErr("address");
                 }
               }}
+              onArea={(area, at) => logEvent("checkout_location", { area, lat: at.lat, lng: at.lng })}
             />
           </div>
           {errors.location ? (

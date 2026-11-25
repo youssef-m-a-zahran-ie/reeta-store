@@ -2,6 +2,7 @@
  * Sends shopping events to whichever pixels are installed (Meta, TikTok, Google Analytics).
  * Safe to call anywhere on the client: missing pixels are skipped.
  */
+import { logEvent } from "./events";
 import { sendVisit } from "./visits";
 
 export type TrackItem = { id: string; name: string; price: number; qty: number; variant?: string | null };
@@ -20,10 +21,19 @@ export function track(event: Event, data: { items: TrackItem[]; value?: number; 
   if (typeof window === "undefined") return;
   const w = window as W;
   const value = data.value ?? data.items.reduce((s, i) => s + i.price * i.qty, 0);
-  // The admin's own Analytics: cart, checkout and purchase steps of this visit.
-  if (event === "add_to_cart") sendVisit("cart");
-  else if (event === "begin_checkout") sendVisit("checkout");
-  else if (event === "purchase") sendVisit("purchase", { orderId: data.orderId });
+  // The admin's own Analytics: cart, checkout and purchase steps of this visit, and the detail for the Live view.
+  const first = data.items[0];
+  if (event === "view_item" && first) logEvent("view_item", { n: first.name, o: first.variant, v: first.price });
+  else if (event === "add_to_cart") {
+    sendVisit("cart");
+    if (first) logEvent("add_to_cart", { n: first.name, o: first.variant, q: first.qty, v: first.price * first.qty });
+  } else if (event === "begin_checkout") {
+    sendVisit("checkout");
+    logEvent("checkout_start", { v: value, q: data.items.reduce((s, i) => s + i.qty, 0) });
+  } else if (event === "purchase") {
+    sendVisit("purchase", { orderId: data.orderId });
+    if (data.orderId) logEvent("purchase", { oid: data.orderId }, true);
+  }
   const ids = data.items.map((i) => i.id);
   try {
     w.fbq?.(
