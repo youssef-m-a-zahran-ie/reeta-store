@@ -22,12 +22,13 @@ export async function signIn(_prev: ActionState, fd: FormData): Promise<ActionSt
     }
     return fail("Email or password is wrong.");
   }
-  const { data: isAdmin } = await supabase.rpc("is_admin");
+  const { data: isAdmin } = await supabase.rpc("is_admin_email", { p_email: email });
   if (!isAdmin) {
     await supabase.auth.signOut();
     return fail("This account doesn't have admin access.");
   }
-  redirect("/admin");
+  // Password is step one; the code from the authenticator app (or setting it up) is step two.
+  redirect("/admin/mfa");
 }
 
 export async function createAdminAccount(_prev: ActionState, fd: FormData): Promise<ActionState> {

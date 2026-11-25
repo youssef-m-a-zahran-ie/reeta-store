@@ -57,6 +57,13 @@ export async function proxy(request: NextRequest) {
     url.search = "";
     return NextResponse.redirect(url);
   }
+  // Signed in with the password only: nothing but the second step until the code is entered.
+  if (signedIn && data?.claims?.aal !== "aal2" && !isPublicAdminPath && !path.startsWith("/admin/mfa")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/admin/mfa";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
 
   // The admin is never for search engines.
   if (onAdminHost) response.headers.set("X-Robots-Tag", "noindex, nofollow");
