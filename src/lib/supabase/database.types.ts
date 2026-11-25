@@ -1623,6 +1623,7 @@ export type Database = {
           paused_message_en: string | null
           seo_description: string | null
           seo_title: string | null
+          admin_url: string | null
           site_url: string
           store_address: string | null
           store_lat: number | null
@@ -1659,6 +1660,7 @@ export type Database = {
           paused_message_en?: string | null
           seo_description?: string | null
           seo_title?: string | null
+          admin_url?: string | null
           site_url?: string
           store_address?: string | null
           store_lat?: number | null
@@ -1695,6 +1697,7 @@ export type Database = {
           paused_message_en?: string | null
           seo_description?: string | null
           seo_title?: string | null
+          admin_url?: string | null
           site_url?: string
           store_address?: string | null
           store_lat?: number | null

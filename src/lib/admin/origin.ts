@@ -2,10 +2,13 @@ import "server-only";
 import { headers } from "next/headers";
 
 /**
- * The site origin for links in auth emails, e.g. https://reeta.store
- * Uses NEXT_PUBLIC_SITE_URL when set, so a forged X-Forwarded-Host can't point reset links elsewhere.
+ * The origin for links in admin sign-in emails (magic link, password reset): the admin's own address when ADMIN_HOST is set
+ * (e.g. https://admin.reeta-eg.com), else NEXT_PUBLIC_SITE_URL. Never taken from the request, so a forged X-Forwarded-Host
+ * can't point reset links elsewhere.
  */
 export async function requestOrigin() {
+  const adminHost = process.env.ADMIN_HOST;
+  if (adminHost) return `https://${adminHost}`;
   const site = process.env.NEXT_PUBLIC_SITE_URL;
   if (site) return site.replace(/\/+$/, "");
   const h = await headers();

@@ -15,6 +15,7 @@
 		}
 	],
 	"vars": {
+		"ADMIN_HOST": "admin.reeta-eg.com",
 		"NEXT_PUBLIC_SUPABASE_URL": "https://bojrqzhsgzahskomgwki.supabase.co",
 		"NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_yFxhFaWD7sV56SK7O7DPGA_-LZeamvK"
 	}
