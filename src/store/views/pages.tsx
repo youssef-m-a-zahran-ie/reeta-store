@@ -238,7 +238,7 @@ export async function ContactView({ lang }: { lang: Lang }) {
   const [settings, faqs] = await Promise.all([getSettings(), getFaqs()]);
   const channels = [
     settings.whatsapp_number && { label: t.contact.whatsapp, value: settings.whatsapp_number, url: waLink(settings.whatsapp_number), color: "#8a9a62" },
-    settings.instagram_url && { label: t.contact.instagram, value: handle(settings.instagram_url), url: settings.instagram_url, color: "#d9607a" },
+    settings.instagram_url && { label: t.contact.instagram, value: "", url: settings.instagram_url, color: "#d9607a" },
     settings.tiktok_url && { label: t.contact.tiktok, value: handle(settings.tiktok_url), url: settings.tiktok_url, color: "#3a2420" },
     settings.facebook_url && { label: t.contact.facebook, value: handle(settings.facebook_url), url: settings.facebook_url, color: "#5b4659" },
   ].filter(Boolean) as { label: string; value: string; url: string; color: string }[];
@@ -259,9 +259,11 @@ export async function ContactView({ lang }: { lang: Lang }) {
               >
                 <span className="size-11 rounded-full shadow-[inset_-4px_-5px_0_rgb(0_0_0/.13)]" style={{ background: c.color }} aria-hidden="true" />
                 <span className="font-display text-2xl font-semibold text-plum">{c.label}</span>
-                <span className="max-w-full justify-self-start truncate text-cocoa/75" dir="ltr">
-                  {c.value}
-                </span>
+                {c.value && (
+                  <span className="max-w-full justify-self-start truncate text-cocoa/75" dir="ltr">
+                    {c.value}
+                  </span>
+                )}
               </a>
             ))}
           </div>
